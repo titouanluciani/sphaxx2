@@ -6,6 +6,8 @@ const client = new faunadb.Client({secret: process.env.FAUNA_SECRET_KEY})
 const {Paginate, Select, Get, Lambda, Var, Index, Match, 
     Let,Documents, Collection, Map, Ref, CurrentIdentity, Logout} = faunadb.query
 
+let authSecret = ''
+
 //const user_url = 'https://www.linkedin.com/in/titouan-luciani-160943160/'
 export default async (req, res) => {
     console.log(JSON.parse(req.body))
@@ -22,7 +24,13 @@ export default async (req, res) => {
     )
     console.log(login)
     process.env.USER_SECRET = login.secret
+    res.setHeader('Set-Cookie', [`user_url=${user_url}; HttpOnly`, `user_secret=${login.secret}; HttpOnly`]);
+    authSecret = login.secret
     console.log("ENV USER SECRET",process.env.USER_SECRET)
+    console.log("user secret wtf userAuth : ", authSecret)
+
+    
+
     const usersIndex = await client.query(
         Paginate(
             Match(Index('users_by_url'),user_url)
@@ -56,3 +64,5 @@ export default async (req, res) => {
     res.statusCode = 200
     res.json(prospects)
 }
+
+exports.authSecret = authSecret

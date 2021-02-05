@@ -4,7 +4,7 @@ import TabPanel from '../components/TabPanel'
 import Modal from '../components/createCampModal'
 
 
-export default function Campaign(){
+export default function Campaign({cookie}){
     const [prospects, setProspects] = useState([]) 
     const [notes, setNotes] = useState([]) 
     const [messages, setMessages] = useState([])
@@ -14,9 +14,14 @@ export default function Campaign(){
     const [selectedProspects, setSelectedProspects] = useState([])
     const [showModal, setShowModal] = useState(false)
 
-    const loadProspects = async (campaign) => {
+    console.log("cookie in campaign pages : ", cookie)
+
+    const loadProspects = async (campaign, cookie) => {
         try{
-            const res = await fetch(`/api/campaigns/${campaign}`);
+            const res = await fetch(`/api/campaigns/${campaign}`,{
+                method:'POST',
+                body:JSON.stringify(cookie)
+            });
             const {prospects, notes, messages} = await res.json();
             console.log("prospects and notes in loadprospects ",prospects, notes, messages)
             setProspects(prospects.data)
@@ -28,8 +33,11 @@ export default function Campaign(){
         }
     }
 
-    const loadCampaigns = async () => {
-        const res = await fetch('/api/getCampaigns')
+    const loadCampaigns = async (cookie) => {
+        const res = await fetch('/api/getCampaigns',{
+            method:'POST',
+            body: JSON.stringify(cookie)
+        })
         const campaigns = await res.json();
         setCampaigns(campaigns.data)
     }
@@ -61,12 +69,13 @@ export default function Campaign(){
     }
 
     useEffect(() => {
-        loadProspects(campaign);
-        loadCampaigns();
-    }, [])
+        console.log("cookie for useEffect loadprosp loadcamp : ", cookie)
+        loadProspects(campaign, cookie);
+        loadCampaigns(cookie);
+    }, [cookie])
 
     useEffect(() => {
-        loadProspects(campaign);
+        loadProspects(campaign, cookie);
     }, [campaign])
 
     const openModal = () => {

@@ -2,20 +2,39 @@ const axios = require('axios')
 require('dotenv').config()
 const faunadb = require('faunadb')
 const q = faunadb.query
+
+const userAuth = require('../userAuth')
+const authSecret = userAuth.authSecret
+
 const client = new faunadb.Client({secret: process.env.FAUNA_SECRET_KEY})
 const {Paginate, Select, Get, Lambda, Var, Index, Match, Intersection,
     Let,Documents, Collection, Map, Ref, CurrentIdentity, Logout} = faunadb.query
-const user_secret = process.env.USER_SECRET
-const userClient = new faunadb.Client({ secret:user_secret })
-console.log("user secret getprospects : ", user_secret)
+//const user_secret = authSecret //process.env.USER_SECRET
+//console.log("user secret getprospects : ", user_secret)
 
 export default async (req, res) => {
-
-        console.log(req)
+    
         console.log(req.query)
-        console.log(typeof req.query)
+        console.log("campaign [name] body : ",req.body)
         const campaign = req.query.name
         console.log(campaign)
+        const user_url = JSON.parse(req.body)
+        console.log("user secret from cookie in [name]  :",user_url)
+
+        const user_secret = await client.query(
+            Select(
+                ['data', 'token', 'secret'],
+                Get(
+                    Match(
+                        Index('tokens_by_url'),
+                        user_url
+                    )
+                )
+            )
+        )
+        console.log("get camp :: this is user secret : ",user_secret)
+
+        const userClient = new faunadb.Client({ secret:user_secret })
         
         const prospects = await userClient.query(Map(
             Paginate(
