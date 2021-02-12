@@ -7,23 +7,23 @@ export default function Connect(props){
     const [oldDescription, setOldDescription] = useState('')
     const [oldName, setOldName] = useState('')
     const [doc, setDoc] = useState('')
+    const [waitingLine, setWaitingLine] = useState(0)
 
-    const handleSave = async (name, oldName, description, campaign, connect) => {
-        console.log("wtf is happenning :",name, description)
+    const handleSave = async (name, oldName, description, campaign, connect, cookie) => {
+        console.log("wtf is happenning :",name, description, cookie)
         await fetch('/api/saveNote', {
             method:'POST',
-            body:JSON.stringify({name, oldName, description, campaign, connect})
+            body:JSON.stringify({name, oldName, description, campaign, connect, cookie})
         })
         await props.loadProspects(campaign)
-        setOptionNote(document.getElementById('noteSelect').value)
+        setOptionNote(document.getElementById('selectInput').value)
         setOldName(document.getElementById('noteSelect').value)
         setOldDescription(props.notes.map(note => note.name === document.getElementById('noteSelect').value ? note.description : ''))
-        setDescription(props.notes.map(note => note.name === document.getElementById('noteSelect').value ? note.description : ''))
-        console.log("current note desc : ", option)
-        console.log("current note desc : ", description)
-        console.log("current note desc : ", document.getElementById('textarea').value)
+        setDescription(description)
         document.getElementById('textarea').value = description
         document.getElementById('selectInput').value = option
+        props.setChanged(prev => !prev)
+
         
     }
     useEffect(()=> setDoc(document.getElementById('noteSelect').value),[])
@@ -35,16 +35,50 @@ export default function Connect(props){
                     
     }, [doc])
 
-    const handleLaunch = async (campaign, selectedProspects, option, description, connect, oldName, action) => {
-        console.log("launch clicked")
-        console.log("prospects selected : ", props.selectedProspects)
-        await handleSave(option,oldName,description, campaign, connect);
+    const handleLaunch = async (campaign, selectedProspects, option, description, connect, oldName, cookie, action) => {
+        
+        await handleSave(option,oldName,description, campaign, connect, cookie);
         await fetch('/api/launchConnect', {
             method:'POST',
-            body:JSON.stringify({campaign, selectedProspects, option, description, connect, action})
+            body:JSON.stringify({campaign, selectedProspects, option, description, connect, cookie, action})
         })
+        const todo_res = await fetch('api/todo', {
+            method:"POST",
+            body: JSON.stringify(cookie)
+        })
+        const todo = await todo_res.json()
+        console.log(todo)
+        console.log(todo.data[0])
+        setWaitingLine(todo.data[0])
+        console.log("waiting line : ",waitingLine)
+        props.setChanged(prev => !prev)
+
+
     }
 
+    const handleNewNote = async (cookie, campaign, connect) => {
+        console.log("New note clicked ")
+        const note_res = await fetch('api/newNote', {
+            method:"POST",
+            body:JSON.stringify({cookie, campaign, connect})
+        })
+        const note = note_res.json()
+        console.log("new note created : ", note)
+        props.setChanged(prev => !prev)
+        return note
+    }   
+    const handleDelete = async (cookie, campaign, name, connect) => {
+        console.log("Delete note clicked ")
+        const note_res = await fetch('api/deleteNote', {
+            method:"POST",
+            body:JSON.stringify({cookie, campaign, name, connect})
+        })
+        const note = note_res.json()
+        console.log("note deleted : ", note)
+        props.setChanged(prev => !prev)
+        return note
+    } 
+   
     return(
         <div className="w-full border-black border-2 h-full">
             <div className="flex flex-row justify-center">
@@ -59,13 +93,13 @@ export default function Connect(props){
                         return <option value={note.name}>{note.name}</option>
                     })}
                 </select>
-                <button className="m-2 p-2 w-1/3 bg-red-500 rounded">{props.connect ? "Add note" : "Add message"}</button>
+                <button onClick={() => handleNewNote(props.cookie, props.campaign, props.connect.toString())} className="m-2 p-2 w-1/3 bg-red-500 rounded">{props.connect ? "Add note" : "Add message"}</button>
                 
             </div>
             <div className="flex flex-row bg-red-100 justify-between">
                 <input onChange={e => setOptionNote(e.target.value)} type="text" value={option} placeholder={option} id="selectInput" className="p-2 m-2 rounded"/>
-                <button onClick={() => handleSave(option,oldName,oldDescription, props.campaign, props.connect.toString())} className="m-2 p-2 w-1/3 bg-red-500 rounded">Save</button>
-                <button className="m-2 p-2 w-1/3 bg-red-500 rounded">Delete</button>
+                <button onClick={() => handleSave(option,oldName,oldDescription, props.campaign, props.connect.toString(), props.cookie)} className="m-2 p-2 w-1/3 bg-red-500 rounded">Save</button>
+                <button onClick={() => handleDelete(props.cookie, props.campaign, oldName, props.connect.toString())} className="m-2 p-2 w-1/3 bg-red-500 rounded">Delete</button>
             </div>
             <div className="bg-red-300 flex flex-row justify-around">
                 <textarea id='textarea' value={description.toString()} onChange={e => {
@@ -79,8 +113,8 @@ export default function Connect(props){
                 </div>
             </div>
             <h4 className="">Available : 150</h4>
-            <button onClick={() => handleSave(option,oldName,description.toString(), props.campaign, props.connect.toString())} className="m-2 p-2 w-1/3 bg-red-500 rounded text-white">Save</button>
-            <button onClick={() => handleLaunch(props.campaign, props.selectedProspects, option, description.toString(), props.connect.toString(), oldName, props.connect ? 'connect' : 'message')} className="m-2 p-2 w-1/3 bg-blue-700 rounded text-white">Launch</button>
+            <button onClick={() => handleSave(option,oldName,description.toString(), props.campaign, props.connect.toString(), props.cookie)} className="m-2 p-2 w-1/3 bg-red-500 rounded text-white">Save</button>
+            <button onClick={() => handleLaunch(props.campaign, props.selectedProspects, option, description.toString(), props.connect.toString(), oldName, props.cookie, props.connect ? 'connect' : 'message')} className="m-2 p-2 w-1/3 bg-blue-700 rounded text-white">Launch</button>
         </div>
         
     )

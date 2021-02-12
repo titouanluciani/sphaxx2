@@ -15,11 +15,11 @@ const {Paginate, Select, Get, Lambda, Var, Index, Match, Intersection,
 export default async (req, res) => {
     
         console.log(req.query)
-        console.log("campaign index body : ",req.body)
+        console.log("waitingLine [name] body : ",req.body)
         const campaign = req.query.name
         console.log(campaign)
         const user_url = JSON.parse(req.body)
-        console.log("user secret from cookie in index  :",user_url)
+        console.log("user secret from cookie in [name]  :",user_url)
 
         const user_secret = await client.query(
             Select(
@@ -36,17 +36,20 @@ export default async (req, res) => {
 
         const userClient = new faunadb.Client({ secret:user_secret })
         
-        const prospects = await userClient.query(Map(
+        const waitingLine = await userClient.query(Map(
             Paginate(
+                Intersection(
                     Match(
-                        Index('prospects_by_user'),Select(['data','url'], Get(CurrentIdentity())))
+                        Index('waitingLine_by_campaign'), campaign),
+                    Match(
+                        Index('waitingLine_by_user'),Select(['data','url'], Get(CurrentIdentity())))
+                )
     
             ), Lambda(['ref'], Select(['data'], Get(Var('ref'))))
         ))
-
+        
         console.log(campaign)
-        console.log(typeof campaign)
         res.statusCode = 200;
-        res.json({prospects})
+        res.json({waitingLine})
 
 }

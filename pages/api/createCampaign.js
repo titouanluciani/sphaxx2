@@ -9,13 +9,22 @@ const {Paginate, Select, Create, Get, Lambda, Var, Index, Match,
 export default async (req, res) => {
     console.log(JSON.parse(req.body))
     const campaignName = JSON.parse(req.body).name
+    const user_url = JSON.parse(req.body).cookie
 
-    const user_secret = process.env.USER_SECRET
-    console.log("user secret getcamp : ", user_secret)
+    const user_secret = await client.query(
+        Select(
+            ['data', 'token', 'secret'],
+            Get(
+                Match(
+                    Index('tokens_by_url'),
+                    user_url
+                )
+            )
+        )
+    )
+    console.log("CREATE CAMP user secret createCamp : ", user_secret)
     const userClient = new faunadb.Client({ secret:user_secret })
 
-    const ci = await userClient.query(Select(['data','url'],Get(CurrentIdentity())))
-    
     const newCampaign = await userClient.query(Create(
         Collection('Campaigns'),
         { data : { name:  campaignName , userUrl : Select(['data','url'], Get(CurrentIdentity())) } }

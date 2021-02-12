@@ -7,27 +7,27 @@ const data = [{
     name:"Dashboard",
     icon:'https://cdn0.iconfinder.com/data/icons/very-basic-android-l-lollipop-icon-pack/24/home-512.png',
     number:null,
-    page:"/Dashboard"
+    page:"/dashboard"
 },{
     name:"Campaigns",
     icon:"https://cdn2.iconfinder.com/data/icons/seo-flat-6/128/25_Campaign_Launch-512.png",
     number:10,
     page:"/campaign"
 },{
-    name:"Scenario",
+    name:"Funnel",
     icon:"https://cdn1.iconfinder.com/data/icons/youtuber/256/storytelling-storyboard-scenario-script-screenplay-512.png",
     number:null,
-    page:"/Scenario"
+    page:"/funnel"
 },{
     name:"Waiting Line",
     icon:"https://cdn2.iconfinder.com/data/icons/font-awesome/1792/hourglass-o-512.png",
     number:10,
-    page:"/WaitingLine"
+    page:"/waitingLine"
 },{
     name:"Prospects",
     icon:"https://cdn0.iconfinder.com/data/icons/users-android-l-lollipop-icon-pack/24/group2-512.png",
     number:10,
-    page:"/Prospects"
+    page:"/prospects"
 },{
     name:"Dashboard",
     icon:'https://cdn0.iconfinder.com/data/icons/very-basic-android-l-lollipop-icon-pack/24/home-512.png',

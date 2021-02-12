@@ -6,12 +6,30 @@ const {Paginate, Select, Get, Lambda, Var, Index, Match, Union, Update, Intersec
     Let,Documents, Collection, Map, Ref, CurrentIdentity, Logout} = faunadb.query
 
 export default async (req, res) => {
-    console.log(req.body)
+    console.log("Save note : ",req.body)
     console.log(JSON.parse(req.body))
-    const { name, oldName ,description, campaign, connect } = JSON.parse(req.body)
-    console.log(connect)
+    const { name, oldName ,description, campaign, connect, cookie } = JSON.parse(req.body)
+    console.log(name, oldName ,description, campaign, connect, cookie)
+    console.log(connect, typeof connect)
     const bool_connect = connect === 'true' ? true : false
-    const userClient = new faunadb.Client({ secret: process.env.USER_SECRET })
+    console.log(bool_connect)
+
+    const user_url = cookie
+
+    const user_secret = await client.query(
+        Select(
+            ['data', 'token', 'secret'],
+            Get(
+                Match(
+                    Index('tokens_by_url'),
+                    user_url
+                )
+            )
+        )
+    )
+    console.log("SAVENOTE :: this is user secret : ",user_secret)
+
+    const userClient = new faunadb.Client({ secret: user_secret })
     if(bool_connect){
         console.log(bool_connect)
         const ref = await userClient.query(Update(

@@ -3,19 +3,17 @@ require('dotenv').config()
 const faunadb = require('faunadb')
 const q = faunadb.query
 
-const userAuth = require('../userAuth')
-const authSecret = userAuth.authSecret
 
 const client = new faunadb.Client({secret: process.env.FAUNA_SECRET_KEY})
 const {Paginate, Select, Get, Lambda, Var, Index, Match, Intersection,
     Let,Documents, Collection, Map, Ref, CurrentIdentity, Logout} = faunadb.query
 //const user_secret = authSecret //process.env.USER_SECRET
-//console.log("user secret getprospects : ", user_secret)
+//console.log("user secret getwaitingLine : ", user_secret)
 
 export default async (req, res) => {
     
         console.log(req.query)
-        console.log("campaign index body : ",req.body)
+        console.log("waitingLine index body : ",req.body)
         const campaign = req.query.name
         console.log(campaign)
         const user_url = JSON.parse(req.body)
@@ -32,21 +30,20 @@ export default async (req, res) => {
                 )
             )
         )
-        console.log("get camp :: this is user secret : ",user_secret)
+        console.log("get waitingLine :: this is user secret : ",user_secret)
 
         const userClient = new faunadb.Client({ secret:user_secret })
         
-        const prospects = await userClient.query(Map(
+        const waitingLine = await userClient.query(Map(
             Paginate(
                     Match(
-                        Index('prospects_by_user'),Select(['data','url'], Get(CurrentIdentity())))
+                        Index('waitingLine_by_user'),Select(['data','url'], Get(CurrentIdentity())))
     
             ), Lambda(['ref'], Select(['data'], Get(Var('ref'))))
         ))
 
-        console.log(campaign)
-        console.log(typeof campaign)
+        console.log(waitingLine)
         res.statusCode = 200;
-        res.json({prospects})
+        res.json({waitingLine})
 
 }

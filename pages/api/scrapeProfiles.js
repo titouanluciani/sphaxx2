@@ -33,8 +33,8 @@ export default async(event, context) => {
         await page.goto("https://linkedin.com/feed/")
 
         // Get current user 's linkedin's url (PRIMARY KEY)
-        await page.waitForSelector('.left-rail')
-        const a = await page.$('.left-rail')
+        await page.waitForSelector('.feed-identity-module__actor-meta.profile-rail-card__actor-meta.break-words')
+        const a = await page.$('.feed-identity-module__actor-meta.profile-rail-card__actor-meta.break-words')
         const pr = await a.$('a')
         const b = await pr.getProperty('href')
         const c = await b.jsonValue()
