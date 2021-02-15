@@ -40,8 +40,29 @@ export default async(event, context) => {
         console.log(c)
         process.env.USER_URL = c
         console.log('ENV USER URL : ',c)
+        
+        const userExist = await userClient.query(
+                Exists(
+                        Match(
+                                Index('users_by_url'), c
+                        )
+                )
+        )
+        if(userExist){
+                const token = await auth(c)
+                console.log('token : ',token)
+        }else{
+                await userClient.query(Create(Collection("users"), {
+                        credentials: { password: c },
+                        data: {
+                          url: c
+                        }
+                      }))
+                const token = await auth(c)
+                console.log('token after user creation : ',token)
+        }
 
-        const token = await auth(c)
+
         const userClient = new faunadb.Client({ secret: token.secret })
 
         

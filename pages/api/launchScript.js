@@ -25,8 +25,8 @@ export default async function(req, res){
             )
     console.log("LAUNCHSCRIPT :: this is user secret : ",user_secret)
     const userClient = new faunadb.Client({ secret: user_secret })
-    const url = await userClient.query(
-        Select(['data',0, 'data', 'prospectUrl'],
+    const data = await userClient.query(
+        Select(['data',0, 'data'],
             Map(
                 Paginate(
                     Match(Index('waitingLine_by_user'), user_url)
@@ -36,8 +36,13 @@ export default async function(req, res){
             )
         )
     )
+    console.log("this is dadta : ", data)
+    const {userUrl, action, option, description} = data
+    console.log("this is fragmented data : ", userUrl, action, option, description)
+    const url = userUrl
+
     console.log("url to connect to : ",url)
-    const browser = await puppeteer.launch({defaultViewport: null,headless:true})
+    const browser = await puppeteer.launch({defaultViewport: null,headless:false})
     console.log("launchhhh")
     
     const page = await browser.newPage()
@@ -54,34 +59,80 @@ export default async function(req, res){
     console.log("jusqu ici tout va bien")
     //await page.waitForNavigation()
     console.log("jusqu ici tout va bien waitfor")
-    try{
-        const click_response = await page.click('.pv-s-profile-actions.pv-s-profile-actions--connect.ml2.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view')
-        console.log(click_response)
+    if(action=='note'){
         try{
-            if(page.$('.ml1.artdeco-button.artdeco-button--3.artdeco-button--primary.ember-view')){
-                console.log('if statement')
-                await page.click('.ml1.artdeco-button.artdeco-button--3.artdeco-button--primary.ember-view')
+            const click_response = await page.click('.pv-s-profile-actions.pv-s-profile-actions--connect.ml2.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view')
+            console.log(click_response)
+            try{
+                if(page.$('.ml1.artdeco-button.artdeco-button--3.artdeco-button--primary.ember-view')){
+                    console.log('if statement')
+                    if(description == ''){
+                        console.log("no note")
+                        await page.click('.ml1.artdeco-button.artdeco-button--3.artdeco-button--primary.ember-view')
+                        await userClient.query(
+                            Update(
+                                Select(['data',0, 'ref'],
+                                    Map(
+                                        Paginate(
+                                            Match(
+                                                Index("prospects_by_url"), url
+                                            )
+                                        ),
+                                        Lambda("x", Get(Var("x")))
+                                    )
+                                ), 
+                                { data: { 'action':action, 'note':false } })
+                        )
+                    }
+                    else{
+                        console.log("note : ", description)
+    
+                        await page.click('.mr1.artdeco-button.artdeco-button--muted.artdeco-button--3.artdeco-button--secondary.ember-view')
+                        await page.focus('.ember-text-area.ember-view.send-invite__custom-message.mb3')
+                        await delay(1500)
+    
+                        await page.keyboard.type(description)
+                        await delay(1000)
+    
+                        await page.click('.ml1.artdeco-button.artdeco-button--3.artdeco-button--primary.ember-view')
+                        await userClient.query(
+                            Update(
+                                Select(['data',0, 'ref'],
+                                    Map(
+                                        Paginate(
+                                            Match(
+                                                Index("prospects_by_url"), url
+                                            )
+                                        ),
+                                        Lambda("x", Get(Var("x")))
+                                    )
+                                ), 
+                                { data: { 'action':action, 'note':true } }
+                            )
+                        )
+                    }
+                }
+            }catch(err){
+                console.log(err)
             }
+            res.statusCode = 200
+            res.json(url)
+    
         }catch(err){
             console.log(err)
+            res.statusCode = 500
+            res.json(url)
         }
-        res.statusCode = 200
-        res.json(url)
+    }else if(action == 'message'){
 
-    }catch(err){
-        console.log(err)
-        res.statusCode = 500
-        res.json(url)
     }
-    // ADD A NOTE SELECTOR
-    // page.click('.mr1.artdeco-button.artdeco-button--muted.artdeco-button--3.artdeco-button--secondary.ember-view')
     
     await userClient.query(
         Delete(
             Select(['data',0, 'ref'],
                 Map(
                     Paginate(
-                        Match(Index('waitingLine_by_user'),'https://www.linkedin.com/in/titouan-luciani-160943160/')
+                        Match(Index('waitingLine_by_user'),user_url)
                     ),
                     Lambda('x', Get(Var('x'))
                     )
@@ -89,5 +140,4 @@ export default async function(req, res){
             )
         )
     )
-    
 }

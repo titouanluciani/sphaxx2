@@ -13,7 +13,6 @@ export default async(event, context) => {
         let profile_href = ""
         console.log(event.body)
         const {url:url2, cookies, number, campaign} = event.body
-        console.log()
         console.log(cookies)
         let data2 = []
         console.log("start",campaign)
