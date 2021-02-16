@@ -8,6 +8,8 @@ const faunadb = require('faunadb')
 const client = new faunadb.Client({ secret: process.env.FAUNA_SECRET_KEY })
 const { Exists, Match, Index, Collection, Create, Update } = faunadb.query
 
+import chromium from 'chrome-aws-lambda';
+
 //http://localhost:3000
 //https://sphaxx.vercel.app
 
@@ -19,7 +21,16 @@ export default async(event, context) => {
         process.env.USER_COOKIES = JSON.stringify(cookies)
         console.log("ENV USER COOKIES", process.env.USER_COOKIES)
         console.log("start auth")
-        const browser = await puppeteer.launch({headless:true, args: ['--no-sandbox']  })
+
+        const browser = await chromium.puppeteer.launch({
+        args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath,
+        headless: true,
+        ignoreHTTPSErrors: true,
+        })
+
+        //const browser = await puppeteer.launch({headless:true, args: ['--no-sandbox']  })
         console.log("launchhhh")
         
         const page = await browser.newPage()
