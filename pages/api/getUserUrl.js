@@ -36,13 +36,13 @@ export default async(event, context) => {
         const page = await browser.newPage()
         console.log("pageeee")
         
-        await delay(100)
+        //await delay(100)
         await page.goto("https://linkedin.com")
         console.log("linkedin")
         await page.setCookie(...cookies)
         //console.log("cookies")
         
-        await delay(100)
+        //await delay(100)
         await page.goto("https://linkedin.com/feed/")
         
         // Get current user 's linkedin's url (PRIMARY KEY)
