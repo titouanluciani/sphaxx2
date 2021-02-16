@@ -54,6 +54,8 @@ export default async(event, context) => {
         console.log(c)
         process.env.USER_URL = c
         console.log('ENV USER URL : ',c)
+        context.statusCode = 200
+        context.json(JSON.stringify(c))
         
         const userExist = await client.query(
                 Exists(
@@ -106,7 +108,6 @@ export default async(event, context) => {
 
         }
 
-        context.statusCode = 200
-        context.json(JSON.stringify(c))
+        
     
 }
