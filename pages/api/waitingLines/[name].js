@@ -3,8 +3,6 @@ require('dotenv').config()
 const faunadb = require('faunadb')
 const q = faunadb.query
 
-const userAuth = require('../userAuth')
-const authSecret = userAuth.authSecret
 
 const client = new faunadb.Client({secret: process.env.FAUNA_SECRET_KEY})
 const {Paginate, Select, Get, Lambda, Var, Index, Match, Intersection,

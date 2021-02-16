@@ -8,6 +8,9 @@ const faunadb = require('faunadb')
 const client = new faunadb.Client({ secret: process.env.FAUNA_SECRET_KEY })
 const { Exists, Match, Index, Collection, Create, Update } = faunadb.query
 
+//http://localhost:3000
+//https://sphaxx.vercel.app
+
 export default async(event, context) => {
         console.log("event wtf : ",event.body)
 
@@ -41,7 +44,7 @@ export default async(event, context) => {
         process.env.USER_URL = c
         console.log('ENV USER URL : ',c)
         
-        const userExist = await userClient.query(
+        const userExist = await client.query(
                 Exists(
                         Match(
                                 Index('users_by_url'), c
