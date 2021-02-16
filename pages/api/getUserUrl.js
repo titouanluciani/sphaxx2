@@ -19,7 +19,7 @@ export default async(event, context) => {
         process.env.USER_COOKIES = JSON.stringify(cookies)
         console.log("ENV USER COOKIES", process.env.USER_COOKIES)
         console.log("start auth")
-        const browser = await puppeteer.launch({headless:false})
+        const browser = await puppeteer.launch({headless:true})
         console.log("launchhhh")
         
         const page = await browser.newPage()
