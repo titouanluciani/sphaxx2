@@ -14,9 +14,9 @@ export default function Campaign({cookie, cookiesSession}){
     const [selectedProspects, setSelectedProspects] = useState([])
     const [showModal, setShowModal] = useState(false)
     const [changed, setChanged] = useState(false)
+    const [isCheckAll, setIsCheckAll] = useState(false)
 
     console.log("cookie in campaign pages : ", cookie)
-    console.log("cookiesSession in campaign pages : ", cookiesSession)
 
     const loadProspects = async (campaign, cookie) => {
         try{
@@ -58,6 +58,17 @@ export default function Campaign({cookie, cookiesSession}){
             setSelectedProspects(selectedProspects.filter(el => el !== e.target.value))
 
         }
+    }
+    const handleCheckAll = (e) => {
+        if(e.target.checked){
+            setSelectedProspects([prospects.map(prospect => prospect.url)])
+            setIsCheckAll(true)
+        }else{
+            setSelectedProspects([])
+            setIsCheckAll(false)
+        }
+        console.log("handlecheckAll : ",selectedProspects, isCheckAll)
+
     }
 
     const openModal = () => {
@@ -110,7 +121,7 @@ export default function Campaign({cookie, cookiesSession}){
                     <button className="p-2 px-3 mr-4 bg-blue-500 rounded">Tools</button>
             </div>
             <div className="flex flex-row flex-wrap justify-between h-screen h-full">
-                <ProspectList prospects={prospects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} />
+                <ProspectList prospects={prospects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} handleCheckAll={handleCheckAll} isCheckAll={isCheckAll} />
                 <TabPanel notes={notes} messages={messages} campaign={campaign} loadProspects={loadProspects} selectedProspects={selectedProspects} cookie={cookie} changed={changed} setChanged={setChanged} />
             </div>
             
