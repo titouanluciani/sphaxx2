@@ -62,26 +62,20 @@ export default function Campaign({cookie, cookiesSession}){
     const handleCheck = (e) => {
         if(e.target.checked){
             setSelectedProspects(selectedProspects => selectedProspects.concat({'url':e.target.value, 'name':e.target.name}))
-            console.log(e.target)
-            console.log(e.target.checked)
         }else{
-            console.log(e.target.checked)
-            console.log(e.target.value)
-            setSelectedProspects(selectedProspects.filter(el => el !== e.target.value))
-            console.log(selectedProspects.filter(el => el !== e.target.value))
+            setSelectedProspects(selectedProspects.filter(el => el.url !== e.target.value))
         }
-        console.log(selectedProspects)
     }
     const handleCheckAll = (e) => {
         if(e.target.checked){
-            setSelectedProspects(prospects.map(prospect => prospect.url))
+            setSelectedProspects([])
+            setSelectedProspects(selectedProspects.concat(prospects.map(prospect => new Object({'url':prospect.url, 'name':prospect.name}))))
             setIsCheckAll(true)
         }else{
             setSelectedProspects([])
             setIsCheckAll(false)
         }
         console.log("handlecheckAll : ", isCheckAll)
-
     }
 
     const openModal = () => {
@@ -117,11 +111,8 @@ export default function Campaign({cookie, cookiesSession}){
         loadProspects(campaign, cookie);
     }, [changed])
     useEffect(() => {
-        console.log(selectedProspects)
-        
+        console.log(selectedProspects)  
     }, [selectedProspects])
-    
-
     return(
         <div className="bg-gray-200 p-4 border-black border-4 ml-48 overflow-x-hidden w-full h-screen">
             <Modal showModal={showModal} setShowModal={setShowModal} cookie={cookie} />

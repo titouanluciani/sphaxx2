@@ -6,9 +6,9 @@ export default function ProspectList({ prospects, handleCheck, campaignHasChange
         <div className="h-full w-6/12 mb-4">
             <h2>Prospect List</h2>
             <div className="h-full pb-4">
-                <table className="border-collapse table-fixed w-full my-6 text-sm h-full rounded overflow-hidden shadow-md">
-                    <thead className="table table-fixed w-full">
-                        <tr className="bg-red-400 text-white block font-bold">
+                <table className="border-collapse my-6 text-sm w-full rounded overflow-x-hidden shadow-md">
+                    <thead className="">
+                        <tr className="bg-red-400 text-white font-bold">
                             <th>
                                 <input type="checkbox" onClick={handleCheckAll} name="" id=""/>
                             </th>
@@ -16,11 +16,17 @@ export default function ProspectList({ prospects, handleCheck, campaignHasChange
                                 Name
                             </th>
                             <th scope="col">
-                                Status
+                                Url
+                            </th>
+                            <th className="text-right">
+                                Action
+                            </th>
+                            <th scope="col">
+                                Campaign
                             </th>
                         </tr>
                     </thead>
-                    <tbody className="overflow-x-hidden block h-screen border-black bg-blue-200 border-2 mb-4">
+                    <tbody className="overflow-x-hidden border-black bg-blue-200 border-2 mb-4">
                                 { prospects && prospects.map(prospect =>(
                                     <ProspectCard key={prospect._id} prospect={ prospect } handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} isCheckAll={isCheckAll} />
                                 )) }

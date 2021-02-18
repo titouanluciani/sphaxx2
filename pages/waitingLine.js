@@ -7,7 +7,7 @@ export default function Prospects({cookie, cookiesSession}){
     const [campaigns, setCampaigns] = useState([])
     const [selectedProspects, setSelectedProspects] = useState([])
     const [campaignHasChanged, setCampaignHasChanged] = useState(false)
-
+    const [isCheckAll, setIsCheckAll] = useState(false)
 
     const loadProspects = async (campaign, cookie) => {
         try{
@@ -48,24 +48,34 @@ export default function Prospects({cookie, cookiesSession}){
     }
     const handleCheck = (e) => {
         if(e.target.checked){
-            setSelectedProspects(selectedProspects => selectedProspects.concat([e.target.value]))
-
+            setSelectedProspects(selectedProspects => selectedProspects.concat({'url':e.target.value, 'name':e.target.name}))
         }else{
             setSelectedProspects(selectedProspects.filter(el => el !== e.target.value))
-
         }
+    }
+    const handleCheckAll = (e) => {
+        if(e.target.checked){
+            setSelectedProspects(prospects.map(prospect => prospect.url))
+            setIsCheckAll(true)
+        }else{
+            setSelectedProspects([])
+            setIsCheckAll(false)
+        }
+        console.log("handlecheckAll : ", isCheckAll)
     }
 
 
     useEffect(() => {
         console.log("cookie for useEffect loadprosp loadcamp : ", cookie)
-        console.log("cookiesSession for useEffect loadprosp loadcamp : ", cookiesSession)
         loadProspects(campaign, cookie);
         loadCampaigns(cookie);
     }, [cookie, cookiesSession])
     useEffect(() => {
         loadProspects(campaign, cookie);
     }, [campaign])
+    useEffect(() => {
+        console.log(selectedProspects)
+    }, [selectedProspects])
     return (
         <div className="flex flex-col border-black border-4 h-screen ml-48 p-4">
                     <select onChange={handleCampaigns} name="pets" id="pet-select" className="p-2 w-5/12 mr-6 bg-red-300 rounded">
@@ -74,7 +84,7 @@ export default function Prospects({cookie, cookiesSession}){
                         ))}
                         <option value="All">All</option>
                     </select>
-            <ProspectList2 prospects={prospects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} />
+            <ProspectList2 prospects={prospects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} handleCheckAll={handleCheckAll} isCheckAll={isCheckAll} />
 
         </div>
     )
