@@ -26,17 +26,18 @@ export default async function(req, res){
     )
     console.log("launchConnect :: this is user secret : ",user_secret)
     const userClient = new faunadb.Client({ secret: user_secret })
-
+    
     const ref = await userClient.query(
         Map(
             selectedProspects, 
             Lambda(
-                ['url'], 
+                'obj', 
                 Create(
                     Collection('waitingLine'),
                     {data : { 
                         campaign: campaign, 
-                        prospectUrl : Var('url'), 
+                        prospectUrl : Select('url',Var('obj')), 
+                        prospectName : Select('name',Var('obj')), 
                         option: option, 
                         description: description, 
                         action: action,

@@ -1,11 +1,17 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { useEffect } from 'react';
 
 
-export default function NavBlock({data}){
+export default function NavBlock({data, campaignsNumber}){
+	useEffect(() =>{
+		data[1].number = campaignsNumber
+
+	},[campaignsNumber])
+
     return(
 				data.map(el => (
-						<div className="">
+						<div className="" key={el.name}>
 							<Link href={el.page}>
 								<a className="flex hover:bg-red-900 rounded transition h-12 ease-in-out duration-200 justify-between items-center flex-row flex-1">
 									<div className="px-3 flex items-center object-contain bg-opacity-50 justify-self-stretch self-center h-full bg-red-500 rounded">

@@ -18,7 +18,7 @@ export default function Connect(props){
         await props.loadProspects(campaign)
         setOptionNote(document.getElementById('selectInput').value)
         setOldName(document.getElementById('noteSelect').value)
-        setOldDescription(props.notes.map(note => note.name === document.getElementById('noteSelect').value ? note.description : ''))
+        props.notes.map(note => note.name === document.getElementById('noteSelect').value ? setOldDescription(note.description) : '')
         setDescription(description)
         document.getElementById('textarea').value = description
         document.getElementById('selectInput').value = option
@@ -26,14 +26,7 @@ export default function Connect(props){
 
         
     }
-    useEffect(()=> setDoc(document.getElementById('noteSelect').value),[])
-    useEffect(() => {
-        setOptionNote(document.getElementById('noteSelect').value)
-        setOldName(document.getElementById('noteSelect').value)
-        setOldDescription(props.notes.map(note => note.name === document.getElementById('noteSelect').value ? note.description : ''))
-        setDescription(props.notes.map(note => note.name === document.getElementById('noteSelect').value ? note.description : ''))
-                    
-    }, [doc])
+    
 
     const handleLaunch = async (campaign, selectedProspects, option, description, connect, oldName, cookie, action) => {
         
@@ -78,15 +71,37 @@ export default function Connect(props){
         props.setChanged(prev => !prev)
         return note
     } 
-   
+    const handleName = async (e) => {
+        console.log(e.target)
+        document.getElementById('textarea').value += e.target.value
+    }
+    useEffect(()=> setDoc(document.getElementById('noteSelect').value),[])
+    useEffect(() => {
+        setOptionNote(document.getElementById('noteSelect').value)
+        setOldName(document.getElementById('noteSelect').value)
+        props.notes.map(note => note.name === document.getElementById('noteSelect').value ? setOldDescription(note.description) : '')
+        props.notes.map(note => note.name === document.getElementById('noteSelect').value ? setDescription(note.description) : '')
+                    
+    }, [doc])
+    
+    useEffect(()=>{
+        document.getElementById('count').innerHTML = "Characters left: " + (299 - description.length);
+        
+    },[description])
+    /*document.getElementById('textarea').onkeyup = function () {
+        document.getElementById('count').innerHTML = "Characters left: " + (299 - this.value.length);
+    };*/
     return(
         <div className="w-full border-black border-2 h-full">
             <div className="flex flex-row justify-center">
                 <select onChange={e => {
                     setOptionNote(e.target.value)
                     setOldName(e.target.value)
-                    setOldDescription(props.notes.map(note => note.name === e.target.value ? note.description : ''))
-                    setDescription(props.notes.map(note => note.name === e.target.value ? note.description : ''))
+                    props.notes.map(note => note.name === e.target.value ? setOldDescription(note.description) : '')
+                    props.notes.map(note => note.name === e.target.value ? setDescription(note.description) : '')
+                    console.log("desc ",description, document.getElementById('textarea').value)
+                    document.getElementById('count').innerHTML = "Characters left: " + (299 - document.getElementById('textarea').value.length);
+
                     }} name="note" id="noteSelect" className="w-1/2 m-2 p-2 rounded">
                     <option value={props.notes[0] ? props.notes[0].name : "Default Note"} selected>{props.notes[0] ? props.notes[0].name : "Default Note"}</option>
                     {props.notes.map(note => {
@@ -103,16 +118,18 @@ export default function Connect(props){
             </div>
             <div className="bg-red-300 flex flex-row justify-around">
                 <textarea id='textarea' value={description.toString()} onChange={e => {
+                    console.log(e.target.value)
                     setDescription(e.target.value.toString())
+                    document.getElementById('count').innerHTML = "Characters left: " + (299 - e.target.value.length);
                     console.log(description)
-                    }} placeholder={description} cols="30" rows="7" className="w-2/3 h-full m-4 rounded"> { description } </textarea>
+                    }} cols="30" rows="7" className="w-2/3 h-full m-4 rounded"> { description } </textarea>
                 <div className="flex flex-col justify-evenly items-stretch bg-red-100">
-                    <button className="bg-red-500 h-1/4 p-4 flex items-center justify-center rounded">Name</button>
-                    <button className="bg-red-500 h-1/4 p-4 flex items-center justify-center rounded">FirstName</button>
-                    <button className="bg-red-500 h-1/4 p-4 flex items-center justify-center rounded">Smileys</button>
+                    <button className="bg-red-500 h-1/4 p-4 flex items-center justify-center rounded" onClick={handleName} value='{{name}}'>Name</button>
+                    <button className="bg-red-500 h-1/4 p-4 flex items-center justify-center rounded" onClick={handleName} value='{{firstname}}'>FirstName</button>
+                    <button disabled className="bg-red-500 h-1/4 p-4 flex items-center justify-center rounded">Smileys</button>
                 </div>
             </div>
-            <h4 className="">Available : 150</h4>
+            <h4 className="" id="count">Characters left: {299 - description.length}</h4>
             <button onClick={() => handleSave(option,oldName,description.toString(), props.campaign, props.connect.toString(), props.cookie)} className="m-2 p-2 w-1/3 bg-red-500 rounded text-white">Save</button>
             <button onClick={() => handleLaunch(props.campaign, props.selectedProspects, option, description.toString(), props.connect.toString(), oldName, props.cookie, props.connect ? 'connect' : 'message')} className="m-2 p-2 w-1/3 bg-blue-700 rounded text-white">Launch</button>
         </div>

@@ -8,7 +8,7 @@ export default function ProspectList2({ prospects, handleCheck, campaignHasChang
             <div className="h-full pb-4">
                 <table className="border-collapse table-fixed w-full my-6 text-sm h-full rounded overflow-x-hidden shadow-md">
                     <thead className="table table-fixed w-full">
-                        <tr className="bg-red-400 text-white block font-bold">
+                        <tr className="bg-red-400 text-white block w-full font-bold">
                             <th>
                                 <input type="checkbox" name="" id=""/>
                             </th>
@@ -18,9 +18,15 @@ export default function ProspectList2({ prospects, handleCheck, campaignHasChang
                             <th scope="col">
                                 Status
                             </th>
+                            <th scope="border-black border-2">
+                                Action
+                            </th>
+                            <th className="border-black border-2">
+                                Campaign
+                            </th>
                         </tr>
                     </thead>
-                    <tbody className="overflow-x-hidden overflow-y-auto block bg-blue-200 h-screen border-black border-2 mb-4">
+                    <tbody className="overflow-x-hidden overflow-y-auto bg-blue-200 block h-screen border-black border-2 mb-4">
                                 { prospects && prospects.map(prospect =>(
                                     <ProspectCard key={prospect._id} prospect={ prospect } handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} />
                                 )) }

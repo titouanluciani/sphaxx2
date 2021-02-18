@@ -6,18 +6,29 @@ export default function ProspectCard({ prospect, handleCheck,campaignHasChanged,
             el.checked = false
         })
     }, [campaignHasChanged])
+    useEffect(() => {
+        Array.from(document.getElementsByClassName('checkboxProspect')).forEach(el =>  {
+            el.checked = isCheckAll
+        })
+    }, [isCheckAll])
 
     
     return (
             <tr className="border-gray-300">
                 <td>
-                    <input onClick={handleCheck} className="checkboxProspect" checked={isCheckAll} type="checkbox" id="checkbox" value={prospect.url}/>
+                    <input onClick={handleCheck} className="checkboxProspect" type="checkbox" id="checkbox" value={prospect.url} name={prospect.name} />
                 </td>
                 <td>
                     {prospect.name}
                 </td>
-                <td className="break-all">
-                    {prospect.url}
+                <td className="break-all border-black border-2">
+                    {prospect.prospectUrl}
+                </td>
+                <td>
+                    {prospect.action}
+                </td>
+                <td>
+                    {prospect.campaign}
                 </td>
             </tr>
            

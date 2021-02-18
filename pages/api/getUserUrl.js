@@ -13,6 +13,9 @@ import chromium from 'chrome-aws-lambda';
 //http://localhost:3000
 //https://sphaxx.vercel.app
 
+///^https:\/\/sphaxx\.vercel\.app/
+///^http:\/\/localhost\:3000/
+
 export default async(event, context) => {
         console.log("event wtf : ",event.body)
 
@@ -54,9 +57,8 @@ export default async(event, context) => {
         console.log(c)
         process.env.USER_URL = c
         console.log('ENV USER URL : ',c)
-        context.statusCode = 200
-        context.json(JSON.stringify(c))
         
+        let token = {}
         const userExist = await client.query(
                 Exists(
                         Match(
@@ -65,7 +67,7 @@ export default async(event, context) => {
                 )
         )
         if(userExist){
-                const token = await auth(c)
+                token = await auth(c)
                 console.log('token : ',token)
         }else{
                 await userClient.query(Create(Collection("users"), {
@@ -78,7 +80,7 @@ export default async(event, context) => {
                 console.log('token after user creation : ',token)
         }
 
-
+        console.log('token : ',token)
         const userClient = new faunadb.Client({ secret: token.secret })
 
         
@@ -108,6 +110,7 @@ export default async(event, context) => {
 
         }
 
-        
+        context.statusCode = 200
+        context.json(JSON.stringify(c))
     
 }

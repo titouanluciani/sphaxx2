@@ -23,5 +23,6 @@ a {
   th,td{
     @apply py-3 px-4;
     @apply text-right;
+    @apply border-black;
   }
 }

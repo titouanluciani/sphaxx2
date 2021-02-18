@@ -37,8 +37,8 @@ export default async function(req, res){
         )
     )
     console.log("this is dadta : ", data)
-    const {userUrl, action, option, description} = data
-    console.log("this is fragmented data : ", userUrl, action, option, description)
+    const {userUrl, action, option, description, prospectName} = data
+    console.log("this is fragmented data : ", userUrl, action, option, description, prospectName)
     const url = userUrl
 
     console.log("url to connect to : ",url)
@@ -86,6 +86,13 @@ export default async function(req, res){
                     }
                     else{
                         console.log("note : ", description)
+                        console.log("prospectName : ", prospectName.split(' ')[0],prospectName.split(' ')[1].trim())
+                        if(description.match('{{firstname}}')){
+                            description.replace('{{firstname}}', prospectName.split(' ')[0].trim())
+                        }
+                        if(description.match('{{name}}')){
+                            description.replace('{{name}}', prospectName.split(' ')[1].trim())
+                        }
     
                         await page.click('.mr1.artdeco-button.artdeco-button--muted.artdeco-button--3.artdeco-button--secondary.ember-view')
                         await page.focus('.ember-text-area.ember-view.send-invite__custom-message.mb3')

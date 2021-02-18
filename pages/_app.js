@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <div className="">
-      <Navbar className=""/>
+      <Navbar cookie={cookie} />
       <Component {...pageProps} cookie={cookie} cookiesSession={cookiesSession} />
     </div>
   )

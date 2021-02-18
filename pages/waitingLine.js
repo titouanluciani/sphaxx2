@@ -16,18 +16,17 @@ export default function Prospects({cookie, cookiesSession}){
                     method:'POST',
                     body:JSON.stringify(cookie)
                 });
-                const {prospects} = await res.json();
-                console.log(prospects) 
-                setProspects(prospects.data) 
+                const {waitingLine} = await res.json();
+                console.log(waitingLine) 
+                setProspects(waitingLine.data) 
 
             }else{
                 const res = await fetch(`/api/waitingLines/${campaign}`,{
                     method:'POST',
                     body:JSON.stringify(cookie)
                 });
-                const {prospects} = await res.json();
-                setProspects(prospects)
-                setProspects(prospects.data)
+                const {waitingLine} = await res.json();
+                setProspects(waitingLine.data)
             }
 
         }catch(err){

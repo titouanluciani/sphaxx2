@@ -16,7 +16,7 @@ export default async(event, context) => {
         console.log(cookies)
         let data2 = []
         console.log("start",campaign)
-        const browser = await puppeteer.launch({headless:false})
+        const browser = await puppeteer.launch({headless:true})
         console.log("launch", number)
 
         const page = await browser.newPage()
@@ -90,6 +90,8 @@ export default async(event, context) => {
                 profile_href = await profile_name.getProperty('href')
                 profile_href = await profile_href.jsonValue()
               }
+              name2 = name2.split('Voir le profil de')[0]
+              name2 = name2.trim()
               
               data2 = [...data2, {"name":name2,"url":profile_href, "userUrl":c,"campaign":campaign}]
               client.query(
