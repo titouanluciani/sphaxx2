@@ -6,7 +6,8 @@ import {useEffect, useState} from 'react'
 function MyApp({ Component, pageProps }) {
   const [cookie, setCookie] = useState('')
   const [cookiesSession, setCookiesSession] = useState({})
-  useEffect(() => {
+  const [userInfo, setUserInfo] = useState({})
+  useEffect(async () => {
     try{
       setCookie(document.cookie.split(";").find(row=>row.startsWith('userUrl')).split('=')[1])
       //const cook = document.cookie.split(";").find(row=>row.startsWith(' userUrl')).split('=')[1]
@@ -14,11 +15,70 @@ function MyApp({ Component, pageProps }) {
     }catch(err){
       console.error(err)
     }
+    
   }, [])
+  useEffect(async () => {
+    console.log(cookie)
+    const res = await fetch('api/getUserInfo', {
+      method: 'POST',
+      body: JSON.stringify({cookie})
+    })
+    const info = await res.json()
+    setUserInfo(info)
+    console.log(info)
+  },[cookie])
 
+  /*useEffect(async ()=>{
+    try{
+      console.log("getuserurl cookiesSesion : ", cookiesSession)
+      let url = 'https://www.linkedin.com/feed/'
+      const cookies = cookiesSession
+      const res = await fetch('/api/getUserUrl',{
+        method:"POST",
+        body:{cookies} ,
+        headers:{
+          'Content-Type':'application/json'
+        }
+      })
+      url = res.json()
+      console.log("GETUSUER URL FROM APP : ",url)
+    }catch(err){
+      console.error(err)
+    }
+  }, [cookiesSession])*/
+  const handleGetUserUrl = async () => {
+    /*try{
+      console.log("getuserurl cookiesSesion : ", cookiesSession)
+      let url = 'https://www.linkedin.com/feed/'
+      const cookies = cookiesSession
+      const res = await fetch('/api/getUserUrl',{
+        method:"POST",
+        body:JSON.stringify({cookies}) ,
+        headers:{
+          'Content-Type':'application/json'
+        }
+      })
+      url = res.json()
+      console.log("GETUSUER URL FROM APP : ",url)
+    }catch(err){
+      console.error(err)
+    }*/
+    console.log(cookie)
+    const res = await fetch('api/getUserInfo', {
+      method: 'POST',
+      body: JSON.stringify({cookie})
+    })
+    const info = await res.json()
+    setUserInfo(info)
+    console.log(info)
+  }
+  useEffect(() => {
+    console.log(userInfo.data)
+  },[userInfo])
   return (
     <div className="">
-      <Navbar cookie={cookie} />
+      <Navbar cookie={cookie} userInfo={userInfo} />
+      <button onClick={handleGetUserUrl} className="fixed left-1/2 top-1/2 bg-red-300">GET USER URL</button>
       <Component {...pageProps} cookie={cookie} cookiesSession={cookiesSession} />
     </div>
   )

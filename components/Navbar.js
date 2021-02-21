@@ -6,7 +6,7 @@ import React , { useState, useEffect } from 'react'
 
 
 
-export default function Navbar({ cookie }){
+export default function Navbar({ cookie, userInfo }){
     const [prospects, setProspects] = useState(20) 
     const [campaignsNumber, setCampaignsNumber] = useState(3)
     const [wg, setWg] = useState(10)
@@ -72,9 +72,9 @@ export default function Navbar({ cookie }){
             <div className="overflow-y-auto divide-y-2 divide-opacity-10 divide-black">
                 <h1 className="my-4 text-2xl text-center">Sphaxx</h1>
                 <div className="flex flex-col items-center py-6">
-                    <Image src="/pp.png" width="64" height="64" alt="pp" className=""/>
+                    <img src={userInfo.data ? userInfo.data.img : ''} width="64" height="64" alt="pp" className=""/>
 
-                    <h2 className="mt-3 mb-0"> Titouan Luciani </h2>
+                    <h2 className="mt-3 mb-0">{userInfo.data ? userInfo.data.name : ''}</h2>
                 </div>
                 <div className="flex flex-col items-stretch py-6">
                         <NavBlock data={data} campaignsNumber={campaignsNumber} />

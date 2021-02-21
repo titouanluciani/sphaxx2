@@ -5,8 +5,10 @@ const delay = require('./utils/delay')
 const axios = require('axios')
 const auth = require('./auth')
 const faunadb = require('faunadb')
+const q = faunadb.query
 const client = new faunadb.Client({ secret: process.env.FAUNA_SECRET_KEY })
-const { Exists, Match, Index, Collection, Create, Update } = faunadb.query
+const { Exists, Create, Collection, Match, Index, Update, Get, Var, Delete } = faunadb.query
+
 
 import chromium from 'chrome-aws-lambda';
 
@@ -23,6 +25,7 @@ export default async(event, context) => {
         console.log(cookies)
         process.env.USER_COOKIES = JSON.stringify(cookies)
         console.log("ENV USER COOKIES", process.env.USER_COOKIES)
+        
         console.log("start auth")
 
         const browser = await chromium.puppeteer.launch({
@@ -57,6 +60,17 @@ export default async(event, context) => {
         console.log(c)
         process.env.USER_URL = c
         console.log('ENV USER URL : ',c)
+
+        await page.waitForSelector('.feed-identity-module__member-photo.profile-rail-card__member-photo.EntityPhoto-circle-5.lazy-image.ember-view')
+        const imgEl = await page.$('.feed-identity-module__member-photo.profile-rail-card__member-photo.EntityPhoto-circle-5.lazy-image.ember-view')
+        const img = await imgEl.getProperty('src')
+        const imgUrl = await img.jsonValue() 
+        console.log(imgUrl)
+        const name = await page.evaluate(() => {
+                const el = document.querySelector('.profile-rail-card__actor-link.t-16.t-black.t-bold')
+                return el.innerText
+        })
+        console.log(name)
         
         let token = {}
         const userExist = await client.query(
@@ -73,7 +87,9 @@ export default async(event, context) => {
                 await userClient.query(Create(Collection("users"), {
                         credentials: { password: c },
                         data: {
-                          url: c
+                          url: c,
+                          name:name,
+                          img:imgUrl
                         }
                       }))
                 const token = await auth(c)
@@ -106,7 +122,8 @@ export default async(event, context) => {
                                 Collection('tokens'),
                                 { data: { token: token } }
                         )
-                )      
+                )
+                console.log("token updated")  
 
         }
 

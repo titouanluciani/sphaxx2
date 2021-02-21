@@ -5,12 +5,20 @@ const faunadb = require('faunadb')
 const q = faunadb.query
 const client = new faunadb.Client({ secret: process.env.FAUNA_SECRET_KEY })
 
-const { Select, Map, Paginate, Match, Index, Lambda, Get, Var, Delete } = faunadb.query
+const { Select, Map, Paginate, Match, Index, Lambda, Get, Var, Delete, Update } = faunadb.query
 
 export default async function(req, res){
+    const connectBtn = '.pv-s-profile-actions.pv-s-profile-actions--connect.ml2.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view'
+    const messageBtn = '.message-anywhere-button.pv-s-profile-actions.pv-s-profile-actions--message.ml2.artdeco-button.artdeco-button--2.artdeco-button--primary'
+    const profileBtn = '.pv-s-profile-actions.pv-s-profile-actions--connect.ml2.artdeco-button.artdeco-button--2.artdeco-button--primary.artdeco-button--disabled.ember-view'
+    const connectBtnPopup = '.ml1.artdeco-button.artdeco-button--3.artdeco-button--primary.ember-view'
+    const addNoteBtnPopup = '.mr1.artdeco-button.artdeco-button--muted.artdeco-button--3.artdeco-button--secondary.ember-view'
+    const addNoteTextAreaPopup = '.mr1.artdeco-button.artdeco-button--muted.artdeco-button--3.artdeco-button--secondary.ember-view'
+
+
     console.log(req.body)
     const {cookie, cookies} = JSON.parse(req.body)
-    const user_url = cookie
+    const user_url = cookie.value
     console.log("Launchscript : user_url & cookies : ",user_url, cookies)
     const user_secret = await client.query(
                 Select(
@@ -36,10 +44,24 @@ export default async function(req, res){
             )
         )
     )
+    
     console.log("this is dadta : ", data)
-    const {userUrl, action, option, description, prospectName} = data
-    console.log("this is fragmented data : ", userUrl, action, option, description, prospectName)
-    const url = userUrl
+    const {prospectUrl, action, option, prospectName} = data
+    let { description } = data
+    console.log("this is fragmented data : ",prospectUrl, action, option, description, prospectName)
+    const url = prospectUrl
+
+    const prospectData = await userClient.query(
+        Select(['data',0, 'data'],
+            Map(
+                Paginate(
+                    Match(Index('prospects_by_url'), prospectUrl)
+                ),
+                Lambda('x', Get(Var('x'))
+                )
+            )
+        )
+    )
 
     console.log("url to connect to : ",url)
     const browser = await puppeteer.launch({defaultViewport: null,headless:false})
@@ -59,16 +81,108 @@ export default async function(req, res){
     console.log("jusqu ici tout va bien")
     //await page.waitForNavigation()
     console.log("jusqu ici tout va bien waitfor")
-    if(action=='note'){
-        try{
-            const click_response = await page.click('.pv-s-profile-actions.pv-s-profile-actions--connect.ml2.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view')
-            console.log(click_response)
-            try{
-                if(page.$('.ml1.artdeco-button.artdeco-button--3.artdeco-button--primary.ember-view')){
+
+    //Replace with prospect name in description
+    console.log("prospectName : ", prospectName.split(' ')[0],prospectName.split(' ')[1].trim())
+    if(description.match('{{firstname}}')){
+        console.log(description.replace('{{firstname}}', prospectName.split(' ')[0].trim()))
+        description = description.replace('{{firstname}}', prospectName.split(' ')[0].trim())
+    }
+    if(description.match('{{name}}')){
+        console.log(description.replace('{{firstname}}', prospectName.split(' ')[0].trim()))
+        description = description.replace('{{name}}', prospectName.split(' ')[1].trim())
+    }
+    console.log(description)
+
+
+    //Connect action or Message action
+    if(action=='connect'){
+
+        //Delete in WG
+        /*await userClient.query(
+            Delete(
+                Select(['data',0, 'ref'],
+                    Map(
+                        Paginate(
+                            Match(Index('waitingLine_by_user'),user_url)
+                        ),
+                        Lambda('x', Get(Var('x'))
+                        )
+                    )
+                )
+            )
+        )*/
+        const connectExist = await page.evaluate(() => {
+            const coBtn = document.querySelector('.pv-s-profile-actions.pv-s-profile-actions--connect.ml2.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view')
+            console.log(!coBtn)
+            return !coBtn
+        })
+        console.log(connectExist)
+        //If connect btn doesn't exist
+        if(connectExist){
+            console.log("connect btn doesn't exist")
+            //Update user Info
+            await userClient.query(
+                Update(
+                    Select(['data',0, 'ref'],
+                        Map(
+                            Paginate(
+                                Match(
+                                    Index("prospects_by_url"), url
+                                )
+                            ),
+                            Lambda("x", Get(Var("x")))
+                        )
+                    ), 
+                    { data: { 'isConnected':true, 'hasAccepted':true } }
+                )
+            )
+        }else{
+            console.log("connect btn exist")
+            //Get the text on the connect btn profile
+            const profileBtnInnerText = await page.evaluate(() => {
+                const el = document.querySelector('.pv-s-profile-actions.pv-s-profile-actions--connect.ml2.artdeco-button.artdeco-button--2.artdeco-button--primary.artdeco-button--disabled.ember-view')//profileBtn
+                return el.innerText
+            })
+            //Check if Connected already
+            if(profileBtnInnerText == 'En attente'){
+                //Update Prospect info with "action='connect', isConnected = false, hasAccepted=false"
+                await userClient.query(
+                    Update(
+                        Select(['data',0, 'ref'],
+                            Map(
+                                Paginate(
+                                    Match(
+                                        Index("prospects_by_url"), url
+                                    )
+                                ),
+                                Lambda("x", Get(Var("x")))
+                            )
+                        ), 
+                        { data: { 'action':action ,'isConnected':false, 'hasAccepted':false } }
+                    )
+                )
+
+                //End the script
+            //Check if prospect not connected
+            }else if(profileBtnInnerText == 'Se connecter' || prospectData.isConnected == false ){
+                //Click on "Se connecter"
+                const click_response = await page.click(connectBtn)
+                console.log(click_response)
+                    
+                //Check if popup appears
+                if(page.$(connectBtnPopup)){
                     console.log('if statement')
-                    if(description == ''){
+        
+                    //If no note to send
+                    if(description == '' || description == ' '){
                         console.log("no note")
-                        await page.click('.ml1.artdeco-button.artdeco-button--3.artdeco-button--primary.ember-view')
+        
+                        /* CHECK IF CONNECTED ALREADY */
+                        //Click on Connect btn in popup
+                        await page.click(connectBtnPopup)
+        
+                        //Update prospects with action info
                         await userClient.query(
                             Update(
                                 Select(['data',0, 'ref'],
@@ -81,27 +195,29 @@ export default async function(req, res){
                                         Lambda("x", Get(Var("x")))
                                     )
                                 ), 
-                                { data: { 'action':action, 'note':false } })
+                                { data: { 'action':action, 'note':false, 'isConnected':false, 'hasAccepted':false } }
+                            )
                         )
                     }
+        
+                    //If note to be send with connection
                     else{
-                        console.log("note : ", description)
-                        console.log("prospectName : ", prospectName.split(' ')[0],prospectName.split(' ')[1].trim())
-                        if(description.match('{{firstname}}')){
-                            description.replace('{{firstname}}', prospectName.split(' ')[0].trim())
-                        }
-                        if(description.match('{{name}}')){
-                            description.replace('{{name}}', prospectName.split(' ')[1].trim())
-                        }
-    
-                        await page.click('.mr1.artdeco-button.artdeco-button--muted.artdeco-button--3.artdeco-button--secondary.ember-view')
-                        await page.focus('.ember-text-area.ember-view.send-invite__custom-message.mb3')
+                        console.log("note : ", description)        
+                        
+        
+                        //Click the Add note button in popup
+                        await page.click(addNoteBtnPopup)
+                        //Focus the textArea
+                        await page.focus(addNoteTextAreaPopup)
                         await delay(1500)
-    
+                        //Type the description in textArea
                         await page.keyboard.type(description)
                         await delay(1000)
-    
+        
+                        //Click on connect after typing the description note
                         await page.click('.ml1.artdeco-button.artdeco-button--3.artdeco-button--primary.ember-view')
+        
+                        //Update the prospect with current action info
                         await userClient.query(
                             Update(
                                 Select(['data',0, 'ref'],
@@ -119,32 +235,121 @@ export default async function(req, res){
                         )
                     }
                 }
-            }catch(err){
-                console.log(err)
             }
-            res.statusCode = 200
-            res.json(url)
-    
-        }catch(err){
-            console.log(err)
-            res.statusCode = 500
-            res.json(url)
         }
-    }else if(action == 'message'){
+        
+        
+        res.statusCode = 200
+        res.json(url)
 
-    }
-    
-    await userClient.query(
-        Delete(
-            Select(['data',0, 'ref'],
-                Map(
-                    Paginate(
-                        Match(Index('waitingLine_by_user'),user_url)
-                    ),
-                    Lambda('x', Get(Var('x'))
+    }else if(action == 'message'){
+        /* CHECK IF HAS ACCEPTED CONNECTION && CHECK IF NOTE HAS BEEN SEND (if so CHECK IF HAS RESPONDED) */
+        /* CHECK IF HAS ACCEPTED CONNECTION BEFORE DELETED */
+        //Del in WG
+        /*await userClient.query(
+            Delete(
+                Select(['data',0, 'ref'],
+                    Map(
+                        Paginate(
+                            Match(Index('waitingLine_by_user'),user_url)
+                        ),
+                        Lambda('x', Get(Var('x'))
+                        )
                     )
                 )
             )
-        )
-    )
+        )*/
+        const connectExistPas = await page.evaluate(() => {
+            const coBtn = document.querySelector('.pv-s-profile-actions.pv-s-profile-actions--connect.ml2.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view')
+            console.log(!coBtn)
+            return !coBtn
+        })
+        console.log(connectExistPas)
+        //Check if connect btn exist
+        if(connectExistPas == false){
+            //Update user Info
+            await userClient.query(
+                Update(
+                    Select(['data',0, 'ref'],
+                        Map(
+                            Paginate(
+                                Match(
+                                    Index("prospects_by_url"), url
+                                )
+                            ),
+                            Lambda("x", Get(Var("x")))
+                        )
+                    ), 
+                    { data: { 'isConnected':false, 'hasAccepted':false } }
+                )
+            )
+        }
+        //If connect btn exist pad
+        else if(connectExistPas){
+            console.log("already connected")
+            //Click on message btn
+            await page.click(messageBtn)
+            await delay(1500)
+            //Check if hasResponded
+            let hasResponded = false
+            const allMessages = await page.evaluate(() => {
+                return document.querySelectorAll('.msg-s-event-listitem--group-a11y-heading.visually-hidden')
+            })
+            console.log(allMessages)
+            for(let item of allMessages){
+                console.log(item, item.innerText)
+                console.log(item.innerText.split(' a envoyé le message suivant à')[0])
+                if(item.innerText.split(' a envoyé le message suivant à')[0] !== prospectName){
+                    hasResponded = true
+                }
+            }
+            if(hasResponded == false){
+                console.log("has not responded")
+
+                // Type message description
+                await page.keyboard.type(description)
+                await delay(1500)
+                //Click "Envoyer"
+                await page.click('.msg-form__send-button.artdeco-button.artdeco-button--1')
+                const prospectUpdated = await userClient.query(
+                    Update(
+                        Select(['data',0, 'ref'],
+                            Map(
+                                Paginate(
+                                    Match(
+                                        Index("prospects_by_url"), url
+                                    )
+                                ),
+                                Lambda("x", Get(Var("x")))
+                            )
+                        ), 
+                        { data: { 'action':action, 'isConnected':true, 'hasAccepted':true } }
+                    )
+                )
+                console.log(prospectUpdated)
+            }
+            else if(hasResponded == true){
+                console.log("has responded")
+
+                await userClient.query(
+                    Update(
+                        Select(['data',0, 'ref'],
+                            Map(
+                                Paginate(
+                                    Match(
+                                        Index("prospects_by_url"), url
+                                    )
+                                ),
+                                Lambda("x", Get(Var("x")))
+                            )
+                        ), 
+                        { data: { 'hasResponded':hasResponded } }
+                    )
+                )
+            }
+
+        }
+    }
+    
+    
 }

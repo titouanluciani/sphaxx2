@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+//<option value={props.notes[0] ? props.notes[0].name : "Default Note"} selected>{props.notes[0] ? props.notes[0].name : "Default Note"}</option>
 
 export default function Connect(props){
     console.log("notes in connect components", props.notes)
@@ -74,6 +75,7 @@ export default function Connect(props){
     const handleName = async (e) => {
         console.log(e.target)
         document.getElementById('textarea').value += e.target.value
+        setDescription(document.getElementById('textarea').value)
     }
     useEffect(()=> setDoc(document.getElementById('noteSelect').value),[])
     useEffect(() => {
@@ -103,7 +105,6 @@ export default function Connect(props){
                     document.getElementById('count').innerHTML = "Characters left: " + (299 - document.getElementById('textarea').value.length);
 
                     }} name="note" id="noteSelect" className="w-1/2 m-2 p-2 rounded">
-                    <option value={props.notes[0] ? props.notes[0].name : "Default Note"} selected>{props.notes[0] ? props.notes[0].name : "Default Note"}</option>
                     {props.notes.map(note => {
                         return <option value={note.name}>{note.name}</option>
                     })}

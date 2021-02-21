@@ -6,6 +6,8 @@ const delay = require('./utils/delay')
 const faunadb = require('faunadb')
 const q = faunadb.query
 const client = new faunadb.Client({ secret:process.env.FAUNA_SECRET_KEY })
+const { Map, Create, Collection, Select, Get, Var, CurrentIdentity, Lambda, Match, Index } = faunadb.query
+
 
 export default async(event, context) => {
     try {
@@ -16,7 +18,7 @@ export default async(event, context) => {
         console.log(cookies)
         let data2 = []
         console.log("start",campaign)
-        const browser = await puppeteer.launch({headless:true})
+        const browser = await puppeteer.launch({headless:false})
         console.log("launch", number)
 
         const page = await browser.newPage()
@@ -72,17 +74,18 @@ export default async(event, context) => {
           for(let i=0;i< linkedin_profiles.length;i++){
               //console.log("iiiii : ", i)
               try{
-                let profile_name = await page.$(`body > div.application-outlet > div.authentication-outlet > div > div.neptune-grid.two-column.search-marvel-srp > div > div > div > div:nth-child(2) > ul > li:nth-child(${i+1}) > div > div > div.entity-result__content.entity-result__divider.pt3.pb3.t-12.t-black--light > div.mb1 > div > div.t-roman.t-sans > span > div > span.entity-result__title-line.flex-shrink-1.entity-result__title-text--black > span > a`)
+                let profile_name = await page.$(`#main > div > div > div.pv2.artdeco-card.ph0.mb2 > ul > li:nth-child(${i+1}) > div > div > div.entity-result__content.entity-result__divider.pt3.pb3.t-12.t-black--light > div.mb1 > div > div.t-roman.t-sans > span > div > span.entity-result__title-line.flex-shrink-1.entity-result__title-text--black > span > a > span > span:nth-child(1)`)
                 name2 = await profile_name.getProperty('textContent')
                 name2 = await name2.jsonValue()
                 console.log(name2)
                 
-                let profile_url = await page.$(`body > div.application-outlet > div.authentication-outlet > div > div.neptune-grid.two-column.search-marvel-srp > div > div > div > div:nth-child(2) > ul > li:nth-child(${i+1}) > div > div > div.entity-result__content.entity-result__divider.pt3.pb3.t-12.t-black--light > div.mb1 > div > div.t-roman.t-sans > span > div > span.entity-result__title-line.flex-shrink-1.entity-result__title-text--black > span > a`)
+                let profile_url = await page.$(`#main > div > div > div.pv2.artdeco-card.ph0.mb2 > ul > li:nth-child(${i+1}) > div > div > div.entity-result__content.entity-result__divider.pt3.pb3.t-12.t-black--light > div.mb1 > div > div.t-roman.t-sans > span > div > span.entity-result__title-line.flex-shrink-1.entity-result__title-text--black > span > a`)
                 profile_href = await profile_url.getProperty('href')
                 profile_href = await profile_href.jsonValue()
               } catch(e) {
                 console.log(e)
-                let profile_name = await page.$(`body > div.application-outlet > div.authentication-outlet > div > div.neptune-grid.two-column.search-marvel-srp > div > div > div > div:nth-child(2) > ul > li:nth-child(${i+1}) > div > div > div.entity-result__content.entity-result__divider.pt3.pb3.t-12.t-black--light > div > div > div.t-roman.t-sans > span > div > span.entity-result__title-line.flex-shrink-1.entity-result__title-text--black > span > a`)
+                
+                let profile_name = await page.$(`#main > div > div > div.pv2.artdeco-card.ph0.mb2 > ul > li:nth-child(${i+1}) > div > div > div.entity-result__content.entity-result__divider.pt3.pb3.t-12.t-black--light > div.mb1 > div > div.t-roman.t-sans > span > div > span.entity-result__title-line.flex-shrink-1.entity-result__title-text--black > span > a`)
                 name2 = await profile_name.getProperty('textContent')
                 name2 = await name2.jsonValue()
                 console.log(name2)
@@ -97,7 +100,7 @@ export default async(event, context) => {
               client.query(
                 q.Create(
                   q.Collection('prospects'),
-                  {data : {name:name2,url:profile_href, userUrl:c, campaign:campaign}}
+                  {data : {name:name2,url:profile_href, userUrl:c, campaign:campaign, isConnected:false}}
                 )
               ).then(res=>console.log(res))
               .catch(err=>console.log(err))
