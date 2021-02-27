@@ -5,7 +5,7 @@ const faunadb = require('faunadb')
 const q = faunadb.query
 const client = new faunadb.Client({ secret: process.env.FAUNA_SECRET_KEY })
 
-const { Select, Map, Paginate, Match, Index, Lambda, Get, Var, Delete, Update } = faunadb.query
+const { Select, Map, Paginate, Match, Index, Lambda, Get, Var, Delete, Update, Intersection } = faunadb.query
 
 export default async function(req, res){
     const connectBtn = '.pv-s-profile-actions.pv-s-profile-actions--connect.ml2.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view'
@@ -31,20 +31,38 @@ export default async function(req, res){
                     )
                 )
             )
+    
     console.log("LAUNCHSCRIPT :: this is user secret : ",user_secret)
     const userClient = new faunadb.Client({ secret: user_secret })
     const data = await userClient.query(
         Select(['data',0, 'data'],
             Map(
                 Paginate(
-                    Match(Index('waitingLine_by_user'), user_url)
+                    Intersection(
+                        Match(Index('waitingLine_by_done'), false),
+                        Match(Index('waitingLine_by_user'), user_url)
+                    )
                 ),
                 Lambda('x', Get(Var('x'))
                 )
             )
         )
     )
-    
+    //Update in WG done to true
+    await userClient.query(
+        Update(
+            Select(['data',0, 'data'],
+                Map(
+                    Paginate(
+                        Match(Index('waitingLine_by_user'),user_url)
+                    ),
+                    Lambda('x', Get(Var('x'))
+                    )
+                )
+            ),
+            { data : { done:true } }
+        )
+    )
     console.log("this is dadta : ", data)
     const {prospectUrl, action, option, prospectName} = data
     let { description } = data
@@ -98,20 +116,7 @@ export default async function(req, res){
     //Connect action or Message action
     if(action=='connect'){
 
-        //Delete in WG
-        /*await userClient.query(
-            Delete(
-                Select(['data',0, 'ref'],
-                    Map(
-                        Paginate(
-                            Match(Index('waitingLine_by_user'),user_url)
-                        ),
-                        Lambda('x', Get(Var('x'))
-                        )
-                    )
-                )
-            )
-        )*/
+        
         const connectExist = await page.evaluate(() => {
             const coBtn = document.querySelector('.pv-s-profile-actions.pv-s-profile-actions--connect.ml2.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view')
             console.log(!coBtn)
@@ -245,20 +250,7 @@ export default async function(req, res){
     }else if(action == 'message'){
         /* CHECK IF HAS ACCEPTED CONNECTION && CHECK IF NOTE HAS BEEN SEND (if so CHECK IF HAS RESPONDED) */
         /* CHECK IF HAS ACCEPTED CONNECTION BEFORE DELETED */
-        //Del in WG
-        /*await userClient.query(
-            Delete(
-                Select(['data',0, 'ref'],
-                    Map(
-                        Paginate(
-                            Match(Index('waitingLine_by_user'),user_url)
-                        ),
-                        Lambda('x', Get(Var('x'))
-                        )
-                    )
-                )
-            )
-        )*/
+        
         const connectExistPas = await page.evaluate(() => {
             const coBtn = document.querySelector('.pv-s-profile-actions.pv-s-profile-actions--connect.ml2.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view')
             console.log(!coBtn)

@@ -7,7 +7,7 @@ const auth = require('./auth')
 const faunadb = require('faunadb')
 const q = faunadb.query
 const client = new faunadb.Client({ secret: process.env.FAUNA_SECRET_KEY })
-const { Exists, Create, Collection, Match, Index, Update, Get, Var, Delete } = faunadb.query
+const { Exists, Create, Collection, Match, Index, Update, Get, Var, Delete, Intersection } = faunadb.query
 
 
 import chromium from 'chrome-aws-lambda';
@@ -45,7 +45,7 @@ export default async(event, context) => {
         //await delay(100)
         await page.goto("https://linkedin.com")
         console.log("linkedin")
-        await page.setCookie(...cookies)
+        await page.setCookie(...[cookies])
         //console.log("cookies")
         
         //await delay(100)

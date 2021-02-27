@@ -41,6 +41,7 @@ export default async function(req, res){
                         option: option, 
                         description: description, 
                         action: action,
+                        done:false,
                         userUrl: Select(['data','url'], Get(CurrentIdentity())) 
                         } 
                     }

