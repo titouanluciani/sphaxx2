@@ -1,6 +1,6 @@
 import '../styles/globals.css'
 import Navbar from "../components/Navbar"
-import {useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
 
 function MyApp({ Component, pageProps }) {
