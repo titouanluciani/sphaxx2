@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { React, useEffect, useState } from 'react'
 import ProspectList2 from '../components/ProspectList2'
 
 export default function Prospects({cookie, cookiesSession}){
