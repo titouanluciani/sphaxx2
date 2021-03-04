@@ -84,7 +84,7 @@ export default async(event, context) => {
                 token = await auth(c)
                 console.log('token : ',token)
         }else{
-                await userClient.query(Create(Collection("users"), {
+                await client.query(Create(Collection("users"), {
                         credentials: { password: c },
                         data: {
                           url: c,
