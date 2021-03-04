@@ -7,6 +7,7 @@ const faunadb = require('faunadb')
 const q = faunadb.query
 const client = new faunadb.Client({ secret:process.env.FAUNA_SECRET_KEY })
 const { Map, Create, Collection, Select, Get, Var, CurrentIdentity, Lambda, Match, Index } = faunadb.query
+import chromium from 'chrome-aws-lambda';
 
 
 export default async(event, context) => {
