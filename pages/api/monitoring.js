@@ -33,7 +33,7 @@ export default async function(req,res){
     console.log("linkedin")
 
     await page.setCookie(...cookies)
-    await page.goto(url)
+    await page.goto(userUrl)
     await delay(2500)
     console.log("connected to linkedin session")
 
@@ -54,6 +54,118 @@ export default async function(req,res){
     )
     for(let d of data){
         console.log(d)
+        //Get prospect Url and check action + note
+        if(d.data.action == 'connect' || d.data.action == 'message'){
+            //Go to relations menu
+            await page.goto("https://www.linkedin.com/mynetwork/invite-connect/connections/")
+            //Search for the prospect
+            await page.click("#mn-connections-search-input")
+            await page.keyboard.type(d.data.prospectName)
+            const prospectExist = await page.evaluate(() => {
+                const coBtn = document.querySelector('span.mn-connection-card__name.t-16.t-black.t-bold')
+                console.log(coBtn)
+                return coBtn
+            })
+            //If prospect doesn't exist
+            if(!prospectExist){
+                console.log(prospectExist)
+                //Update it's state
+                await userClient.query(
+                    Update(
+                        Select(['data',0, 'ref'],
+                            Map(
+                                Paginate(Intersection(
+                                    Match(
+                                        Index("prospects_by_url"), d.data.prospectUrl
+                                    ),
+                                    Match(
+                                        Index("prospects_by_user"), d.data.userUrl
+                                    )
+                                )),
+                                Lambda("x", Get(Var("x")))
+                            )
+                        ), 
+                        { data: { 'hasAccepted':false } }
+                    )
+                )
+            }else{
+                console.log(prospectExist)
+                //Update it's state
+                await userClient.query(
+                    Update(
+                        Select(['data',0, 'ref'],
+                            Map(
+                                Paginate(Intersection(
+                                    Match(
+                                        Index("prospects_by_url"), d.data.prospectUrl
+                                    ),
+                                    Match(
+                                        Index("prospects_by_user"), d.data.userUrl
+                                    )
+                                )),
+                                Lambda("x", Get(Var("x")))
+                            )
+                        ),
+                        { data: { 'hasAccepted':true } }
+                    )
+                )   
+                //Check if prospect has responded
+                await page.click('.message-anywhere-button.artdeco-button.artdeco-button--secondary')
+                
+                let hasResponded = false
+                const allMessages = await page.evaluate(() => {
+                    return document.querySelectorAll('.msg-s-event-listitem--group-a11y-heading.visually-hidden')
+                })
+                console.log(allMessages)
+                for(let item of allMessages){
+                    console.log(item, item.innerText)
+                    console.log(item.innerText.split(' a envoyé le message suivant à')[0])
+                    if(item.innerText.split(' a envoyé le message suivant à')[0] == prospectName){
+                        hasResponded = true
+                    }
+                }
+                if(hasResponded){
+                    await userClient.query(
+                        Update(
+                            Select(['data',0, 'ref'],
+                                Map(
+                                    Paginate(Intersection(
+                                        Match(
+                                            Index("prospects_by_url"), d.data.prospectUrl
+                                        ),
+                                        Match(
+                                            Index("prospects_by_user"), d.data.userUrl
+                                        )
+                                    )),
+                                    Lambda("x", Get(Var("x")))
+                                )
+                            ),
+                            { data: { 'hasResponded':true } }
+                        )
+                    )   
+                }else{
+                    await userClient.query(
+                        Update(
+                            Select(['data',0, 'ref'],
+                                Map(
+                                    Paginate(Intersection(
+                                        Match(
+                                            Index("prospects_by_url"), d.data.prospectUrl
+                                        ),
+                                        Match(
+                                            Index("prospects_by_user"), d.data.userUrl
+                                        )
+                                    )),
+                                    Lambda("x", Get(Var("x")))
+                                )
+                            ),
+                            { data: { 'hasResponded':false } }
+                        )
+                    )
+                }
+            }
+
+        }
     }
 
 

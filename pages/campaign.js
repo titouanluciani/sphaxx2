@@ -15,6 +15,8 @@ export default function Campaign({cookie, cookiesSession}){
     const [showModal, setShowModal] = useState(false)
     const [changed, setChanged] = useState(false)
     const [isCheckAll, setIsCheckAll] = useState(false)
+    const [filter, setFilter] = useState([])
+    const [filterProspects, setFilterProspects] = useState([])
 
     console.log("cookie in campaign pages : ", cookie)
 
@@ -58,7 +60,16 @@ export default function Campaign({cookie, cookiesSession}){
         setSelectedProspects([])
         setCampaignHasChanged(prev => !prev)
     }
-
+    const handleCheckFilter = (e) => {
+        if(e.target.checked){
+            console.log("filter : ",e.target.check)
+            setFilter(filter => filter.concat(e.target.name))
+            
+        }else{
+            console.log("filterrr : ", e.target)
+            setFilter(filter.filter(el => el !== e.target.name))
+        }
+    }
     const handleCheck = (e) => {
         if(e.target.checked){
             setSelectedProspects(selectedProspects => selectedProspects.concat({'url':e.target.value, 'name':e.target.name}))
@@ -96,6 +107,7 @@ export default function Campaign({cookie, cookiesSession}){
         console.log("cookiesSession for useEffect loadprosp loadcamp : ", cookiesSession)
         loadProspects(campaign, cookie);
         loadCampaigns(cookie);
+        setFilterProspects(selectedProspects)
     }, [cookie, cookiesSession])
 
     useEffect(() => {
@@ -113,6 +125,33 @@ export default function Campaign({cookie, cookiesSession}){
     useEffect(() => {
         console.log(selectedProspects)  
     }, [selectedProspects])
+    useEffect(() => {
+        console.log(filter)
+        filter.map(f => setFilterProspects(filterProspects.concat(prospects.filter(el => el.f))))
+        for(let f of filter){
+            if(f == 'isNotConnected'){
+                setFilterProspects(filterProspects.concat(prospects.filter(el => el.f == false)))
+                console.log("is not co : ",prospects.filter(el => el.isConnected == false))
+            }else if(f == 'isConnected'){
+                setFilterProspects(filterProspects.concat(prospects.filter(el => el.isConnected == true)))
+            }else if(f == 'hasNotAccepted'){
+                setFilterProspects(filterProspects.concat(prospects.filter(el => el.hasAccepted == false)))
+            }else if(f == 'hasAccepted'){
+                setFilterProspects(filterProspects.concat(prospects.filter(el => el.hasAccepted == true)))
+            }else if(f == 'hasNotResponded'){
+                setFilterProspects(filterProspects.concat(prospects.filter(el => el.hasResponded == false)))
+            }else if(f == 'hasResponded'){
+                setFilterProspects(filterProspects.concat(prospects.filter(el => el.hasResponded == true)))
+            }
+        }
+    }, [filter])
+    useEffect(() => {
+        setFilterProspects(prospects)
+    }, [prospects])
+    useEffect(() => {
+        console.log(filterProspects)
+
+    }, [filterProspects])
     return(
         <div className="bg-gray-200 p-4 border-black border-4 ml-48 overflow-x-hidden w-full h-screen">
             <Modal showModal={showModal} setShowModal={setShowModal} cookie={cookie} />
@@ -129,7 +168,7 @@ export default function Campaign({cookie, cookiesSession}){
                     <button className="p-2 px-3 mr-4 bg-blue-500 rounded">Tools</button>
             </div>
             <div className="flex flex-row flex-wrap justify-between h-screen h-full">
-                <ProspectList prospects={prospects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} handleCheckAll={handleCheckAll} isCheckAll={isCheckAll} />
+                <ProspectList prospects={filterProspects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} handleCheckAll={handleCheckAll} isCheckAll={isCheckAll} handleCheckFilter={handleCheckFilter} />
                 <TabPanel notes={notes} messages={messages} campaign={campaign} loadProspects={loadProspects} selectedProspects={selectedProspects} cookie={cookie} changed={changed} setChanged={setChanged} />
             </div>
             

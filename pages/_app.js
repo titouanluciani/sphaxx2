@@ -7,6 +7,30 @@ function MyApp({ Component, pageProps }) {
   const [cookie, setCookie] = useState('')
   const [cookiesSession, setCookiesSession] = useState({})
   const [userInfo, setUserInfo] = useState({})
+
+  //Launch monitoring every 15 minutes
+  let i = 0;
+  let random = Math.random() * 2 + 3
+  let date = new Date();
+  setInterval(async () => {
+      i+=1;
+      random = Math.random() * 2 + 3
+      let currentDate = new Date()
+      console.log("counting i : ",i)
+      if(i<101 && currentDate.getHours() > 8 && currentDate.getHours() < 18 && currentDate.getDay() < 6 ){
+          await fetch('/api/monitoring', {
+            method:'POST',
+            body:JSON.stringify({ cookie, cookiesSession})
+          })
+      }
+      if(date.getDay() !== currentDate.getDay() ){
+          i = 0
+          date = new Date();
+          currentDate = new Date()
+      }
+
+  }, random*60*1000)
+
   useEffect(async () => {
     try{
       setCookie(document.cookie.split(";").find(row=>row.startsWith('userUrl')).split('=')[1])

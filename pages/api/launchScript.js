@@ -291,7 +291,7 @@ export default async function(req, res){
             for(let item of allMessages){
                 console.log(item, item.innerText)
                 console.log(item.innerText.split(' a envoyé le message suivant à')[0])
-                if(item.innerText.split(' a envoyé le message suivant à')[0] !== prospectName){
+                if(item.innerText.split(' a envoyé le message suivant à')[0] == prospectName){
                     hasResponded = true
                 }
             }

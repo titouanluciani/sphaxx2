@@ -18,7 +18,7 @@ export default async(event, context) => {
         console.log(cookies)
         let data2 = []
         console.log("start",campaign)
-        const browser = await puppeteer.launch({headless:false})
+        const browser = await puppeteer.launch({headless:true})
         console.log("launch", number)
 
         const page = await browser.newPage()

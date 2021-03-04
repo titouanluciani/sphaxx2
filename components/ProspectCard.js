@@ -25,7 +25,7 @@ export default function ProspectCard({ prospect, handleCheck,campaignHasChanged,
                     {prospect.prospectUrl ? prospect.prospectUrl : prospect.url}
                 </td>
                 <td>
-                    {prospect.action ? prospect.action : prospect.campaign}
+                    {prospect.isConnected ? (prospect.hasAccepted ? 'Connected' : 'Connection in hold' ) : 'Connection not send'}<br/>{prospect.hasAccepted ? (prospect.hasResponded ? 'Has responded' : 'Has not responded yet' ) : ''} 
                 </td>
                 <td>
                     {prospect.campaign}

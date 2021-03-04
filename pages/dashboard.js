@@ -2,6 +2,12 @@ import { React, useEffect, useState } from 'react';
 
 export default function Dashboard({ cookie, cookiesSession }){
     
+    const monitore = async () => {
+        await fetch('/api/monitoring', {
+            method:'POST',
+            body:JSON.stringify({ cookie, cookiesSession})
+          })
+    }
 
     return(
         <div className="ml-48 grid grid-cols-3 grid-rows-4 border-black border-4 h-screen gap-1">
@@ -26,6 +32,7 @@ export default function Dashboard({ cookie, cookiesSession }){
             </div>
             <div className="bg-blue-300 row-span-2 col-span-2">
                 Global Performance
+                <button className="inline-block ml-4 mt-2 bg-purple-500 p-1 rounded text-white" onClick={monitore()}>Refresh Stats</button>
             </div>
             <div className="bg-green-300 col-span-full row-span-2">
                 Activity Report
