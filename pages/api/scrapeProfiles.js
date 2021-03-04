@@ -18,7 +18,13 @@ export default async(event, context) => {
         console.log(cookies)
         let data2 = []
         console.log("start",campaign)
-        const browser = await puppeteer.launch({headless:true})
+        const browser = await puppeteer.launch({
+          args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath,
+        headless: true,
+        ignoreHTTPSErrors: true,
+        })
         console.log("launch", number)
 
         const page = await browser.newPage()
