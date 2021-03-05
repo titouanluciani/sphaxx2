@@ -82,7 +82,13 @@ export default async function(req, res){
     )
 
     console.log("url to connect to : ",url)
-    const browser = await puppeteer.launch({defaultViewport: null,headless:false})
+    const browser = await puppeteer.launch({
+        args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath,
+        headless: true,
+        ignoreHTTPSErrors: true,
+        })
     console.log("launchhhh")
     
     const page = await browser.newPage()
