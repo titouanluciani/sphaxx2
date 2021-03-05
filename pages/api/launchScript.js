@@ -51,7 +51,7 @@ export default async function(req, res){
     //Update in WG done to true
     await userClient.query(
         Update(
-            Select(['data',0, 'data'],
+            Select(['data',0, 'ref'],
                 Map(
                     Paginate(
                         Match(Index('waitingLine_by_user'),user_url)
@@ -115,8 +115,6 @@ export default async function(req, res){
 
     //Connect action or Message action
     if(action=='connect'){
-
-        
         const connectExist = await page.evaluate(() => {
             const coBtn = document.querySelector('.pv-s-profile-actions.pv-s-profile-actions--connect.ml2.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view')
             console.log(!coBtn)
