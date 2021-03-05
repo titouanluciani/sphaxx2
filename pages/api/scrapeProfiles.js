@@ -34,7 +34,7 @@ export default async(event, context) => {
         await delay(3000)
         await page.goto("https://linkedin.com")
         console.log("linkedin")
-        await page.setCookie(...cookies)
+        await page.setCookie(...[cookies])
         //console.log("cookies")
 
         await delay(3000)
