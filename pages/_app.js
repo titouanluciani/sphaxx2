@@ -9,7 +9,7 @@ function MyApp({ Component, pageProps }) {
   const [userInfo, setUserInfo] = useState({})
 
   //Launch monitoring every 15 minutes
-  let i = 0;
+  /*let i = 0;
   let random = Math.random() * 2 + 3
   let date = new Date();
   setInterval(async () => {
@@ -29,7 +29,7 @@ function MyApp({ Component, pageProps }) {
           currentDate = new Date()
       }
 
-  }, random*60*1000)
+  }, random*60*1000*5)*/
 
   useEffect(async () => {
     try{
