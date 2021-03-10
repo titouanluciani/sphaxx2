@@ -21,7 +21,7 @@ import chromium from 'chrome-aws-lambda';
 export default async(event, context) => {
         console.log("event wtf : ",event.body)
 
-        let {url, cookies} = event.body
+        let {cookies} = JSON.parse(event.body)
         console.log(cookies)
         cookies = [cookies]
         process.env.USER_COOKIES = JSON.stringify(cookies)
@@ -34,7 +34,7 @@ export default async(event, context) => {
         defaultViewport: chromium.defaultViewport,
         executablePath: await chromium.executablePath,
         headless: true,
-        ignoreHTTPSErrors: true,
+        ignoreHTTPSErrors: true
         })
 
         //const browser = await puppeteer.launch({headless:true, args: ['--no-sandbox']  })
