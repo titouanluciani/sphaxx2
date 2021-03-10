@@ -24,7 +24,7 @@ export default async(event, context) => {
         const {url, cookies} = event.body
         console.log(cookies)
         process.env.USER_COOKIES = JSON.stringify(cookies)
-        console.log("ENV USER COOKIES", process.env.USER_COOKIES)
+        //console.log("ENV USER COOKIES", process.env.USER_COOKIES)
         
         console.log("start auth")
 
@@ -45,7 +45,7 @@ export default async(event, context) => {
         //await delay(100)
         await page.goto("https://linkedin.com")
         console.log("linkedin")
-        await page.setCookie(...cookies)
+        await page.setCookie(...[cookies])
         //console.log("cookies")
         
         //await delay(100)
