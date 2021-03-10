@@ -126,7 +126,9 @@ export default async(event, context) => {
                 console.log("token updated")  
 
         }
-        context.setHeader('Access-Control-Allow-Origin','*')
+        context.setHeader('Access-Control-Allow-Origin','https://sphaxx-five.vercel.app/api/getUserUrl')
+        context.setHeader('Access-Control-Allow-Methods','POST')
+        context.setHeader('Access-Control-Allow-Headers','Content-Type')
         context.statusCode = 200
         context.json(JSON.stringify(c))
     
