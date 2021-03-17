@@ -17,11 +17,13 @@ export default function Campaign({cookie, cookiesSession}){
     const [isCheckAll, setIsCheckAll] = useState(false)
     const [filter, setFilter] = useState([])
     const [filterProspects, setFilterProspects] = useState([])
+    const [loadingProspects, setLoadingProspects] = useState(false)
 
     console.log("cookie in campaign pages : ", cookie)
 
     const loadProspects = async (campaign, cookie) => {
         try{
+            setLoadingProspects(true)
             if(campaign == 'All'){
                 const res = await fetch(`/api/campaigns`,{
                     method:'POST',
@@ -39,6 +41,7 @@ export default function Campaign({cookie, cookiesSession}){
                 setNotes(notes.data)
                 setMessages(messages.data)
             }
+            setLoadingProspects(false)
 
         }catch(err){
             console.error(err)
@@ -64,10 +67,11 @@ export default function Campaign({cookie, cookiesSession}){
         if(e.target.checked){
             console.log("filter : ",e.target.check)
             setFilter(filter => filter.concat(e.target.name))
-            
+            setFilterProspects([])
         }else{
             console.log("filterrr : ", e.target)
             setFilter(filter.filter(el => el !== e.target.name))
+            setFilterProspects([])
         }
     }
     const handleCheck = (e) => {
@@ -107,11 +111,12 @@ export default function Campaign({cookie, cookiesSession}){
         console.log("cookiesSession for useEffect loadprosp loadcamp : ", cookiesSession)
         loadProspects(campaign, cookie);
         loadCampaigns(cookie);
-        setFilterProspects(selectedProspects)
+        //setFilterProspects(selectedProspects)
     }, [cookie, cookiesSession])
 
     useEffect(() => {
         loadProspects(campaign, cookie);
+        setFilterProspects([])
     }, [campaign])
     useEffect(() => {
         console.log("modal in campaign : ",showModal);
@@ -127,26 +132,31 @@ export default function Campaign({cookie, cookiesSession}){
     }, [selectedProspects])
     useEffect(() => {
         console.log(filter)
-        filter.map(f => setFilterProspects(filterProspects.concat(prospects.filter(el => el.f))))
+        console.log(filter.length)
+        //filter.map(f => setFilterProspects(filterProspects.concat(prospects.filter(el => el.f))))
         for(let f of filter){
-            if(f == 'isNotConnected'){
-                setFilterProspects(filterProspects.concat(prospects.filter(el => el.f == false)))
+            if(f == "isNotConnected"){
+                setFilterProspects(filterProspects.concat(prospects.filter(el => el.isConnected == false)))
                 console.log("is not co : ",prospects.filter(el => el.isConnected == false))
-            }else if(f == 'isConnected'){
+            }else if(f == "isConnected"){
                 setFilterProspects(filterProspects.concat(prospects.filter(el => el.isConnected == true)))
-            }else if(f == 'hasNotAccepted'){
+            }else if(f == "hasNotAccepted"){
                 setFilterProspects(filterProspects.concat(prospects.filter(el => el.hasAccepted == false)))
-            }else if(f == 'hasAccepted'){
+            }else if(f == "hasAccepted"){
                 setFilterProspects(filterProspects.concat(prospects.filter(el => el.hasAccepted == true)))
-            }else if(f == 'hasNotResponded'){
+            }else if(f == "hasNotResponded"){
                 setFilterProspects(filterProspects.concat(prospects.filter(el => el.hasResponded == false)))
-            }else if(f == 'hasResponded'){
+            }else if(f == "hasResponded"){
                 setFilterProspects(filterProspects.concat(prospects.filter(el => el.hasResponded == true)))
             }
         }
-    }, [filter])
+        if(filter.length == 0){
+            console.log("filter empty")
+            setFilterProspects(prospects)
+        }
+    }, [filter, prospects])
     useEffect(() => {
-        setFilterProspects(prospects)
+        //setFilterProspects(prospects)
     }, [prospects])
     useEffect(() => {
         console.log(filterProspects)
@@ -168,7 +178,7 @@ export default function Campaign({cookie, cookiesSession}){
                     <button className="p-2 px-3 mr-4 bg-blue-500 rounded">Tools</button>
             </div>
             <div className="flex flex-row flex-wrap justify-between h-screen h-full">
-                <ProspectList prospects={filterProspects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} handleCheckAll={handleCheckAll} isCheckAll={isCheckAll} handleCheckFilter={handleCheckFilter} />
+                <ProspectList prospects={filterProspects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} handleCheckAll={handleCheckAll} isCheckAll={isCheckAll} handleCheckFilter={handleCheckFilter} loadingProspects={loadingProspects} />
                 <TabPanel notes={notes} messages={messages} campaign={campaign} loadProspects={loadProspects} selectedProspects={selectedProspects} cookie={cookie} changed={changed} setChanged={setChanged} />
             </div>
             

@@ -15,6 +15,13 @@ a {
   box-sizing: border-box;
 }
 
+button.active{
+  background-color: brown
+}
+/*ul > li:first-child > button{
+  background-color: brown
+}*/
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

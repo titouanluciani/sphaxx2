@@ -125,8 +125,10 @@ export default async(event, context) => {
         }
         console.log(data2)
         console.log("done",data2.length)
+        context.setHeader('Access-Control-Allow-Origin','chrome-extension://eiglnhpkhijlbopnpcdddiaagdgelamd')
         context.statusCode = 200
         context.send(data2)
+        
         //return formattedResponse(200, data2)
     } catch(err) {
         console.error("errooorrr : ", err)

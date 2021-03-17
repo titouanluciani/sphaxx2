@@ -13,9 +13,9 @@ const { Exists, Create, Collection, Match, Index, Update, Get, Var, Delete, Inte
 import chromium from 'chrome-aws-lambda';
 
 //http://localhost:3000
-//https://sphaxx.vercel.app
+//https://sphaxx-five.vercel.app
 
-///^https:\/\/sphaxx\.vercel\.app/
+///^https:\/\/sphaxx-five\.vercel\.app/
 ///^http:\/\/localhost\:3000/
 
 export default async(event, context) => {

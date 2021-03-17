@@ -1,10 +1,42 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ProspectCard from './ProspectCard'
+import Pagination from './Pagination'
 
-export default function ProspectList({ prospects, handleCheck, campaignHasChanged, handleCheckAll, isCheckAll, handleCheckFilter }){
+export default function ProspectList({ prospects, handleCheck, campaignHasChanged, handleCheckAll, isCheckAll, handleCheckFilter, loadingProspects }){
+    //PAGINATION IMPORTED FROM https://www.thatsoftwaredude.com/content/6384/add-pagination-to-any-table-in-javascript
+    
+    //Pagination
+    const [currentPage, setCurrentPage] = useState(1)
+    const [rowsPerPage, setRowsPerPage] = useState(5)
+    const [previousPage, setPreviousPage] = useState(1)
+
+    const indexOfFirstItem = rowsPerPage * currentPage
+    const indexOfLastItem = indexOfFirstItem + rowsPerPage
+    const currentProspects = prospects.slice(indexOfFirstItem, indexOfLastItem)
+
+    //Change page
+    const paginate = (e,pageNumber) => {
+        console.log("e of paginate ",e.target)
+        console.log("e of paginate ",previousPage)
+        
+        //if(currentPage == )
+        if(currentPage !== 1){
+            console.log("remove prev")
+            previousPage.classList.remove('active')
+        }else{
+            console.log("remove first : ",document.querySelector('.pageBtn') )
+            document.querySelector('.pageBtn').classList.remove('active')
+        }
+        e.target.classList.add('active')
+        setPreviousPage(e.target)
+        setCurrentPage(pageNumber)
+    }
+    
+
     return(
         <div className="h-full w-6/12 mb-4">
             <h2>Prospect List</h2>
+            <Pagination paginate={paginate} rowsPerPage={rowsPerPage} totalProspects={prospects.length} />
             <div className="">
                 <input type="checkbox" id="Connection not send" name="isNotConnected" onClick={handleCheckFilter} />
                 <label for="Connection not send">Connection not send</label>
@@ -20,7 +52,7 @@ export default function ProspectList({ prospects, handleCheck, campaignHasChange
                 <label for="Has responded">Has responded</label>
             </div>
             <div className="h-full pb-4">
-                <table className="border-collapse my-6 text-sm w-full rounded overflow-x-hidden shadow-md">
+                <table data-pagecount="3" className="pagination border-collapse my-6 text-sm w-full rounded overflow-x-hidden shadow-md">
                     <thead className="">
                         <tr className="bg-red-400 text-white font-bold">
                             <th>
@@ -41,7 +73,7 @@ export default function ProspectList({ prospects, handleCheck, campaignHasChange
                         </tr>
                     </thead>
                     <tbody className="overflow-x-hidden border-black bg-blue-200 border-2 mb-4">
-                                { prospects && prospects.map(prospect =>(
+                                { currentProspects && currentProspects.map(prospect =>(
                                     <ProspectCard key={prospect._id} prospect={ prospect } handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} isCheckAll={isCheckAll} />
                                 )) }
                     </tbody>
@@ -50,4 +82,5 @@ export default function ProspectList({ prospects, handleCheck, campaignHasChange
             
         </div>
     )
+
 }
