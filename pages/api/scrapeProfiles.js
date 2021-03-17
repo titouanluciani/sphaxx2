@@ -15,7 +15,7 @@ export default async(event, context) => {
         let name2 = ""
         let profile_href = ""
         console.log(event.body)
-        const {url:url2, cookies, number, campaign} = event.body
+        const {url:url2, cookies, number, campaign} = JSON.parse(event.body)
         console.log(cookies)
         let data2 = []
         console.log("start",campaign)
