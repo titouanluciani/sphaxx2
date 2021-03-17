@@ -106,10 +106,10 @@ function MyApp({ Component, pageProps }) {
   return (
     <div className="">
       <Navbar cookie={cookie} userInfo={userInfo} />
-      <button onClick={handleGetUserUrl} className="fixed left-1/2 top-1/2 bg-red-300">GET USER URL</button>
       <Component {...pageProps} cookie={cookie} cookiesSession={cookiesSession} />
     </div>
   )
 }
+//<button onClick={handleGetUserUrl} className="fixed left-1/2 top-1/2 bg-red-300">GET USER URL</button>
 
 export default MyApp

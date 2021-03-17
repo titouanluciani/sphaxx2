@@ -24,8 +24,6 @@ export default function Connect(props){
         document.getElementById('textarea').value = description
         document.getElementById('selectInput').value = option
         props.setChanged(prev => !prev)
-
-        
     }
     
 
@@ -94,7 +92,7 @@ export default function Connect(props){
         document.getElementById('count').innerHTML = "Characters left: " + (299 - this.value.length);
     };*/
     return(
-        <div className="w-full border-black border-2 h-full">
+        <div className="w-full h-full">
             <div className="flex flex-row justify-center">
                 <select onChange={e => {
                     setOptionNote(e.target.value)

@@ -7,7 +7,7 @@ export default function ProspectList({ prospects, handleCheck, campaignHasChange
     
     //Pagination
     const [currentPage, setCurrentPage] = useState(1)
-    const [rowsPerPage, setRowsPerPage] = useState(5)
+    const [rowsPerPage, setRowsPerPage] = useState(20)
     const [previousPage, setPreviousPage] = useState(1)
 
     const indexOfFirstItem = rowsPerPage * currentPage
@@ -72,7 +72,7 @@ export default function ProspectList({ prospects, handleCheck, campaignHasChange
                             </th>
                         </tr>
                     </thead>
-                    <tbody className="overflow-x-hidden border-black bg-blue-200 border-2 mb-4">
+                    <tbody className="overflow-x-hidden bg-blue-200 mb-4">
                                 { currentProspects && currentProspects.map(prospect =>(
                                     <ProspectCard key={prospect._id} prospect={ prospect } handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} isCheckAll={isCheckAll} />
                                 )) }

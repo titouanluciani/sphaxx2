@@ -10,7 +10,7 @@ export default function Dashboard({ cookie, cookiesSession }){
     }
 
     return(
-        <div className="ml-48 grid grid-cols-3 grid-rows-4 border-black border-4 h-screen gap-1">
+        <div className="ml-48 grid grid-cols-3 grid-rows-4 h-screen gap-1">
             <div className="bg-red-300 row-span-2">
                 LinkedIn Stats
                 <div className="flex flex-row text-center my-2">

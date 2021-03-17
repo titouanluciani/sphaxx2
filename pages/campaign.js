@@ -162,8 +162,9 @@ export default function Campaign({cookie, cookiesSession}){
         console.log(filterProspects)
 
     }, [filterProspects])
+    //<option value="All" selected>Default Campaign</option>
     return(
-        <div className="bg-gray-200 p-4 border-black border-4 ml-48 overflow-x-hidden w-full h-screen">
+        <div className="bg-gray-200 p-4 ml-48 overflow-x-hidden w-full h-screen">
             <Modal showModal={showModal} setShowModal={setShowModal} cookie={cookie} />
 
             <div className="flex flex-row m-2 mb-4 bg-gray-200">
@@ -171,7 +172,6 @@ export default function Campaign({cookie, cookiesSession}){
                         {campaigns.map(campaign => (
                             <option value={campaign.name}>{campaign.name}</option>
                         ))}
-                        <option value="All" selected>Default Campaign</option>
                     </select>
                     <button onClick={openModal} className="p-2 px-3 mr-4 bg-blue-500 rounded">Create</button>
                     <button onClick={() => handleDelete(campaign, cookie)} className="p-2 px-3 mr-4 bg-red-500 rounded">Delete</button>

@@ -104,7 +104,7 @@ export default async(event, context) => {
               name2 = name2.trim()
               
               data2 = [...data2, {"name":name2,"url":profile_href, "userUrl":c,"campaign":campaign}]
-              client.query(
+              await client.query(
                 q.Create(
                   q.Collection('prospects'),
                   {data : {name:name2,url:profile_href, userUrl:c, campaign:campaign, isConnected:false}}

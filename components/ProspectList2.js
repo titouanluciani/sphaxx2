@@ -26,7 +26,7 @@ export default function ProspectList2({ prospects, handleCheck, campaignHasChang
                             </th>
                         </tr>
                     </thead>
-                    <tbody className="overflow-x-hidden overflow-y-auto bg-blue-200 border-black border-2 mb-4">
+                    <tbody className="overflow-x-hidden overflow-y-auto bg-blue-200 mb-4">
                                 { prospects && prospects.map(prospect =>(
                                     <ProspectCard key={prospect._id} prospect={ prospect } handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} isCheckAll={isCheckAll} />
                                 )) }

@@ -79,10 +79,6 @@ export default function Navbar({ cookie, userInfo }){
                 <div className="flex flex-col items-stretch py-6">
                         <NavBlock data={data} campaignsNumber={campaignsNumber} />
                 </div>
-                <div className="flex flex-col items-stretch py-6">
-                        <NavBlock data={data} campaignsNumber={campaignsNumber} />
-                </div>
-            
             </div>
             
         </div>

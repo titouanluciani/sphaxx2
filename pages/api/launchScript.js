@@ -227,11 +227,12 @@ export default async function(req, res){
                         //Click the Add note button in popup
                         await page.click(addNoteBtnPopup)
                         //Focus the textArea
+                        await delay(3000)
                         await page.focus(addNoteTextAreaPopup)
-                        await delay(1500)
+                        await delay(3000)
                         //Type the description in textArea
                         await page.keyboard.type(description)
-                        await delay(1000)
+                        await delay(3000)
         
                         //Click on connect after typing the description note
                         await page.click('.ml1.artdeco-button.artdeco-button--3.artdeco-button--primary.ember-view')
@@ -294,6 +295,7 @@ export default async function(req, res){
         else if(connectExistPas){
             console.log("already connected")
             //Click on message btn
+            await delay(1500)
             await page.click(messageBtn)
             await delay(1500)
             //Check if hasResponded
@@ -313,10 +315,13 @@ export default async function(req, res){
                 console.log("has not responded")
 
                 // Type message description
+                await delay(3000)
                 await page.keyboard.type(description)
-                await delay(1500)
+                await delay(3000)
                 //Click "Envoyer"
                 await page.click('.msg-form__send-button.artdeco-button.artdeco-button--1')
+                await delay(3000)
+
                 const prospectUpdated = await userClient.query(
                     Update(
                         Select(['data',0, 'ref'],

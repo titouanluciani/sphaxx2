@@ -66,7 +66,7 @@ export default function Prospects({cookie, cookiesSession}){
         loadProspects(campaign, cookie);
     }, [campaign])
     return (
-        <div className="flex flex-col border-black border-4 h-screen ml-48 p-4">
+        <div className="flex flex-col h-screen ml-48 p-4">
                     <select onChange={handleCampaigns} name="pets" id="pet-select" className="p-2 w-5/12 mr-6 bg-red-300 rounded">
                         {campaigns.map(campaign => (
                             <option value={campaign.name}>{campaign.name}</option>

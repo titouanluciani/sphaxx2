@@ -95,6 +95,31 @@ export default async(event, context) => {
                       }))
                 const token = await auth(c)
                 console.log('token after user creation : ',token)
+
+                //Create default campaign with default prospects
+                await client.query(Create(
+                        Collection('Campaigns'),
+                        {data : { 
+                            name: "Default Campaign", 
+                            userUrl: c
+                            } 
+                        }
+                    )
+                )
+                await client.query(Create(
+                        Collection('prospects'),
+                        {data : { 
+                            name: "Titouan Luciani", 
+                            url: c,
+                            userUrl:"https://www.linkedin.com/in/titouan-luciani-160943160/",
+                            campaign:"Default Campaign" ,
+                            isConnected: false
+                            } 
+                        }
+                    )
+                )
+                
+                
         }
 
         console.log('token : ',token)
