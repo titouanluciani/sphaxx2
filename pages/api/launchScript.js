@@ -100,7 +100,7 @@ export default async function(req, res){
     await page.goto("https://linkedin.com")
     console.log("linkedin")
 
-    await page.setCookie(...cookies)
+    await page.setCookie(...[cookies])
     await page.goto(url)
 
     await delay(2500)
