@@ -20,8 +20,8 @@ export default async(event, context) => {
         let data2 = []
         console.log("start",campaign)
         const browser = await puppeteer.launch({
-          args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
-        defaultViewport: chromium.defaultViewport,
+          args: [...chromium.args,  "--disable-web-security"],//"--hide-scrollbars",
+        defaultViewport: null,//chromium.defaultViewport
         executablePath: await chromium.executablePath,
         headless: false,
         ignoreHTTPSErrors: true,
@@ -30,7 +30,8 @@ export default async(event, context) => {
 
         const page = await browser.newPage()
         console.log("page")
-
+        await delay(3000)
+        await page.setViewport({ width: 1280, height: 800 })
         await delay(3000)
         await page.goto("https://linkedin.com")
         console.log("linkedin")
@@ -44,19 +45,26 @@ export default async(event, context) => {
         await page.waitForSelector('.feed-identity-module__actor-meta.profile-rail-card__actor-meta.break-words')
         const a = await page.$('.feed-identity-module__actor-meta.profile-rail-card__actor-meta.break-words')
         const pr = await a.$('a')
-        const b = await pr.getProperty('href')
-        const c = await b.jsonValue()
-        console.log(c)
+        let c = ""
+
+        try{
+          const b = await pr.getProperty('href')
+          c = await b.jsonValue()
+          console.log(c)
+        }catch(err){
+          console.log("errr",err)
+        }
 
         await delay(3000)
         await page.goto(url2)
         console.log("url")
-        
+        await delay(3000)
         const x = await page.viewport().width
         const y = await page.viewport().height
 
         //Make the number of pages appear in DOM
         await delay(3000)
+        console.log("mooooove : ", x, y)
         await page.mouse.wheel({deltaX : x ,deltaY : y*3 })
         await delay(3000)
 
