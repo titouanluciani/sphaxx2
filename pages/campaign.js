@@ -9,7 +9,7 @@ export default function Campaign({cookie, cookiesSession}){
     const [notes, setNotes] = useState([]) 
     const [messages, setMessages] = useState([])
     const [campaignHasChanged, setCampaignHasChanged] = useState(false)
-    const [campaign, setCampaign] = useState('')
+    const [campaign, setCampaign] = useState('Default Campaign')
     const [campaigns, setCampaigns] = useState([])
     const [selectedProspects, setSelectedProspects] = useState([{}])
     const [showModal, setShowModal] = useState(false)
@@ -24,6 +24,7 @@ export default function Campaign({cookie, cookiesSession}){
     const loadProspects = async (campaign, cookie) => {
         try{
             setLoadingProspects(true)
+            console.log("WHAT SI CAMPPPPAIG N : ", campaign)/*
             if(campaign == 'All'){
                 const res = await fetch(`/api/campaigns`,{
                     method:'POST',
@@ -31,7 +32,7 @@ export default function Campaign({cookie, cookiesSession}){
                 });
                 const {prospects, notes, messages} = await res.json();
                 setProspects(prospects.data)
-            }else{
+            }else{*/
                 const res = await fetch(`/api/campaigns/${campaign}`,{
                     method:'POST',
                     body:JSON.stringify(cookie)
@@ -40,7 +41,7 @@ export default function Campaign({cookie, cookiesSession}){
                 setProspects(prospects.data)
                 setNotes(notes.data)
                 setMessages(messages.data)
-            }
+            //}
             setLoadingProspects(false)
 
         }catch(err){
@@ -131,7 +132,7 @@ export default function Campaign({cookie, cookiesSession}){
         console.log(selectedProspects)  
     }, [selectedProspects])
     useEffect(() => {
-        console.log(filter)
+        console.log("this is filter : ",filter)
         console.log(filter.length)
         //filter.map(f => setFilterProspects(filterProspects.concat(prospects.filter(el => el.f))))
         for(let f of filter){
@@ -159,7 +160,7 @@ export default function Campaign({cookie, cookiesSession}){
         //setFilterProspects(prospects)
     }, [prospects])
     useEffect(() => {
-        console.log(filterProspects)
+        console.log("filter prospects : ",filterProspects)
 
     }, [filterProspects])
     //<option value="All" selected>Default Campaign</option>
@@ -169,9 +170,14 @@ export default function Campaign({cookie, cookiesSession}){
 
             <div className="flex flex-row m-2 mb-4 bg-gray-200">
                     <select onChange={handleCampaigns} name="pets" id="pet-select" className="p-2 w-5/12 mr-6 bg-red-300 rounded">
-                        {campaigns.map(campaign => (
+                        {campaigns.map(campaign => campaign == 'Default Campaign' ? 
+                            (
+                                <option selected value={campaign.name}>{campaign.name}</option>
+                            )
+                        : (
                             <option value={campaign.name}>{campaign.name}</option>
-                        ))}
+                            )
+                        )}
                     </select>
                     <button onClick={openModal} className="p-2 px-3 mr-4 bg-blue-500 rounded">Create</button>
                     <button onClick={() => handleDelete(campaign, cookie)} className="p-2 px-3 mr-4 bg-red-500 rounded">Delete</button>
@@ -179,7 +185,7 @@ export default function Campaign({cookie, cookiesSession}){
             </div>
             <div className="flex flex-row flex-wrap justify-between h-screen h-full">
                 <ProspectList prospects={filterProspects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} handleCheckAll={handleCheckAll} isCheckAll={isCheckAll} handleCheckFilter={handleCheckFilter} loadingProspects={loadingProspects} />
-                <TabPanel notes={notes} messages={messages} campaign={campaign} loadProspects={loadProspects} selectedProspects={selectedProspects} cookie={cookie} changed={changed} setChanged={setChanged} />
+                <TabPanel notes={notes} messages={messages} campaign={campaign} loadProspects={loadProspects} selectedProspects={selectedProspects} cookie={cookie} changed={changed} setChanged={setChanged} campaignHasChanged={setCampaignHasChanged} />
             </div>
             
             

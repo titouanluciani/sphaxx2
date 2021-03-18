@@ -3,15 +3,14 @@ import ProspectCard from './ProspectCard'
 import Pagination from './Pagination'
 
 export default function ProspectList({ prospects, handleCheck, campaignHasChanged, handleCheckAll, isCheckAll, handleCheckFilter, loadingProspects }){
-    //PAGINATION IMPORTED FROM https://www.thatsoftwaredude.com/content/6384/add-pagination-to-any-table-in-javascript
-    
+
     //Pagination
     const [currentPage, setCurrentPage] = useState(1)
     const [rowsPerPage, setRowsPerPage] = useState(20)
     const [previousPage, setPreviousPage] = useState(1)
 
-    const indexOfFirstItem = rowsPerPage * currentPage
-    const indexOfLastItem = indexOfFirstItem + rowsPerPage
+    const indexOfLastItem = rowsPerPage * currentPage
+    const indexOfFirstItem = indexOfLastItem - rowsPerPage
     const currentProspects = prospects.slice(indexOfFirstItem, indexOfLastItem)
 
     //Change page
@@ -32,7 +31,10 @@ export default function ProspectList({ prospects, handleCheck, campaignHasChange
         setCurrentPage(pageNumber)
     }
     
-
+    useEffect(() => {
+        console.log("PROSPECTS IN PROSPECT LIST : ", prospects)
+        console.log("PROSPECTS IN PROSPECT LIST : ", currentProspects)
+    }, [currentProspects])
     return(
         <div className="h-full w-6/12 mb-4">
             <h2>Prospect List</h2>

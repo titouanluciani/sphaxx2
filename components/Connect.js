@@ -11,14 +11,14 @@ export default function Connect(props){
     const [waitingLine, setWaitingLine] = useState(0)
 
     const handleSave = async (name, oldName, description, campaign, connect, cookie) => {
-        console.log("wtf is happenning :",name, description, cookie)
+        console.log("wtf is happenning :",name, oldName , description, cookie)
         await fetch('/api/saveNote', {
             method:'POST',
             body:JSON.stringify({name, oldName, description, campaign, connect, cookie})
         })
         await props.loadProspects(campaign)
         setOptionNote(document.getElementById('selectInput').value)
-        setOldName(document.getElementById('noteSelect').value)
+        setOldName(document.getElementById('selectInput').value)
         props.notes.map(note => note.name === document.getElementById('noteSelect').value ? setOldDescription(note.description) : '')
         setDescription(description)
         document.getElementById('textarea').value = description
@@ -50,6 +50,8 @@ export default function Connect(props){
 
     const handleNewNote = async (cookie, campaign, connect) => {
         console.log("New note clicked ")
+        setOptionNote("New note")
+        setOldName("New note")
         const note_res = await fetch('api/newNote', {
             method:"POST",
             body:JSON.stringify({cookie, campaign, connect})
@@ -75,14 +77,14 @@ export default function Connect(props){
         document.getElementById('textarea').value += e.target.value
         setDescription(document.getElementById('textarea').value)
     }
-    useEffect(()=> setDoc(document.getElementById('noteSelect').value),[])
+    /*useEffect(()=> setDoc(document.getElementById('noteSelect').value),[])
     useEffect(() => {
         setOptionNote(document.getElementById('noteSelect').value)
         setOldName(document.getElementById('noteSelect').value)
         props.notes.map(note => note.name === document.getElementById('noteSelect').value ? setOldDescription(note.description) : '')
         props.notes.map(note => note.name === document.getElementById('noteSelect').value ? setDescription(note.description) : '')
                     
-    }, [doc])
+    }, [doc])*/
     
     useEffect(()=>{
         document.getElementById('count').innerHTML = "Characters left: " + (299 - description.length);
@@ -91,6 +93,13 @@ export default function Connect(props){
     /*document.getElementById('textarea').onkeyup = function () {
         document.getElementById('count').innerHTML = "Characters left: " + (299 - this.value.length);
     };*/
+    useEffect(()=>{        
+        setOptionNote(document.getElementById('noteSelect').value)
+        document.getElementById('selectInput').value = document.getElementById('noteSelect').value
+        setDescription('')
+        props.notes.filter(note => note.name === document.getElementById('noteSelect').value ? setOldDescription(note.description) : '')
+        props.notes.filter(note => note.name === document.getElementById('noteSelect').value ? setDescription(note.description) : '')
+    },[props.notes])
     return(
         <div className="w-full h-full">
             <div className="flex flex-row justify-center">

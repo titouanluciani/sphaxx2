@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SimpleTabs({ notes, messages, campaign, loadProspects, selectedProspects, cookie, changed, setChanged }) {
+export default function SimpleTabs({ notes, messages, campaign, loadProspects, selectedProspects, cookie, changed, setChanged, campaignHasChanged }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   console.log("notes in tabpanel props : ", notes)
@@ -70,7 +70,7 @@ export default function SimpleTabs({ notes, messages, campaign, loadProspects, s
         <Connect connect={true} notes={notes} campaign={campaign} loadProspects={loadProspects} selectedProspects={selectedProspects} cookie={cookie} setChanged={setChanged} changed={changed} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Connect connect={false} notes={messages} campaign={campaign} loadProspects={loadProspects} selectedProspects={selectedProspects} cookie={cookie} setChanged={setChanged} changed={changed} />
+        <Connect connect={false} notes={messages} campaign={campaign} loadProspects={loadProspects} selectedProspects={selectedProspects} cookie={cookie} setChanged={setChanged} changed={changed} campaignHasChanged={campaignHasChanged} />
       </TabPanel>
       <TabPanel value={value} index={2}>
         Item Three

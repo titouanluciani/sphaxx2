@@ -17,8 +17,8 @@ export default function Prospects({cookie, cookiesSession}){
                     body:JSON.stringify(cookie)
                 });
                 const {waitingLine} = await res.json();
-                console.log(waitingLine) 
-                setProspects(waitingLine.data) 
+                console.log("wggg : ",waitingLine) 
+                setProspects(waitingLine.data)
 
             }else{
                 const res = await fetch(`/api/waitingLines/${campaign}`,{
@@ -26,6 +26,8 @@ export default function Prospects({cookie, cookiesSession}){
                     body:JSON.stringify(cookie)
                 });
                 const {waitingLine} = await res.json();
+                console.log("wggg : ",waitingLine.data.filter(prospect => prospect.done == false)) 
+
                 setProspects(waitingLine.data)
             }
 

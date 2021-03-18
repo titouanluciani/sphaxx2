@@ -23,7 +23,7 @@ export default async(event, context) => {
           args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
         defaultViewport: chromium.defaultViewport,
         executablePath: await chromium.executablePath,
-        headless: true,
+        headless: false,
         ignoreHTTPSErrors: true,
         })
         console.log("launch", number)
@@ -58,6 +58,7 @@ export default async(event, context) => {
         //Make the number of pages appear in DOM
         await delay(3000)
         await page.mouse.wheel({deltaX : x ,deltaY : y*3 })
+        await delay(3000)
 
         await page.waitForSelector('.artdeco-pagination__button.artdeco-pagination__button--next.artdeco-button.artdeco-button--muted.artdeco-button--icon-right.artdeco-button--1.artdeco-button--tertiary.ember-view')
 
