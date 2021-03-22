@@ -90,24 +90,30 @@ export default async(event, context) => {
           for(let i=0;i< linkedin_profiles.length;i++){
               //console.log("iiiii : ", i)
               try{
-                let profile_name = await page.$(`#main > div > div > div.pv2.artdeco-card.ph0.mb2 > ul > li:nth-child(${i+1}) > div > div > div.entity-result__content.entity-result__divider.pt3.pb3.t-12.t-black--light > div.mb1 > div > div.t-roman.t-sans > span > div > span.entity-result__title-line.flex-shrink-1.entity-result__title-text--black > span > a > span > span:nth-child(1)`)
-                name2 = await profile_name.getProperty('textContent')
-                name2 = await name2.jsonValue()
-                console.log(name2)
-                
-                let profile_url = await page.$(`#main > div > div > div.pv2.artdeco-card.ph0.mb2 > ul > li:nth-child(${i+1}) > div > div > div.entity-result__content.entity-result__divider.pt3.pb3.t-12.t-black--light > div.mb1 > div > div.t-roman.t-sans > span > div > span.entity-result__title-line.flex-shrink-1.entity-result__title-text--black > span > a`)
-                profile_href = await profile_url.getProperty('href')
-                profile_href = await profile_href.jsonValue()
-              } catch(e) {
-                console.log(e)
-                
-                let profile_name = await page.$(`#main > div > div > div.pv2.artdeco-card.ph0.mb2 > ul > li:nth-child(${i+1}) > div > div > div.entity-result__content.entity-result__divider.pt3.pb3.t-12.t-black--light > div.mb1 > div > div.t-roman.t-sans > span > div > span.entity-result__title-line.flex-shrink-1.entity-result__title-text--black > span > a`)
-                name2 = await profile_name.getProperty('textContent')
-                name2 = await name2.jsonValue()
-                console.log(name2)
-                
-                profile_href = await profile_name.getProperty('href')
-                profile_href = await profile_href.jsonValue()
+                try{
+                  let profile_name = await page.$(`#main > div > div > div.pv2.artdeco-card.ph0.mb2 > ul > li:nth-child(${i+1}) > div > div > div.entity-result__content.entity-result__divider.pt3.pb3.t-12.t-black--light > div.mb1 > div > div.t-roman.t-sans > span > div > span.entity-result__title-line.flex-shrink-1.entity-result__title-text--black > span > a > span > span:nth-child(1)`)
+                  name2 = await profile_name.getProperty('textContent')
+                  name2 = await name2.jsonValue()
+                  console.log(name2)
+                  
+                  let profile_url = await page.$(`#main > div > div > div.pv2.artdeco-card.ph0.mb2 > ul > li:nth-child(${i+1}) > div > div > div.entity-result__content.entity-result__divider.pt3.pb3.t-12.t-black--light > div.mb1 > div > div.t-roman.t-sans > span > div > span.entity-result__title-line.flex-shrink-1.entity-result__title-text--black > span > a`)
+                  profile_href = await profile_url.getProperty('href')
+                  profile_href = await profile_href.jsonValue()
+                } catch(e) {
+                  console.log(e)
+                  
+                  let profile_name = await page.$(`#main > div > div > div.pv2.artdeco-card.ph0.mb2 > ul > li:nth-child(${i+1}) > div > div > div.entity-result__content.entity-result__divider.pt3.pb3.t-12.t-black--light > div.mb1 > div > div.t-roman.t-sans > span > div > span.entity-result__title-line.flex-shrink-1.entity-result__title-text--black > span > a`)
+                  name2 = await profile_name.getProperty('textContent')
+                  name2 = await name2.jsonValue()
+                  console.log(name2)
+                  
+                  profile_href = await profile_name.getProperty('href')
+                  profile_href = await profile_href.jsonValue()
+                }
+              }catch(e){
+                console.log("this is an error : ", e)
+                name2 = ""
+                profile_href = ""
               }
               name2 = name2.split('Voir le profil de')[0]
               name2 = name2.trim()
