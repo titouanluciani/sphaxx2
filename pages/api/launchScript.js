@@ -151,7 +151,7 @@ export default async function(req, res){
         }else{
             console.log("connect btn exist")
             //Get the text on the connect btn profile
-            delay(3000)
+            await delay(3000)
             const profileBtnInnerText = await page.evaluate(() => {
                 try{
                     
@@ -225,6 +225,7 @@ export default async function(req, res){
                         
         
                         //Click the Add note button in popup
+                        await delay(3000)
                         await page.click(addNoteBtnPopup)
                         //Focus the textArea
                         await delay(3000)
@@ -236,6 +237,8 @@ export default async function(req, res){
         
                         //Click on connect after typing the description note
                         await page.click('.ml1.artdeco-button.artdeco-button--3.artdeco-button--primary.ember-view')
+                        await delay(3000)
+
         
                         //Update the prospect with current action info
                         await userClient.query(
