@@ -7,6 +7,7 @@ const client = new faunadb.Client({ secret: process.env.FAUNA_SECRET_KEY })
 
 const { Select, Map, Paginate, Match, Index, Lambda, Get, Var, Delete, Update, Intersection } = faunadb.query
 import chromium from 'chrome-aws-lambda';
+import { query } from 'faunadb'
 
 
 export default async function(req, res){
@@ -34,6 +35,22 @@ export default async function(req, res){
                 )
             )
     
+    //Check if hold is true (for linkedin security, put on hold the script for 24h for the current user)
+    const user = await client.query(
+        Get(
+            Match(
+                Index('users_by_url'),
+                user_url
+            )
+        )
+    )
+    console.log("this is user : ", user)
+    
+    if(user.hold){
+        res.statusCode = 200
+        res.send("user put in hold", user_url)
+    }
+
     console.log("LAUNCHSCRIPT :: this is user secret : ",user_secret)
     const userClient = new faunadb.Client({ secret: user_secret })
     console.log(user_url)
@@ -179,10 +196,12 @@ export default async function(req, res){
                         { data: { 'action':action ,'isConnected':true, 'hasAccepted':false } }
                     )
                 )
-
+                
                 //End the script
+                res.statusCode = 200
+                res.send("En attente")
             //Check if prospect not connected
-            }else if(profileBtnInnerText == 'Se connecter' || prospectData.isConnected == false ){
+            }else if(profileBtnInnerText == 'Se connecter' ){// || prospectData.isConnected == false
                 //Click on "Se connecter"
                 const click_response = await page.click(connectBtn)
                 console.log(click_response)
@@ -197,6 +216,22 @@ export default async function(req, res){
         
                         /* CHECK IF CONNECTED ALREADY */
                         //Click on Connect btn in popup
+                        if(!page.$(connectBtnPopup)){
+                            await client.query(
+                                Update(
+                                    Select(
+                                        ['ref'],
+                                        Get(
+                                            Match(
+                                                Index('users_by_url'),
+                                                user_url
+                                            )
+                                        ))
+                                    ,
+                                    { data : { hold: true } }
+                                )
+                            )
+                        }
                         await page.click(connectBtnPopup)
         
                         //Update prospects with action info
