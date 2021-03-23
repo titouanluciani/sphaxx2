@@ -240,6 +240,13 @@ export default async function(req, res){
                                 { data: { 'action':action, 'note':true } }
                             )
                         )
+                        //Update prospects with action info
+                        await userClient.query(
+                            Update(
+                                prospectd.ref,
+                                { data: { 'action':action, 'note':true, 'isConnected':false, 'hasAccepted':false, "hasResponded":false } }
+                            )
+                        )
                     }
                 }
             }
