@@ -18,7 +18,7 @@ export default function Prospects({cookie, cookiesSession}){
                 });
                 const {waitingLine} = await res.json();
                 console.log("wggg : ",waitingLine) 
-                setProspects(waitingLine.data)
+                setProspects(waitingLine.data.filter(prospect => prospect.done == false))
 
             }else{
                 const res = await fetch(`/api/waitingLines/${campaign}`,{
@@ -27,8 +27,8 @@ export default function Prospects({cookie, cookiesSession}){
                 });
                 const {waitingLine} = await res.json();
                 console.log("wggg : ",waitingLine.data.filter(prospect => prospect.done == false)) 
-
-                setProspects(waitingLine.data)
+                console.log("wGG  :", waitingLine.data)
+                setProspects(waitingLine.data.filter(prospect => prospect.done == false))
             }
 
         }catch(err){
