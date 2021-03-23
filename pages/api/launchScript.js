@@ -36,8 +36,8 @@ export default async function(req, res){
     
     console.log("LAUNCHSCRIPT :: this is user secret : ",user_secret)
     const userClient = new faunadb.Client({ secret: user_secret })
-    const data = await userClient.query(
-        Select(['data',0, 'data'],
+    const d = await userClient.query(
+        Select(['data',0],
             Map(
                 Paginate(
                     Intersection(
@@ -50,29 +50,16 @@ export default async function(req, res){
             )
         )
     )
-    //Update in WG done to true
-    await userClient.query(
-        Update(
-            Select(['data',0, 'ref'],
-                Map(
-                    Paginate(
-                        Match(Index('waitingLine_by_user'),user_url)
-                    ),
-                    Lambda('x', Get(Var('x'))
-                    )
-                )
-            ),
-            { data : { done:true } }
-        )
-    )
+    const data = d.data
+    
     console.log("this is dadta : ", data)
     const {prospectUrl, action, option, prospectName} = data
     let { description } = data
     console.log("this is fragmented data : ",prospectUrl, action, option, description, prospectName)
     const url = prospectUrl
 
-    const prospectData = await userClient.query(
-        Select(['data',0, 'data'],
+    const prospectd = await userClient.query(
+        Select(['data',0],
             Map(
                 Paginate(
                     Match(Index('prospects_by_url'), prospectUrl)
@@ -82,13 +69,41 @@ export default async function(req, res){
             )
         )
     )
+    const prospectData = prospectd.data
+    //Update in WG done to true
+    await userClient.query(
+        Update(
+            d.ref,
+            { data : { done:true } }
+        )
+    )
+    /*
+    await userClient.query(
+        Update(
+            Select(['data',0, 'ref'],
+                Map(
+                    Paginate(
+                        Intersection(
+                            Match(Index('waitingLine_by_done'), false),
+                            Match(Index('waitingLine_by_prospectUrl'), prospectUrl),
+                            Match(Index('waitingLine_by_user'),user_url)
+                        )
+                    ),
+                    Lambda('x', Get(Var('x'))
+                    )
+                )
+            ),
+            { data : { done:true } }
+        )
+    )*/
+    
 
     console.log("url to connect to : ",url)
     const browser = await puppeteer.launch({
         args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
         defaultViewport: chromium.defaultViewport,
         executablePath: await chromium.executablePath,
-        headless: true,
+        headless: false,
         ignoreHTTPSErrors: true,
         })
     console.log("launchhhh")
@@ -135,16 +150,7 @@ export default async function(req, res){
             //Update user Info
             await userClient.query(
                 Update(
-                    Select(['data',0, 'ref'],
-                        Map(
-                            Paginate(
-                                Match(
-                                    Index("prospects_by_url"), url
-                                )
-                            ),
-                            Lambda("x", Get(Var("x")))
-                        )
-                    ), 
+                    prospectd.ref,
                     { data: { 'isConnected':true, 'hasAccepted':true } }
                 )
             )
@@ -168,16 +174,7 @@ export default async function(req, res){
                 //Update Prospect info with "action='connect', isConnected = false, hasAccepted=false"
                 await userClient.query(
                     Update(
-                        Select(['data',0, 'ref'],
-                            Map(
-                                Paginate(
-                                    Match(
-                                        Index("prospects_by_url"), url
-                                    )
-                                ),
-                                Lambda("x", Get(Var("x")))
-                            )
-                        ), 
+                        prospectd.ref,
                         { data: { 'action':action ,'isConnected':false, 'hasAccepted':false } }
                     )
                 )
@@ -204,16 +201,7 @@ export default async function(req, res){
                         //Update prospects with action info
                         await userClient.query(
                             Update(
-                                Select(['data',0, 'ref'],
-                                    Map(
-                                        Paginate(
-                                            Match(
-                                                Index("prospects_by_url"), url
-                                            )
-                                        ),
-                                        Lambda("x", Get(Var("x")))
-                                    )
-                                ), 
+                                prospectd.ref,
                                 { data: { 'action':action, 'note':false, 'isConnected':false, 'hasAccepted':false } }
                             )
                         )
@@ -229,7 +217,12 @@ export default async function(req, res){
                         await page.click(addNoteBtnPopup)
                         //Focus the textArea
                         await delay(3000)
-                        await page.focus(addNoteTextAreaPopup)
+                        try{
+                            await page.focus(addNoteTextAreaPopup)
+                        }catch(err){
+                            console.log("error for focus text area")
+                            await page.focus('.ember-text-area.ember-view.connect-button-send-invite__custom-message.mb3')
+                        }
                         await delay(3000)
                         //Type the description in textArea
                         await page.keyboard.type(description)
@@ -243,16 +236,7 @@ export default async function(req, res){
                         //Update the prospect with current action info
                         await userClient.query(
                             Update(
-                                Select(['data',0, 'ref'],
-                                    Map(
-                                        Paginate(
-                                            Match(
-                                                Index("prospects_by_url"), url
-                                            )
-                                        ),
-                                        Lambda("x", Get(Var("x")))
-                                    )
-                                ), 
+                                prospectd.ref,
                                 { data: { 'action':action, 'note':true } }
                             )
                         )
@@ -280,16 +264,7 @@ export default async function(req, res){
             //Update user Info
             await userClient.query(
                 Update(
-                    Select(['data',0, 'ref'],
-                        Map(
-                            Paginate(
-                                Match(
-                                    Index("prospects_by_url"), url
-                                )
-                            ),
-                            Lambda("x", Get(Var("x")))
-                        )
-                    ), 
+                    prospectd.ref,
                     { data: { 'isConnected':false, 'hasAccepted':false } }
                 )
             )
@@ -327,16 +302,7 @@ export default async function(req, res){
 
                 const prospectUpdated = await userClient.query(
                     Update(
-                        Select(['data',0, 'ref'],
-                            Map(
-                                Paginate(
-                                    Match(
-                                        Index("prospects_by_url"), url
-                                    )
-                                ),
-                                Lambda("x", Get(Var("x")))
-                            )
-                        ), 
+                        prospectd.ref,
                         { data: { 'action':action, 'isConnected':true, 'hasAccepted':true } }
                     )
                 )
@@ -347,16 +313,7 @@ export default async function(req, res){
 
                 await userClient.query(
                     Update(
-                        Select(['data',0, 'ref'],
-                            Map(
-                                Paginate(
-                                    Match(
-                                        Index("prospects_by_url"), url
-                                    )
-                                ),
-                                Lambda("x", Get(Var("x")))
-                            )
-                        ), 
+                        prospectd.ref,
                         { data: { 'hasResponded':hasResponded } }
                     )
                 )

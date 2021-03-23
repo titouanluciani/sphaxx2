@@ -12,7 +12,7 @@ export default function ProspectCard({ prospect, handleCheck,campaignHasChanged,
         })
     }, [isCheckAll])
 
-    
+    //{prospect.isConnected == true ? (prospect.hasAccepted && prospect.hasAccepted == true ? 'Connected' : 'Connection in hold' ) : 'Connection not send'}<br/>{prospect.hasAccepted ? (prospect.hasResponded ? 'Has responded' : 'Has not responded yet' ) : ''}
     return (
             <tr className="">
                 <td>
@@ -25,8 +25,9 @@ export default function ProspectCard({ prospect, handleCheck,campaignHasChanged,
                     {prospect.prospectUrl ? prospect.prospectUrl : prospect.url}
                 </td>
                 <td>
-                    {prospect.isConnected ? (prospect.hasAccepted ? 'Connected' : 'Connection in hold' ) : 'Connection not send'}<br/>{prospect.hasAccepted ? (prospect.hasResponded ? 'Has responded' : 'Has not responded yet' ) : ''} 
-                    
+                    {prospect.isConnected ? "Connection send" : "Connection not send"}<br/>
+                    {prospect.hasAccepted ? "Connected" : "Connection in hold"}<br/>
+                    {prospect.hasResponded ? "Has responded" : "Has not responded yet"}
                 </td>
                 <td>
                     {prospect.campaign}
