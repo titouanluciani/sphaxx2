@@ -36,6 +36,7 @@ export default async function(req, res){
     
     console.log("LAUNCHSCRIPT :: this is user secret : ",user_secret)
     const userClient = new faunadb.Client({ secret: user_secret })
+    console.log(user_url)
     const d = await userClient.query(
         Select(['data',0],
             Map(
