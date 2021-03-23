@@ -217,17 +217,17 @@ export default async function(req, res){
                         await delay(3000)
                         await page.click(addNoteBtnPopup)
                         //Focus the textArea
-                        await delay(3000)
+                        await delay(5000)
                         try{
                             await page.focus(addNoteTextAreaPopup)
                         }catch(err){
                             console.log("error for focus text area")
                             await page.focus('.ember-text-area.ember-view.connect-button-send-invite__custom-message.mb3')
                         }
-                        await delay(3000)
+                        await delay(6000)
                         //Type the description in textArea
                         await page.keyboard.type(description)
-                        await delay(3000)
+                        await delay(8000)
         
                         //Click on connect after typing the description note
                         await page.click('.ml1.artdeco-button.artdeco-button--3.artdeco-button--primary.ember-view')
