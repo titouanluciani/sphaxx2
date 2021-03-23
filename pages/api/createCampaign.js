@@ -27,7 +27,7 @@ export default async (req, res) => {
 
     const newCampaign = await client.query(Create(
         Collection('Campaigns'),
-        { data : { name:  campaignName , userUrl : Select(['data','url'], Get(CurrentIdentity())) } }
+        { data : { name:  campaignName , userUrl : Select(['data','url'], user_url) } }
     ))
 
     console.log(newCampaign)
