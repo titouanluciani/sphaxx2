@@ -107,6 +107,23 @@ export default function Campaign({cookie, cookiesSession}){
         setChanged('del')
     }
 
+    const handleMessageFilter = (connect) => {
+        if(!connect){
+            console.log("message tab clicked")
+            document.getElementById('Connected').checked = true
+            document.getElementById('Has not responded').checked = true
+            setFilter(filter => filter.concat("hasAccepted"))
+            setFilter(filter => filter.concat("hasNotResponded"))
+            setFilterProspects([])
+        }else{
+            console.log("connect tab clicked")
+            document.getElementById('Connected').checked = false
+            document.getElementById('Has not responded').checked = false
+            setFilter([])
+            setFilterProspects([])
+        }
+    }
+
     useEffect(() => {
         console.log("cookie for useEffect loadprosp loadcamp : ", cookie)
         console.log("cookiesSession for useEffect loadprosp loadcamp : ", cookiesSession)
@@ -185,7 +202,7 @@ export default function Campaign({cookie, cookiesSession}){
             </div>
             <div className="flex flex-row flex-wrap justify-between h-screen h-full">
                 <ProspectList prospects={filterProspects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} handleCheckAll={handleCheckAll} isCheckAll={isCheckAll} handleCheckFilter={handleCheckFilter} loadingProspects={loadingProspects} />
-                <TabPanel notes={notes} messages={messages} campaign={campaign} loadProspects={loadProspects} selectedProspects={selectedProspects} cookie={cookie} changed={changed} setChanged={setChanged} campaignHasChanged={setCampaignHasChanged} />
+                <TabPanel notes={notes} messages={messages} campaign={campaign} loadProspects={loadProspects} selectedProspects={selectedProspects} cookie={cookie} changed={changed} setChanged={setChanged} campaignHasChanged={setCampaignHasChanged} handleMessageFilter={handleMessageFilter} />
             </div>
             
             

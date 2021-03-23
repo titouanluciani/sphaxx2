@@ -100,6 +100,9 @@ export default function Connect(props){
         props.notes.filter(note => note.name === document.getElementById('noteSelect').value ? setOldDescription(note.description) : '')
         props.notes.filter(note => note.name === document.getElementById('noteSelect').value ? setDescription(note.description) : '')
     },[props.notes])
+    useEffect(() => {
+        props.handleMessageFilter(props.connect)
+    }, [])
     return(
         <div className="w-full h-full">
             <div className="flex flex-row justify-center">

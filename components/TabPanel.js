@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SimpleTabs({ notes, messages, campaign, loadProspects, selectedProspects, cookie, changed, setChanged, campaignHasChanged }) {
+export default function SimpleTabs({ notes, messages, campaign, loadProspects, selectedProspects, cookie, changed, setChanged, campaignHasChanged, handleMessageFilter }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   console.log("notes in tabpanel props : ", notes)
@@ -67,10 +67,10 @@ export default function SimpleTabs({ notes, messages, campaign, loadProspects, s
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <Connect connect={true} notes={notes} campaign={campaign} loadProspects={loadProspects} selectedProspects={selectedProspects} cookie={cookie} setChanged={setChanged} changed={changed} />
+        <Connect connect={true} notes={notes} campaign={campaign} loadProspects={loadProspects} selectedProspects={selectedProspects} cookie={cookie} setChanged={setChanged} changed={changed} handleMessageFilter={handleMessageFilter}/>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Connect connect={false} notes={messages} campaign={campaign} loadProspects={loadProspects} selectedProspects={selectedProspects} cookie={cookie} setChanged={setChanged} changed={changed} campaignHasChanged={campaignHasChanged} />
+        <Connect connect={false} notes={messages} campaign={campaign} loadProspects={loadProspects} selectedProspects={selectedProspects} cookie={cookie} setChanged={setChanged} changed={changed} campaignHasChanged={campaignHasChanged} handleMessageFilter={handleMessageFilter} />
       </TabPanel>
       <TabPanel value={value} index={2}>
         Item Three
