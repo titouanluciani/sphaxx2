@@ -303,7 +303,7 @@ export default async function(req, res){
                 const prospectUpdated = await userClient.query(
                     Update(
                         prospectd.ref,
-                        { data: { 'action':action, 'isConnected':true, 'hasAccepted':true } }
+                        { data: { 'action':action, 'isConnected':true, 'hasAccepted':true, 'hasResponded':false } }
                     )
                 )
                 console.log(prospectUpdated)
@@ -314,7 +314,7 @@ export default async function(req, res){
                 await userClient.query(
                     Update(
                         prospectd.ref,
-                        { data: { 'hasResponded':hasResponded } }
+                        { data: { 'hasResponded':true } }
                     )
                 )
             }
