@@ -66,6 +66,12 @@ export default function Prospects({cookie, cookiesSession}){
         console.log("handlecheckAll : ", isCheckAll)
     }
 
+    const handleDelete = async () => {
+        await fetch('api/DeleteWG', {
+            method: 'POST',
+            body:JSON.stringify({cookie, selectedProspects})
+        })
+    }
 
     useEffect(() => {
         console.log("cookie for useEffect loadprosp loadcamp : ", cookie)
@@ -86,7 +92,7 @@ export default function Prospects({cookie, cookiesSession}){
                         ))}
                         <option value="All">All</option>
                     </select>
-            <ProspectList2 prospects={prospects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} handleCheckAll={handleCheckAll} isCheckAll={isCheckAll} />
+            <ProspectList2 prospects={prospects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} handleCheckAll={handleCheckAll} isCheckAll={isCheckAll} handleDelete={handleDelete} />
 
         </div>
     )

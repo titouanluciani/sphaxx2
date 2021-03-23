@@ -175,7 +175,7 @@ export default async function(req, res){
                 await userClient.query(
                     Update(
                         prospectd.ref,
-                        { data: { 'action':action ,'isConnected':false, 'hasAccepted':false } }
+                        { data: { 'action':action ,'isConnected':true, 'hasAccepted':false } }
                     )
                 )
 
@@ -202,7 +202,7 @@ export default async function(req, res){
                         await userClient.query(
                             Update(
                                 prospectd.ref,
-                                { data: { 'action':action, 'note':false, 'isConnected':false, 'hasAccepted':false } }
+                                { data: { 'action':action, 'note':false, 'isConnected':true, 'hasAccepted':false } }
                             )
                         )
                     }
@@ -244,7 +244,7 @@ export default async function(req, res){
                         await userClient.query(
                             Update(
                                 prospectd.ref,
-                                { data: { 'action':action, 'note':true, 'isConnected':false, 'hasAccepted':false, "hasResponded":false } }
+                                { data: { 'action':action, 'note':true, 'isConnected':true, 'hasAccepted':false, "hasResponded":false } }
                             )
                         )
                     }

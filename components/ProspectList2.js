@@ -1,10 +1,12 @@
 import React from 'react';
 import ProspectCard from './ProspectCard'
 
-export default function ProspectList2({ prospects, handleCheck, campaignHasChanged, handleCheckAll, isCheckAll }){
+export default function ProspectList2({ prospects, handleCheck, campaignHasChanged, handleCheckAll, isCheckAll,handleDelete }){
     return(
         <div className="h-full w-full mb-4">
             <h2>Prospect List</h2>
+            <button onClick={handleDelete} className="bg-red-400 py-2 px-3 rounded">Delete Action</button>
+
             <div className="h-full pb-4">
                 <table className="border-collapse my-6 text-sm w-full rounded overflow-x-hidden shadow-md">
                     <thead className="">
