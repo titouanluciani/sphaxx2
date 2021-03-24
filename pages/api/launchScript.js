@@ -193,6 +193,8 @@ export default async function(req, res){
                             return el.innerText
                         }
                     })
+                    console.log("connect btn exist3")
+
                     //Check if Connected already
                     if(profileBtnInnerText == 'En attente'){
                         //Update Prospect info with "action='connect', isConnected = false, hasAccepted=false"
