@@ -179,8 +179,10 @@ export default async function(req, res){
                     console.log("connect btn exist")
                     //Get the text on the connect btn profile
                     await delay(3000)
+                    console.log("connect btn exist")
                     const profileBtnInnerText = await page.evaluate(() => {
                         try{
+                            console.log("profile btn inner text : ")
                             
                             const el = document.querySelector('.pv-s-profile-actions.pv-s-profile-actions--connect.ml2.artdeco-button.artdeco-button--2.artdeco-button--primary.artdeco-button--disabled.ember-view')//profileBtn
                             return el.innerText
