@@ -211,7 +211,7 @@ export default async function(req, res){
                     console.log(elements)
                     console.log(typeof elements)
                     console.log(typeof Array.from(elements))
-                    for(let el of elements){
+                    for(const [key, el] of elements){
                         //let el = elements.values[i]
                         console.log("el.innerTExt : ",el)
                         profileBtnInnerText = el
