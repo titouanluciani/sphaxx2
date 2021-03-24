@@ -302,6 +302,7 @@ export default async function(req, res){
                                         }
                                         //Focus the textArea
                                         await delay(5000)
+                                        
                                         try{
                                             console.log("try add text area popup")
                                             //await page.focus(addNoteTextAreaPopup)
