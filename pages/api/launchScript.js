@@ -240,7 +240,7 @@ export default async function(req, res){
                                 res.statusCode = 200
                                 res.send("En attente")
                             //Check if prospect not connected
-                            }else if(profileBtnInnerText == 'Se connecter' ){// || prospectData.isConnected == false
+                            }else if(profileBtnInnerText == 'Se connecter' || profileBtnInnerText == 'Connect' ){// || prospectData.isConnected == false
                                 //Click on "Se connecter"
                                 console.log("se connecter")
         
