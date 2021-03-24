@@ -180,16 +180,17 @@ export default async function(req, res){
                     //Get the text on the connect btn profile
                     await delay(3000)
                     console.log("connect btn exist")
+                    let profileBtnInnerText = ''
                     try{
 
-                        const profileBtnInnerText = await page.evaluate(() => {
+                        profileBtnInnerText = await page.evaluate(() => {
                                 console.log("profile btn inner text : ")
                                 
                                 const el = document.querySelector('.pv-s-profile-actions.pv-s-profile-actions--connect.ml2.artdeco-button.artdeco-button--2.artdeco-button--primary.artdeco-button--disabled.ember-view')//profileBtn
                                 return el.innerText
                         })
                     }catch(err){
-                        const profileBtnInnerText = await page.evaluate(() => {
+                        profileBtnInnerText = await page.evaluate(() => {
                             console.log("profile btn inner text err : ", err)
                             //document.querySelector('.ml2.mr2.pv-s-profile-actions__overflow-toggle.artdeco-button.artdeco-button--circle.artdeco-button--muted.artdeco-button--2.artdeco-button--tertiary.artdeco-dropdown__trigger.artdeco-dropdown__trigger--placement-bottom.ember-view').click()
                             const el = document.querySelector('.display-flex.t-normal.pv-s-profile-actions__label')
