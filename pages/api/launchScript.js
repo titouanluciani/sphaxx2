@@ -206,12 +206,17 @@ export default async function(req, res){
                         })
                     }*/
                     let elements = await page.evaluate(() => {
-                        return document.getElementsByTagName('span')
+                        return Array.from(document.getElementsByTagName('span'), element => element.innerText)
                     })
-                    for(el of elements){
-                        if(el.innerText == 'Se connecter' || el.innerText == 'Connect')
-                        console.log("el.innerTExt : ",el.innerText)
-                        console.log("connect btn exist3 : ", profileBtnInnerText)
+                    console.log(elements)
+                    console.log(typeof elements)
+                    console.log(typeof Array.from(elements))
+                    for(let el of elements){
+                        //let el = elements.values[i]
+                        console.log("el.innerTExt : ",el)
+                        profileBtnInnerText = el
+                        if(profileBtnInnerText == 'Se connecter' || profileBtnInnerText == 'Connect')
+                        //console.log("connect btn exist3 : ", profileBtnInnerText)
     
                         //Check if Connected already
                         if(profileBtnInnerText == 'En attente'){
