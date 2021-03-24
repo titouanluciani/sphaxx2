@@ -294,9 +294,11 @@ export default async function(req, res){
                                         //Click the Add note button in popup
                                         await delay(3000)
                                         try{
+                                            console.log("try add note btn popup")
                                             await page.click(addNoteBtnPopup)
                                         }catch(err){
                                             console.log("err when click add note : ", err)
+                                            
                                         }
                                         //Focus the textArea
                                         await delay(5000)
