@@ -211,114 +211,122 @@ export default async function(req, res){
                     console.log(elements)
                     console.log(typeof elements)
                     console.log(typeof Array.from(elements))
-                    for(const [key, el] of elements){
+                    for(const el of elements){
+                        if(el == 'Se connecter'){
+                            console.log("elllll : ",el)
+                        }
+                    }
+                    let doneFor = false
+                    for(const el of elements){
                         //let el = elements.values[i]
-                        console.log("el.innerTExt : ",el)
-                        profileBtnInnerText = el
-                        if(profileBtnInnerText == 'Se connecter' || profileBtnInnerText == 'Connect')
-                        //console.log("connect btn exist3 : ", profileBtnInnerText)
-    
-                        //Check if Connected already
-                        if(profileBtnInnerText == 'En attente'){
-                            //Update Prospect info with "action='connect', isConnected = false, hasAccepted=false"
-                            console.log("en attente")
-                            await userClient.query(
-                                Update(
-                                    prospectd.ref,
-                                    { data: { 'action':action ,'isConnected':true, 'hasAccepted':false } }
+                        if((el == 'Se connecter' || el == 'Connect' || el == 'En attente') && !doneFor){
+                            doneFor = true
+                            console.log("el.innerTExt : ",el)
+                            profileBtnInnerText = el
+                            //console.log("connect btn exist3 : ", profileBtnInnerText)
+        
+                            //Check if Connected already
+                            if(profileBtnInnerText == 'En attente'){
+                                //Update Prospect info with "action='connect', isConnected = false, hasAccepted=false"
+                                console.log("en attente")
+                                await userClient.query(
+                                    Update(
+                                        prospectd.ref,
+                                        { data: { 'action':action ,'isConnected':true, 'hasAccepted':false } }
+                                    )
                                 )
-                            )
-                            
-                            //End the script
-                            res.statusCode = 200
-                            res.send("En attente")
-                        //Check if prospect not connected
-                        }else if(profileBtnInnerText == 'Se connecter' ){// || prospectData.isConnected == false
-                            //Click on "Se connecter"
-                            console.log("se connecter")
-    
-                            const click_response = await page.click(connectBtn)
-                            console.log(click_response)
                                 
-                            //Check if popup appears
-                            if(page.$(connectBtnPopup)){
-                                console.log('if statement')
-                    
-                                //If no note to send
-                                if(description == '' || description == ' '){
-                                    console.log("no note")
-                    
-                                    /* CHECK IF CONNECTED ALREADY */
-                                    //Click on Connect btn in popup
-                                    if(!page.$(connectBtnPopup)){
-                                        console.log("put hold")
-                                        await client.query(
+                                //End the script
+                                res.statusCode = 200
+                                res.send("En attente")
+                            //Check if prospect not connected
+                            }else if(profileBtnInnerText == 'Se connecter' ){// || prospectData.isConnected == false
+                                //Click on "Se connecter"
+                                console.log("se connecter")
+        
+                                const click_response = await page.click(connectBtn)
+                                console.log(click_response)
+                                    
+                                //Check if popup appears
+                                if(page.$(connectBtnPopup)){
+                                    console.log('if statement')
+                        
+                                    //If no note to send
+                                    if(description == '' || description == ' '){
+                                        console.log("no note")
+                        
+                                        /* CHECK IF CONNECTED ALREADY */
+                                        //Click on Connect btn in popup
+                                        if(!page.$(connectBtnPopup)){
+                                            console.log("put hold")
+                                            await client.query(
+                                                Update(
+                                                    Select(
+                                                        ['ref'],
+                                                        Get(
+                                                            Match(
+                                                                Index('users_by_url'),
+                                                                user_url
+                                                            )
+                                                        ))
+                                                    ,
+                                                    { data : { hold: true } }
+                                                )
+                                            )
+                                        }
+                                        console.log("click on connect btn popup")
+                                        await page.click(connectBtnPopup)
+                        
+                                        //Update prospects with action info
+                                        await userClient.query(
                                             Update(
-                                                Select(
-                                                    ['ref'],
-                                                    Get(
-                                                        Match(
-                                                            Index('users_by_url'),
-                                                            user_url
-                                                        )
-                                                    ))
-                                                ,
-                                                { data : { hold: true } }
+                                                prospectd.ref,
+                                                { data: { 'action':action, 'note':false, 'isConnected':true, 'hasAccepted':false } }
                                             )
                                         )
                                     }
-                                    console.log("click on connect btn popup")
-                                    await page.click(connectBtnPopup)
-                    
-                                    //Update prospects with action info
-                                    await userClient.query(
-                                        Update(
-                                            prospectd.ref,
-                                            { data: { 'action':action, 'note':false, 'isConnected':true, 'hasAccepted':false } }
+                        
+                                    //If note to be send with connection
+                                    else{
+                                        console.log("note : ", description)        
+                                        
+                        
+                                        //Click the Add note button in popup
+                                        await delay(3000)
+                                        await page.click(addNoteBtnPopup)
+                                        //Focus the textArea
+                                        await delay(5000)
+                                        try{
+                                            await page.focus(addNoteTextAreaPopup)
+                                        }catch(err){
+                                            console.log("error for focus text area")
+                                            await page.focus('.ember-text-area.ember-view.connect-button-send-invite__custom-message.mb3')
+                                        }
+                                        await delay(6000)
+                                        //Type the description in textArea
+                                        await page.keyboard.type(description)
+                                        await delay(8000)
+                        
+                                        //Click on connect after typing the description note
+                                        await page.click('.ml1.artdeco-button.artdeco-button--3.artdeco-button--primary.ember-view')
+                                        await delay(3000)
+                
+                        
+                                        //Update the prospect with current action info
+                                        await userClient.query(
+                                            Update(
+                                                prospectd.ref,
+                                                { data: { 'action':action, 'note':true } }
+                                            )
                                         )
-                                    )
-                                }
-                    
-                                //If note to be send with connection
-                                else{
-                                    console.log("note : ", description)        
-                                    
-                    
-                                    //Click the Add note button in popup
-                                    await delay(3000)
-                                    await page.click(addNoteBtnPopup)
-                                    //Focus the textArea
-                                    await delay(5000)
-                                    try{
-                                        await page.focus(addNoteTextAreaPopup)
-                                    }catch(err){
-                                        console.log("error for focus text area")
-                                        await page.focus('.ember-text-area.ember-view.connect-button-send-invite__custom-message.mb3')
+                                        //Update prospects with action info
+                                        await userClient.query(
+                                            Update(
+                                                prospectd.ref,
+                                                { data: { 'action':action, 'note':true, 'isConnected':true, 'hasAccepted':false, "hasResponded":false } }
+                                            )
+                                        )
                                     }
-                                    await delay(6000)
-                                    //Type the description in textArea
-                                    await page.keyboard.type(description)
-                                    await delay(8000)
-                    
-                                    //Click on connect after typing the description note
-                                    await page.click('.ml1.artdeco-button.artdeco-button--3.artdeco-button--primary.ember-view')
-                                    await delay(3000)
-            
-                    
-                                    //Update the prospect with current action info
-                                    await userClient.query(
-                                        Update(
-                                            prospectd.ref,
-                                            { data: { 'action':action, 'note':true } }
-                                        )
-                                    )
-                                    //Update prospects with action info
-                                    await userClient.query(
-                                        Update(
-                                            prospectd.ref,
-                                            { data: { 'action':action, 'note':true, 'isConnected':true, 'hasAccepted':false, "hasResponded":false } }
-                                        )
-                                    )
                                 }
                             }
                         }
