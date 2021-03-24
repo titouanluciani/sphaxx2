@@ -205,7 +205,7 @@ export default async function(req, res){
                             }
                         })
                     }
-                    console.log("connect btn exist3")
+                    console.log("connect btn exist3 : ", profileBtnInnerText)
 
                     //Check if Connected already
                     if(profileBtnInnerText == 'En attente'){
