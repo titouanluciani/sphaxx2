@@ -32,7 +32,7 @@ export default async function(req,res){
     await page.goto("https://linkedin.com")
     console.log("linkedin")
 
-    await page.setCookie(...cookies)
+    await page.setCookie(...[cookies])
     await page.goto(userUrl)
     await delay(2500)
     console.log("connected to linkedin session")
@@ -54,8 +54,22 @@ export default async function(req,res){
     )
     for(let d of data){
         console.log(d)
+        const prospect = await userClient.query(Select(['data',0, 'ref'],
+                                Map(
+                                    Paginate(Intersection(
+                                        Match(
+                                            Index("prospects_by_url"), d.data.prospectUrl
+                                        ),
+                                        Match(
+                                            Index("prospects_by_user"), d.data.userUrl
+                                        )
+                                    )),
+                                    Lambda("x", Get(Var("x")))
+                                )
+                            ))
+        
         //Get prospect Url and check action + note
-        if(d.data.action == 'connect' || d.data.action == 'message'){
+        if((d.data.action == 'connect' || d.data.action == 'message') && !prospect.data.monitored ){
             //Go to relations menu
             await page.goto("https://www.linkedin.com/mynetwork/invite-connect/connections/")
             //Search for the prospect
@@ -68,7 +82,7 @@ export default async function(req,res){
             })
             //If prospect doesn't exist
             if(!prospectExist){
-                console.log(prospectExist)
+                console.log("does prospect exist ? (false) : ",prospectExist)
                 //Update it's state
                 await userClient.query(
                     Update(
@@ -108,7 +122,27 @@ export default async function(req,res){
                         ),
                         { data: { 'hasAccepted':true } }
                     )
-                )   
+                )
+                if(d.data.description !== ''){
+                    await userClient.query(
+                        Update(
+                            Select(['data',0, 'ref'],
+                                Map(
+                                    Paginate(Intersection(
+                                        Match(
+                                            Index("prospects_by_url"), d.data.prospectUrl
+                                        ),
+                                        Match(
+                                            Index("prospects_by_user"), d.data.userUrl
+                                        )
+                                    )),
+                                    Lambda("x", Get(Var("x")))
+                                )
+                            ),
+                            { data: { 'monitored':true } }
+                        )
+                    )
+                }
                 //Check if prospect has responded
                 await page.click('.message-anywhere-button.artdeco-button.artdeco-button--secondary')
                 
@@ -140,9 +174,9 @@ export default async function(req,res){
                                     Lambda("x", Get(Var("x")))
                                 )
                             ),
-                            { data: { 'hasResponded':true } }
+                            { data: { 'hasResponded':true, 'monitored':true } }
                         )
-                    )   
+                    )
                 }else{
                     await userClient.query(
                         Update(
