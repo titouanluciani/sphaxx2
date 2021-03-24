@@ -205,7 +205,9 @@ export default async function(req, res){
                             }
                         })
                     }*/
-                    let elements = document.getElementsByTagName('span')
+                    let elements = await page.evaluate(() => {
+                        return document.getElementsByTagName('span')
+                    })
                     for(el of elements){
                         if(el.innerText == 'Se connecter' || el.innerText == 'Connect')
                         console.log("el.innerTExt : ",el.innerText)
