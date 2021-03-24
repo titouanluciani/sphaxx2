@@ -194,8 +194,15 @@ export default async function(req, res){
 
                         profileBtnInnerText = await page.evaluate(() => {
                             //document.querySelector('.ml2.mr2.pv-s-profile-actions__overflow-toggle.artdeco-button.artdeco-button--circle.artdeco-button--muted.artdeco-button--2.artdeco-button--tertiary.artdeco-dropdown__trigger.artdeco-dropdown__trigger--placement-bottom.ember-view').click()
-                            const el = document.querySelector('.display-flex.t-normal.pv-s-profile-actions__label')
-                            return el.innerText
+                            if(!document.querySelector('.display-flex.t-normal.pv-s-profile-actions__label')){
+                                console.log("pro btn inner text 2")
+                                const el = document.querySelector('.pv-s-profile-actions.pv-s-profile-actions--connect.ml2.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view')
+                                return el.innerText
+                            }else{
+                                console.log("pro btn inner text 3")
+                                const el = document.querySelector('.display-flex.t-normal.pv-s-profile-actions__label')
+                                return el.innerText
+                            }
                         })
                     }
                     console.log("connect btn exist3")
