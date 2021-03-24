@@ -294,15 +294,16 @@ export default async function(req, res){
                                         //Click the Add note button in popup
                                         await delay(3000)
                                         try{
-                                            console.log("try add note btn popup")
+                                            console.log("try add note btn popup :", !addNoteBtnPopup)
                                             await page.click(addNoteBtnPopup)
                                         }catch(err){
                                             console.log("err when click add note : ", err)
-                                            
+
                                         }
                                         //Focus the textArea
                                         await delay(5000)
                                         try{
+                                            console.log("try add text area popup")
                                             await page.focus(addNoteTextAreaPopup)
                                         }catch(err){
                                             console.log("error for focus text area")
@@ -310,11 +311,18 @@ export default async function(req, res){
                                         }
                                         await delay(6000)
                                         //Type the description in textArea
+                                        console.log("type desc")
                                         await page.keyboard.type(description)
                                         await delay(8000)
                         
                                         //Click on connect after typing the description note
-                                        await page.click('.ml1.artdeco-button.artdeco-button--3.artdeco-button--primary.ember-view')
+                                        try{
+                                            console.log("click on send ")
+                                            await page.click('.ml1.artdeco-button.artdeco-button--3.artdeco-button--primary.ember-view')
+                                        }catch(err){
+                                            console.log("click send err : ",err)
+                                            
+                                        }
                                         await delay(3000)
                 
                         
