@@ -304,7 +304,12 @@ export default async function(req, res){
                                         await delay(5000)
                                         try{
                                             console.log("try add text area popup")
-                                            await page.focus(addNoteTextAreaPopup)
+                                            //await page.focus(addNoteTextAreaPopup)
+                                            const textarea = await page.evaluate(() => {
+                                                return document.getElementsByTagName('textarea')[0]
+                                            })
+                                            await delay(500)
+                                            await page.focus(textarea)
                                         }catch(err){
                                             console.log("error for focus text area")
                                             await page.focus('.ember-text-area.ember-view.connect-button-send-invite__custom-message.mb3')
@@ -321,7 +326,7 @@ export default async function(req, res){
                                             await page.click('.ml1.artdeco-button.artdeco-button--3.artdeco-button--primary.ember-view')
                                         }catch(err){
                                             console.log("click send err : ",err)
-                                            
+
                                         }
                                         await delay(3000)
                 
