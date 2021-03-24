@@ -193,6 +193,7 @@ export default async function(req, res){
                     //Check if Connected already
                     if(profileBtnInnerText == 'En attente'){
                         //Update Prospect info with "action='connect', isConnected = false, hasAccepted=false"
+                        console.log("en attente")
                         await userClient.query(
                             Update(
                                 prospectd.ref,
@@ -206,6 +207,8 @@ export default async function(req, res){
                     //Check if prospect not connected
                     }else if(profileBtnInnerText == 'Se connecter' ){// || prospectData.isConnected == false
                         //Click on "Se connecter"
+                        console.log("se connecter")
+
                         const click_response = await page.click(connectBtn)
                         console.log(click_response)
                             
@@ -220,6 +223,7 @@ export default async function(req, res){
                                 /* CHECK IF CONNECTED ALREADY */
                                 //Click on Connect btn in popup
                                 if(!page.$(connectBtnPopup)){
+                                    console.log("put hold")
                                     await client.query(
                                         Update(
                                             Select(
@@ -235,6 +239,7 @@ export default async function(req, res){
                                         )
                                     )
                                 }
+                                console.log("click on connect btn popup")
                                 await page.click(connectBtnPopup)
                 
                                 //Update prospects with action info
