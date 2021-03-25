@@ -104,11 +104,19 @@ function MyApp({ Component, pageProps }) {
     console.log(userInfo.data)
   },[userInfo])
   return (
-    <div className="overscroll-none">
-      <Navbar cookie={cookie} userInfo={userInfo} />
-      <Component {...pageProps} cookie={cookie} cookiesSession={cookiesSession} />
-    </div>
+      
+        !cookie ? (<div>
+          <div class="loader" id="loader"></div>
+          <h2>Click the "refresh button in the extension. Then refresh Linkedin. Wait a little then refresh the app</h2>
+        </div>) : 
+        (
+        <div className="overscroll-none">
+          <Navbar cookie={cookie} userInfo={userInfo} />
+          <Component {...pageProps} cookie={cookie} cookiesSession={cookiesSession} />
+        </div>
+        )
   )
+  
 }
 //<button onClick={handleGetUserUrl} className="fixed left-1/2 top-1/2 bg-red-300">GET USER URL</button>
 
