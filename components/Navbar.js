@@ -79,6 +79,10 @@ export default function Navbar({ cookie, userInfo }){
                 <div className="flex flex-col items-stretch py-6">
                         <NavBlock data={data} campaignsNumber={campaignsNumber} />
                 </div>
+                <div className="block">
+                    <a className="bg-indigo-400 p-1 rounded" href="https://sphaxx.co/tutorials">Need Help ?</a><br/>
+                    <a className="bg-indigo-400 p-1 rounded" href="https://sphaxx.co/tutorials">See our Tutorial</a>
+                </div>
             </div>
             
         </div>
