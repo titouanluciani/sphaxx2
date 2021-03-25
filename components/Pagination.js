@@ -1,6 +1,6 @@
 export default function Pagination({ rowsPerPage, totalProspects, paginate }){
     const pageNumbers = []
-    for(let i=1; i < Math.ceil( totalProspects / rowsPerPage );i++){
+    for(let i=1; i < Math.ceil( totalProspects / rowsPerPage ) + 1;i++){
         pageNumbers.push(i)
     }
     console.log("this is pagenumbers : ",pageNumbers, totalProspects, rowsPerPage, Math.ceil( totalProspects / rowsPerPage ))
