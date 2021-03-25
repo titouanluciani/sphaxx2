@@ -3,7 +3,7 @@ export default function Pagination({ rowsPerPage, totalProspects, paginate }){
     for(let i=1; i < Math.ceil( totalProspects / rowsPerPage );i++){
         pageNumbers.push(i)
     }
-    console.log("this is pagenumbers : ",pageNumbers)
+    console.log("this is pagenumbers : ",pageNumbers, totalProspects, rowsPerPage, Math.ceil( totalProspects / rowsPerPage ))
     return (
         <nav className="">
             <ul className="flex flex-row space-x-1">

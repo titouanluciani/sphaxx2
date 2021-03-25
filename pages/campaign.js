@@ -185,7 +185,7 @@ export default function Campaign({cookie, cookiesSession}){
         <div className="bg-gray-200 p-4 ml-48 overflow-x-hidden w-full h-screen">
             <Modal showModal={showModal} setShowModal={setShowModal} cookie={cookie} />
 
-            <div className="flex flex-row m-2 mb-4 bg-gray-200">
+            <div className="flex flex-row m-2 mb-4 bg-gray-200 ">
                     <select onChange={handleCampaigns} name="pets" id="pet-select" className="p-2 w-5/12 mr-6 bg-red-300 rounded">
                         {campaigns.map(campaign => campaign == 'Default Campaign' ? 
                             (
