@@ -106,8 +106,14 @@ function MyApp({ Component, pageProps }) {
   return (
       
         !cookie ? (<div>
-          <div class="loader" id="loader"></div>
-          <h2>Click the "refresh button in the extension. Then refresh Linkedin. Wait a little then refresh the app</h2>
+          <div className="loader" id="loader"></div>
+          <h2 className="font-bold">Click the "refresh" button in the extension. Then refresh Linkedin. Wait a little then refresh the app</h2>
+          <h2>If that still don't work, please contact one of us.</h2>
+          <ul>
+          <li><a className="text-blue-600 underline" href="https://www.linkedin.com/in/valentin-pouxguirimand/">https://www.linkedin.com/in/valentin-pouxguirimand/</a></li>
+          <li><a className="text-blue-600 underline" href="https://www.linkedin.com/in/ilias-khattabi-0282631b1/">https://www.linkedin.com/in/ilias-khattabi-0282631b1/</a></li>
+          <li><a className="text-blue-600 underline" href="https://www.linkedin.com/in/titouan-lenormand-059218202/">https://www.linkedin.com/in/titouan-lenormand-059218202/</a></li>
+          </ul>
         </div>) : 
         (
         <div className="overscroll-none">
