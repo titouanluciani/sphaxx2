@@ -138,7 +138,7 @@ export default async(event, context) => {
               name2 = name2.trim()
 
               data2 = [...data2, {"name":name2,"url":profile_href, "userUrl":c,"campaign":campaign}]
-              if(prospectsUrl.includes(!profile_href) && (profile_href !== "LinkedIn Member" || profile_href !== 'Member de LinkedIn')){
+              if(prospectsUrl.includes(!profile_href) && (profile_href !== "LinkedIn Member" || profile_href !== 'Membre de LinkedIn')){
                 await client.query(
                   q.Create(
                     q.Collection('prospects'),
