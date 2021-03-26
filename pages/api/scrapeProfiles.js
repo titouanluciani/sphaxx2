@@ -6,7 +6,7 @@ const delay = require('./utils/delay')
 const faunadb = require('faunadb')
 const q = faunadb.query
 const client = new faunadb.Client({ secret:process.env.FAUNA_SECRET_KEY })
-const { Map, Create, Collection, Select, Get, Var, CurrentIdentity, Lambda, Match, Index, Paginate } = faunadb.query
+const { Map, Create, Collection, Select, Get, Var, CurrentIdentity, Lambda, Match, Index, Paginate, Intersection } = faunadb.query
 import chromium from 'chrome-aws-lambda';
 
 
