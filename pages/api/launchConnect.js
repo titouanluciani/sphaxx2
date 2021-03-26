@@ -27,6 +27,46 @@ export default async function(req, res){
     console.log("launchConnect :: this is user secret : ",user_secret)
     const userClient = new faunadb.Client({ secret: user_secret })
     
+    //Get all prospectsUrl from wg
+    const wgs = await userClient.query(
+        Map(
+            Paginate(
+            Intersection(
+                Match("waitingLine_by_done", false),
+                Match("waitingLine_by_campaign", "anglish camp"),
+                Match(
+                "waitingLine_by_user",
+                "https://www.linkedin.com/in/titouan-lenormand-059218202/"
+                )   
+            )
+            ),
+            Lambda("wg", Get(Var("wg")))
+        )
+    )
+    //Update prospects action that already are in wg
+    for(let wg of wgs.data){
+        if(selectedProspects.includes(wg.data.prospectUrl) && wg.data.action == action){
+            console.log("update wg")
+            await userClient.query(
+                Update(
+                    wg.ref,
+                    {data : { 
+                        campaign: campaign, 
+                        option: option, 
+                        description: description, 
+                        done:false,
+                        } 
+                    }
+                )
+            )
+            const index = selectedProspects.indexOf(wg.data.prospectUrl);
+            if (index > -1) {
+                console.log("remove in selectedProspects")
+                selectedProspects.splice(index, 1);
+            }
+        }
+    }
+
     const ref = await userClient.query(
         Map(
             selectedProspects, 

@@ -15,7 +15,7 @@ export default async(event, context) => {
         let name2 = ""
         let profile_href = ""
         console.log(event.body)
-        const {url:url2, cookies, number, campaign} = JSON.parse(event.body)
+        const {url:url2, cookies, number, campaign} = JSON.parse(event.body)//cookie
         console.log(cookies)
         let data2 = []
         console.log("start",campaign)
@@ -30,22 +30,22 @@ export default async(event, context) => {
 
         const page = await browser.newPage()
         console.log("page")
-        await delay(3000)
+        //await delay(3000)
         await page.setViewport({ width: 1280, height: 800 })
-        await delay(3000)
+        //await delay(3000)
         await page.goto("https://linkedin.com")
         console.log("linkedin")
         await page.setCookie(...[cookies])
         //console.log("cookies")
 
-        await delay(3000)
+        //await delay(3000)
         await page.goto("https://linkedin.com/feed/")
 
         // Get current user 's linkedin's url (PRIMARY KEY)
         await page.waitForSelector('.feed-identity-module__actor-meta.profile-rail-card__actor-meta.break-words')
         const a = await page.$('.feed-identity-module__actor-meta.profile-rail-card__actor-meta.break-words')
         const pr = await a.$('a')
-        let c = ""
+        let c = ""//cookie
 
         try{
           const b = await pr.getProperty('href')
@@ -55,7 +55,7 @@ export default async(event, context) => {
           console.log("errr",err)
         }
 
-        await delay(3000)
+        //await delay(3000)
         await page.goto(url2)
         console.log("url")
         await delay(3000)
@@ -63,10 +63,10 @@ export default async(event, context) => {
         const y = await page.viewport().height
 
         //Make the number of pages appear in DOM
-        await delay(3000)
+        //await delay(3000)
         console.log("mooooove : ", x, y)
         await page.mouse.wheel({deltaX : x ,deltaY : y*3 })
-        await delay(3000)
+        //await delay(3000)
 
         await page.waitForSelector('.artdeco-pagination__button.artdeco-pagination__button--next.artdeco-button.artdeco-button--muted.artdeco-button--icon-right.artdeco-button--1.artdeco-button--tertiary.ember-view')
 
@@ -87,6 +87,25 @@ export default async(event, context) => {
           const linkedin_profiles = await page.$$(".reusable-search__result-container ")
           console.log("lentgth : ", typeof parseInt(linkedin_profiles.length))
 
+          //Prospects of the campaign
+          const prospects = await client.query(
+            Select(['data'],Map(
+              Paginate(
+                Intersection(
+                  Match(
+                    "prospects_by_user",
+                    c
+                  ),
+                  Match("prospects_by_campaign", campaign)
+                )
+              ), Lambda('prospect', Get(Var('prospect')))
+            ))
+          )
+          const prospectsUrl = []
+          for(let prospect of prospects){
+            prospectsUrl.push(prospect.data.url)
+          }
+          console.log("prospects url : ", prospectsUrl)
           for(let i=0;i< linkedin_profiles.length;i++){
               //console.log("iiiii : ", i)
               try{
@@ -117,21 +136,22 @@ export default async(event, context) => {
               }
               name2 = name2.split('Voir le profil de')[0]
               name2 = name2.trim()
-              
+
               data2 = [...data2, {"name":name2,"url":profile_href, "userUrl":c,"campaign":campaign}]
-              await client.query(
-                q.Create(
-                  q.Collection('prospects'),
-                  {data : {name:name2,url:profile_href, userUrl:c, campaign:campaign, isConnected:false}}
-                )
-              ).then(res=>console.log(res))
-              .catch(err=>console.log(err))
+              if(prospectsUrl.includes(!profile_href) && (profile_href !== "LinkedIn Member" || profile_href !== 'Member de LinkedIn')){
+                await client.query(
+                  q.Create(
+                    q.Collection('prospects'),
+                    {data : {name:name2,url:profile_href, userUrl:c, campaign:campaign, isConnected:false}}
+                  )
+                ).then(res=>console.log(res))
+                .catch(err=>console.log(err))
+              }
           }
           console.log(data2)
           console.log(data2.length)
           console.log("Next page")
           
-          //browser.close()
 
           await page.waitForSelector('.artdeco-pagination__button.artdeco-pagination__button--next.artdeco-button.artdeco-button--muted.artdeco-button--icon-right.artdeco-button--1.artdeco-button--tertiary.ember-view')
           //const suivant = await page.$('.artdeco-pagination__button.artdeco-pagination__button--next.artdeco-button.artdeco-button--muted.artdeco-button--icon-right.artdeco-button--1.artdeco-button--tertiary.ember-view')
@@ -145,6 +165,8 @@ export default async(event, context) => {
         context.send(data2)
         
         //return formattedResponse(200, data2)
+        await browser.close()
+
     } catch(err) {
         console.error("errooorrr : ", err)
         return formattedResponse(500, data2)
