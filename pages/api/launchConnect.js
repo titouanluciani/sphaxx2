@@ -4,7 +4,7 @@ const q = faunadb.query
 const client = new faunadb.Client({ secret: process.env.FAUNA_SECRET_KEY })
 
 const { Map, Create, Collection, Select, Get, Var, CurrentIdentity, Lambda, Match, Index, Paginate, Intersection,
-        Update, Create, Collection } = faunadb.query
+        Update, Collection } = faunadb.query
 
 export default async function(req, res){
     console.log(req.body)
