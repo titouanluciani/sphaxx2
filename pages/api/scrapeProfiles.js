@@ -23,7 +23,7 @@ export default async(event, context) => {
           args: [...chromium.args,  "--disable-web-security"],//"--hide-scrollbars",
         defaultViewport: null,//chromium.defaultViewport
         executablePath: await chromium.executablePath,
-        headless: false,
+        headless: true,
         ignoreHTTPSErrors: true,
         })
         console.log("launch", number)
@@ -108,14 +108,10 @@ export default async(event, context) => {
           console.log("prospects url : ", prospectsUrl)
           //"ul" tag with list of prospects on a page
 
-          let ul = await page.evaluate(() => {
-            return document.querySelector('.reusable-search__entity-results-list.list-style-none')
-          })
-          console.log("li after ul")
-          let li = await page.evaluate(() => {
-            return ul.getElementsByTagName('li') 
-          })
-          console.log("li done")
+          let ul = await page.$('.reusable-search__entity-results-list.list-style-none')
+          console.log("li after ul : ")
+          let li = await ul.$$('li') 
+          console.log("li done : ")
           for(let i=0;i< linkedin_profiles.length;i++){
               //console.log("iiiii : ", i)
               try{
@@ -150,13 +146,19 @@ export default async(event, context) => {
               data2 = [...data2, {"name":name2,"url":profile_href, "userUrl":c,"campaign":campaign}]
 
               //Check button state
-              let state = await page.evaluate(() => {
+              /*let state = await page.evaluate(() => {
                 return li[i].querySelector('.artdeco-button.artdeco-button--2.artdeco-button--secondary.ember-view').innerText
-              })
+              })*/
+              let state = await li[i].$('.artdeco-button.artdeco-button--2.artdeco-button--secondary.ember-view')
+              console.log("staate  :")
+              state = await state.getProperty('innerText')
+              state = await state.jsonValue()
+              console.log("staate2  :", state)
               //state == (Se connecter' || 'Connect') |||| ('En attente' || 'Pending')
-              console.log("prospectsUrl includeds url ? ",prospectsUrl.includes(!profile_href))
+              console.log("prospectsUrl includeds url ? ",prospectsUrl.includes(profile_href))
               if(!prospectsUrl.includes(profile_href) && (profile_href !== "LinkedIn Member" && profile_href !== 'Membre de LinkedIn')){
                 if(state == 'Se connecter' || state ==  'Connect'){
+                  console.log("connnecctt")
                   await client.query(
                     q.Create(
                       q.Collection('prospects'),
@@ -164,7 +166,8 @@ export default async(event, context) => {
                     )
                   )
                 }
-                if(state == 'En attente' || state ==  'Pending'){
+                else if(state == 'En attente' || state ==  'Pending'){
+                  console.log("pendingggg")
                   await client.query(
                     q.Create(
                       q.Collection('prospects'),
@@ -172,6 +175,7 @@ export default async(event, context) => {
                     )
                   )
                 }else{
+                  console.log("alreaaddyy connecteddd")
                   await client.query(
                     q.Create(
                       q.Collection('prospects'),
