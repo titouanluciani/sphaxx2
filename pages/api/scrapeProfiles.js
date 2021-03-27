@@ -149,8 +149,9 @@ export default async(event, context) => {
               /*let state = await page.evaluate(() => {
                 return li[i].querySelector('.artdeco-button.artdeco-button--2.artdeco-button--secondary.ember-view').innerText
               })*/
+              let state = ''
               try{
-                let state = await li[i].$('.artdeco-button.artdeco-button--2.artdeco-button--secondary.ember-view')
+                state = await li[i].$('.artdeco-button.artdeco-button--2.artdeco-button--secondary.ember-view')
                 console.log("staate  :")
                 state = await state.getProperty('innerText')
                 state = await state.jsonValue()
