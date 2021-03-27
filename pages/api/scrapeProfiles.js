@@ -139,7 +139,7 @@ export default async(event, context) => {
 
               data2 = [...data2, {"name":name2,"url":profile_href, "userUrl":c,"campaign":campaign}]
               console.log("prospectsUrl includeds url ? ",prospectsUrl.includes(!profile_href))
-              if(prospectsUrl.includes(!profile_href) && (profile_href !== "LinkedIn Member" || profile_href !== 'Membre de LinkedIn')){
+              if(!prospectsUrl.includes(profile_href) && (profile_href !== "LinkedIn Member" || profile_href !== 'Membre de LinkedIn')){
                 await client.query(
                   q.Create(
                     q.Collection('prospects'),
