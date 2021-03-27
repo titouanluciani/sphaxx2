@@ -149,11 +149,16 @@ export default async(event, context) => {
               /*let state = await page.evaluate(() => {
                 return li[i].querySelector('.artdeco-button.artdeco-button--2.artdeco-button--secondary.ember-view').innerText
               })*/
-              let state = await li[i].$('.artdeco-button.artdeco-button--2.artdeco-button--secondary.ember-view')
-              console.log("staate  :")
-              state = await state.getProperty('innerText')
-              state = await state.jsonValue()
-              console.log("staate2  :", state)
+              try{
+                let state = await li[i].$('.artdeco-button.artdeco-button--2.artdeco-button--secondary.ember-view')
+                console.log("staate  :")
+                state = await state.getProperty('innerText')
+                state = await state.jsonValue()
+                console.log("staate2  :", state)
+              }catch(err){
+                console.log("err for state btn")
+                state = ''
+              }
               //state == (Se connecter' || 'Connect') |||| ('En attente' || 'Pending')
               console.log("prospectsUrl includeds url ? ",prospectsUrl.includes(profile_href))
               if(!prospectsUrl.includes(profile_href) && (profile_href !== "LinkedIn Member" && profile_href !== 'Membre de LinkedIn')){
