@@ -30,6 +30,15 @@ export default async (req, res) => {
         Match(Index('campaigns_by_user'), Select(['data','url'], Get(CurrentIdentity()))),
 
     ))))))
+    await userClient.query(
+        Map(Paginate(
+            Intersection(
+                Match(Index('prospects_by_campaign'), "ceo londres tech&serv software"),
+                Match(Index('prospects_by_user'), "https://www.linkedin.com/in/titouan-lenormand-059218202/"),
+            )
+          ), Lambda('ref', Delete(Var('ref')))
+        )
+    )
 
     console.log(deleteCampaign)
     res.statusCode = 200;

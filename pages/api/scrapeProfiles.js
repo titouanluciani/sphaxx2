@@ -106,6 +106,16 @@ export default async(event, context) => {
             prospectsUrl.push(prospect.data.url)
           }
           console.log("prospects url : ", prospectsUrl)
+          //"ul" tag with list of prospects on a page
+
+          let ul = await page.evaluate(() => {
+            return document.querySelector('.reusable-search__entity-results-list.list-style-none')
+          })
+          console.log("li after ul")
+          let li = await page.evaluate(() => {
+            return ul.getElementsByTagName('li') 
+          })
+          console.log("li done")
           for(let i=0;i< linkedin_profiles.length;i++){
               //console.log("iiiii : ", i)
               try{
@@ -138,15 +148,37 @@ export default async(event, context) => {
               name2 = name2.trim()
 
               data2 = [...data2, {"name":name2,"url":profile_href, "userUrl":c,"campaign":campaign}]
+
+              //Check button state
+              let state = await page.evaluate(() => {
+                return li[i].querySelector('.artdeco-button.artdeco-button--2.artdeco-button--secondary.ember-view').innerText
+              })
+              //state == (Se connecter' || 'Connect') |||| ('En attente' || 'Pending')
               console.log("prospectsUrl includeds url ? ",prospectsUrl.includes(!profile_href))
               if(!prospectsUrl.includes(profile_href) && (profile_href !== "LinkedIn Member" && profile_href !== 'Membre de LinkedIn')){
-                await client.query(
-                  q.Create(
-                    q.Collection('prospects'),
-                    {data : {name:name2,url:profile_href, userUrl:c, campaign:campaign, isConnected:false}}
+                if(state == 'Se connecter' || state ==  'Connect'){
+                  await client.query(
+                    q.Create(
+                      q.Collection('prospects'),
+                      {data : {name:name2,url:profile_href, userUrl:c, campaign:campaign, isConnected:false}}
+                    )
                   )
-                ).then(res=>console.log(res))
-                .catch(err=>console.log(err))
+                }
+                if(state == 'En attente' || state ==  'Pending'){
+                  await client.query(
+                    q.Create(
+                      q.Collection('prospects'),
+                      {data : {name:name2,url:profile_href, userUrl:c, campaign:campaign, isConnected:true, hasAccepted: false }}
+                    )
+                  )
+                }else{
+                  await client.query(
+                    q.Create(
+                      q.Collection('prospects'),
+                      {data : {name:name2,url:profile_href, userUrl:c, campaign:campaign, isConnected:true, hasAccepted: true }}
+                    )
+                  )
+                }
               }
           }
           console.log(data2)
