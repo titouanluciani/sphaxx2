@@ -15,7 +15,7 @@ export default async(event, context) => {
         let name2 = ""
         let profile_href = ""
         console.log(event.body)
-        const {url:url2, cookies, number, campaign} = JSON.parse(event.body)//cookie
+        const {url:url2, cookie, cookies, number, campaign} = JSON.parse(event.body)
         console.log(cookies)
         let data2 = []
         console.log("start",campaign)
@@ -23,7 +23,7 @@ export default async(event, context) => {
           args: [...chromium.args,  "--disable-web-security"],//"--hide-scrollbars",
         defaultViewport: null,//chromium.defaultViewport
         executablePath: await chromium.executablePath,
-        headless: true,
+        headless: false,
         ignoreHTTPSErrors: true,
         })
         console.log("launch", number)
@@ -37,16 +37,16 @@ export default async(event, context) => {
         console.log("linkedin")
         await page.setCookie(...[cookies])
         //console.log("cookies")
-
+        /*
         //await delay(3000)
         await page.goto("https://linkedin.com/feed/")
 
         // Get current user 's linkedin's url (PRIMARY KEY)
         await page.waitForSelector('.feed-identity-module__actor-meta.profile-rail-card__actor-meta.break-words')
         const a = await page.$('.feed-identity-module__actor-meta.profile-rail-card__actor-meta.break-words')
-        const pr = await a.$('a')
-        let c = ""//cookie
-
+        const pr = await a.$('a')*/
+        let c = cookie.value
+        /*
         try{
           const b = await pr.getProperty('href')
           c = await b.jsonValue()
@@ -54,7 +54,7 @@ export default async(event, context) => {
         }catch(err){
           console.log("errr",err)
         }
-
+        */
         //await delay(3000)
         await page.goto(url2)
         console.log("url")
@@ -86,7 +86,7 @@ export default async(event, context) => {
           // Get the number of linkedin profile in the current page
           const linkedin_profiles = await page.$$(".reusable-search__result-container ")
           console.log("lentgth : ", typeof parseInt(linkedin_profiles.length))
-
+          console.log(cookie, c)
           //Prospects of the campaign
           const prospects = await client.query(
             Select(['data'],Map(
