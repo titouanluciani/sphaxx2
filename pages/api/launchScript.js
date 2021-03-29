@@ -52,8 +52,6 @@ export default async function(req, res){
         res.statusCode = 200
         res.send("user put in hold", user_url)
     }else{
-
-        
             console.log("LAUNCHSCRIPT :: this is user secret : ",user_secret)
             const userClient = new faunadb.Client({ secret: user_secret })
             console.log(user_url)
@@ -83,7 +81,10 @@ export default async function(req, res){
                 Select(['data',0],
                     Map(
                         Paginate(
-                            Match(Index('prospects_by_url'), prospectUrl)
+                            Intersection(
+                                Match(Index('prospects_by_url'), prospectUrl),
+                                Match(Index('prospects_by_user'), user_url)
+                            )
                         ),
                         Lambda('x', Get(Var('x'))
                         )
@@ -168,13 +169,30 @@ export default async function(req, res){
                 //If connect btn doesn't exist
                 if(connectExist){
                     console.log("connect btn doesn't exist")
-                    //Update user Info
-                    await userClient.query(
-                        Update(
-                            prospectd.ref,
-                            { data: { 'isConnected':true, 'hasAccepted':true } }
+                    //Click on trois petits points
+                    try{
+                        console.log("trois petits points")
+                        await page.click('.ml2.mr2.pv-s-profile-actions__overflow-toggle.artdeco-button.artdeco-button--circle.artdeco-button--muted.artdeco-button--2.artdeco-button--tertiary.artdeco-dropdown__trigger.artdeco-dropdown__trigger--placement-bottom.ember-view')
+                        await delay(500)
+                        let popupPoints = await page.$('.pv-s-profile-actions.pv-s-profile-actions--connect.pv-s-profile-actions__overflow-button.full-width.text-align-left.artdeco-dropdown__item.artdeco-dropdown__item--is-dropdown.ember-view')
+                        await delay(500)
+                        await popupPoints.click('.pv-s-profile-actions.pv-s-profile-actions--connect.pv-s-profile-actions__overflow-button.full-width.text-align-left.artdeco-dropdown__item.artdeco-dropdown__item--is-dropdown.ember-view')
+                        await userClient.query(
+                            Update(
+                                prospectd.ref,
+                                { data: { 'isConnected':true, 'hasAccepted':false } }
+                            )
                         )
-                    )
+                    }catch(err){
+                        console.log("err on trois petits points")
+                        //Update user Info
+                        await userClient.query(
+                            Update(
+                                prospectd.ref,
+                                { data: { 'isConnected':true, 'hasAccepted':true } }
+                            )
+                        )
+                    }
                 }else{
                     console.log("connect btn exist")
                     //Get the text on the connect btn profile
@@ -219,14 +237,14 @@ export default async function(req, res){
                     let doneFor = false
                     for(const el of elements){
                         //let el = elements.values[i]
-                        if((el == 'Se connecter' || el == 'Connect' || el == 'En attente') && !doneFor){
+                        if((el == 'Se connecter' || el == 'Connect' || el == 'En attente' || el == 'Pending') && !doneFor){
                             doneFor = true
                             console.log("el.innerTExt : ",el)
                             profileBtnInnerText = el
                             //console.log("connect btn exist3 : ", profileBtnInnerText)
         
                             //Check if Connected already
-                            if(profileBtnInnerText == 'En attente'){
+                            if(profileBtnInnerText == 'En attente' || profileBtnInnerText == 'Pending'){
                                 //Update Prospect info with "action='connect', isConnected = false, hasAccepted=false"
                                 console.log("en attente")
                                 await userClient.query(
@@ -330,15 +348,6 @@ export default async function(req, res){
 
                                         }
                                         await delay(3000)
-                
-                        
-                                        //Update the prospect with current action info
-                                        await userClient.query(
-                                            Update(
-                                                prospectd.ref,
-                                                { data: { 'action':action, 'note':true } }
-                                            )
-                                        )
                                         //Update prospects with action info
                                         await userClient.query(
                                             Update(
@@ -347,6 +356,22 @@ export default async function(req, res){
                                             )
                                         )
                                     }
+                                }else if(!page.$(connectBtnPopup)){
+                                        console.log("put hold")
+                                        await client.query(
+                                            Update(
+                                                Select(
+                                                    ['ref'],
+                                                    Get(
+                                                        Match(
+                                                            Index('users_by_url'),
+                                                            user_url
+                                                        )
+                                                    ))
+                                                ,
+                                                { data : { hold: true } }
+                                            )
+                                        )
                                 }
                             }
                         }
@@ -354,8 +379,8 @@ export default async function(req, res){
                 }
                 
                 
-                res.statusCode = 200
-                res.json(url)
+                //res.statusCode = 200
+                //res.json(url)
         
             }else if(action == 'message'){
                 /* CHECK IF HAS ACCEPTED CONNECTION && CHECK IF NOTE HAS BEEN SEND (if so CHECK IF HAS RESPONDED) */
@@ -431,8 +456,8 @@ export default async function(req, res){
             }
             
             
+            await browser.close()
     }
-    await browser.close()
     res.statusCode =200
     res.send("aha")
 }

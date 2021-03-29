@@ -107,7 +107,7 @@ function MyApp({ Component, pageProps }) {
       
         !cookie ? (<div>
           <div className="loader" id="loader"></div>
-          <h2 className="font-bold">Click the "refresh" button in the extension. Then refresh Linkedin. Wait a little then refresh the app</h2>
+          <h2 className="font-bold">Click the "refresh" button in the extension. Then refresh Linkedin. Wait a little (15-20sec) then refresh the app</h2>
           <h2>If that still don't work, please contact one of us.</h2>
           <ul>
           <li><a className="text-blue-600 underline" href="https://www.linkedin.com/in/valentin-pouxguirimand/">https://www.linkedin.com/in/valentin-pouxguirimand/</a></li>

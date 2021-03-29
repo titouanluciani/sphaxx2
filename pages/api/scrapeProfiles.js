@@ -96,8 +96,8 @@ export default async(event, context) => {
                   Match(
                     "prospects_by_user",
                     c
-                  ),
-                  Match("prospects_by_campaign", campaign)
+                  )
+                  //Match("prospects_by_campaign", campaign)
                 )
               ), Lambda('prospect', Get(Var('prospect')))
             ))
@@ -106,13 +106,17 @@ export default async(event, context) => {
           for(let prospect of prospects){
             prospectsUrl.push(prospect.data.url)
           }
-          console.log("prospects url : ", prospectsUrl)
-          //"ul" tag with list of prospects on a page
+          //console.log("prospects url : ", prospectsUrl)
 
+          //"ul" tag with list of prospects on a page
           let ul = await page.$('.reusable-search__entity-results-list.list-style-none')
           console.log("li after ul : ")
           let li = await ul.$$('li') 
           console.log("li done : ")
+          //Get 1,2,3rd relation distance
+          let titles = page.$$('.entity-result__title-text.t-16')
+          console.log("titles done :")
+
           for(let i=0;i< linkedin_profiles.length;i++){
               //console.log("iiiii : ", i)
               try{
@@ -161,7 +165,19 @@ export default async(event, context) => {
                 console.log("err for state btn")
                 state = ''
               }
-              //state == (Se connecter' || 'Connect') |||| ('En attente' || 'Pending')
+              //Get relation distance
+              let relation = ''
+              try{
+                relation = await titles[i].$('.image-text-lockup__text.entity-result__badge-text')
+                console.log("relation  :")
+                relation = await relation.getProperty('innerText')
+                relation = await relation.jsonValue()
+                console.log("relation2  :", relation)
+              }catch(err){
+                console.log("err for relation btn")
+                relation = ''
+              }
+              //state == (Se connecter' || 'Connect') |||| ('En attente' || 'Pending') || Message
               console.log("prospectsUrl includeds url ? ",prospectsUrl.includes(profile_href))
               if(!prospectsUrl.includes(profile_href) && (profile_href !== "LinkedIn Member" && profile_href !== 'Membre de LinkedIn')){
                 if(state == 'Se connecter' || state ==  'Connect'){
@@ -179,6 +195,14 @@ export default async(event, context) => {
                     q.Create(
                       q.Collection('prospects'),
                       {data : {name:name2,url:profile_href, userUrl:c, campaign:campaign, isConnected:true, hasAccepted: false }}
+                    )
+                  )
+                }else if(state == 'Message' && (relation == '3rd+' || relation == '3e et +' ) ){
+                  console.log("3rd trois petits points")
+                  await client.query(
+                    q.Create(
+                      q.Collection('prospects'),
+                      {data : {name:name2,url:profile_href, userUrl:c, campaign:campaign, isConnected:false, troisPetitsPoints:true }}
                     )
                   )
                 }else{
