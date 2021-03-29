@@ -381,7 +381,8 @@ export default async function(req, res){
                 
                 //res.statusCode = 200
                 //res.json(url)
-        
+                await browser.close()
+    
             }else if(action == 'message'){
                 /* CHECK IF HAS ACCEPTED CONNECTION && CHECK IF NOTE HAS BEEN SEND (if so CHECK IF HAS RESPONDED) */
                 /* CHECK IF HAS ACCEPTED CONNECTION BEFORE DELETED */
@@ -453,10 +454,10 @@ export default async function(req, res){
                     }
         
                 }
+                await browser.close()
             }
             
             
-            await browser.close()
     }
     res.statusCode =200
     res.send("aha")
