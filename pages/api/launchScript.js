@@ -124,7 +124,7 @@ export default async function(req, res){
                 args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
                 defaultViewport: chromium.defaultViewport,
                 executablePath: await chromium.executablePath,
-                headless: false,
+                headless: true,
                 ignoreHTTPSErrors: true,
                 })
             console.log("launchhhh")
@@ -432,6 +432,7 @@ export default async function(req, res){
             
             
     }
-    //res.statusCode =200
-    //res.send("aha")
+    await browser.close()
+    res.statusCode =200
+    res.send("aha")
 }

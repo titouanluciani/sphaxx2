@@ -23,7 +23,7 @@ export default async(event, context) => {
           args: [...chromium.args,  "--disable-web-security"],//"--hide-scrollbars",
         defaultViewport: null,//chromium.defaultViewport
         executablePath: await chromium.executablePath,
-        headless: false,
+        headless: true,
         ignoreHTTPSErrors: true,
         })
         console.log("launch", number)
@@ -45,6 +45,7 @@ export default async(event, context) => {
         await page.waitForSelector('.feed-identity-module__actor-meta.profile-rail-card__actor-meta.break-words')
         const a = await page.$('.feed-identity-module__actor-meta.profile-rail-card__actor-meta.break-words')
         const pr = await a.$('a')*/
+        console.log(cookie)
         let c = cookie.value
         /*
         try{
@@ -212,6 +213,7 @@ export default async(event, context) => {
 
     } catch(err) {
         console.error("errooorrr : ", err)
+        await browser.close()
         return formattedResponse(500, data2)
     }
 }
