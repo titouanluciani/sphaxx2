@@ -42,14 +42,19 @@ export default function ProspectList({ prospects, handleCheck, campaignHasChange
             <div className="">
                 <input type="checkbox" id="Connection not send" name="isNotConnected" onClick={handleCheckFilter} />
                 <label className="mr-4" for="Connection not send">Connection not send</label>
+
                 <input type="checkbox" id="Connection send" name="isConnected" onClick={handleCheckFilter} />
                 <label className="mr-4" for="Connection send">Connection send</label>
+
                 <input type="checkbox" id="Connection in hold" name="hasNotAccepted" onClick={handleCheckFilter} />
                 <label className="mr-4" for="Connection in hold">Connection in hold</label>
+
                 <input type="checkbox" id="Connected" name="hasAccepted" onClick={handleCheckFilter} />
                 <label className="mr-4" for="Connected">Connected</label><br/>
+
                 <input type="checkbox" id="Has not responded" name="hasNotResponded" onClick={handleCheckFilter} />
                 <label className="mr-4" for="Has not responded">Has not responded</label>
+                
                 <input type="checkbox" id="Has responded" name="hasResponded" onClick={handleCheckFilter} />
                 <label for="Has responded">Has responded</label>
             </div>

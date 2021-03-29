@@ -1,65 +1,43 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import { React, useEffect, useState } from 'react';
 
-export default function Home() {
-  return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+export default function Dashboard({ cookie, cookiesSession }){
+    
+    const monitore = async () => {
+        await fetch('/api/monitoring', {
+            method:'POST',
+            body:JSON.stringify({ cookie, cookiesSession})
+          })
+    }
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">NSPHAXX</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+    return(
+        <div className="ml-48 grid grid-cols-3 grid-rows-4 h-screen gap-1">
+            <div className="bg-red-300 row-span-2">
+                LinkedIn Stats
+                <div className="flex flex-row text-center my-2">
+                        <img width='32' height='32' src="https://cdn4.iconfinder.com/data/icons/glyphs/24/icons_send-512.png" alt=""/>
+                        <p className="ml-4">123</p>
+                </div>
+                <div className="flex flex-row text-center my-2">
+                        <img width='32' height='32' src="https://cdn4.iconfinder.com/data/icons/glyphs/24/icons_send-512.png" alt=""/>
+                        <p className="ml-4">123</p>
+                </div>
+                <div className="flex flex-row text-center my-2">
+                        <img width='32' height='32' src="https://cdn4.iconfinder.com/data/icons/glyphs/24/icons_send-512.png" alt=""/>
+                        <p className="ml-4">123</p>
+                </div>
+                <div className="flex flex-row text-center my-2">
+                        <img width='32' height='32' src="https://cdn4.iconfinder.com/data/icons/glyphs/24/icons_send-512.png" alt=""/>
+                        <p className="ml-4">123</p>
+                </div>
+            </div>
+            <div className="bg-blue-300 row-span-2 col-span-2">
+                Global Performance
+                <button className="inline-block ml-4 mt-2 bg-purple-500 p-1 rounded text-white" onClick={monitore()}>Refresh Stats</button>
+            </div>
+            <div className="bg-green-300 col-span-full row-span-2">
+                Activity Report
+            </div>
         </div>
-      </main>
 
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
+    )
 }
