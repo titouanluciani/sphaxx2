@@ -34,10 +34,10 @@ export default async function(req, res){
             Paginate(
             Intersection(
                 Match("waitingLine_by_done", false),
-                Match("waitingLine_by_campaign", "anglish camp"),
+                Match("waitingLine_by_campaign", campaign),
                 Match(
                 "waitingLine_by_user",
-                "https://www.linkedin.com/in/titouan-lenormand-059218202/"
+                cookie
                 )   
             )
             ),
