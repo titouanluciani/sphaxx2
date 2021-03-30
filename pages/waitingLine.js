@@ -8,6 +8,7 @@ export default function Prospects({cookie, cookiesSession}){
     const [selectedProspects, setSelectedProspects] = useState([])
     const [campaignHasChanged, setCampaignHasChanged] = useState(false)
     const [isCheckAll, setIsCheckAll] = useState(false)
+    let hold = false
 
     const loadProspects = async (campaign, cookie) => {
         try{
@@ -72,7 +73,17 @@ export default function Prospects({cookie, cookiesSession}){
             body:JSON.stringify({cookie, selectedProspects})
         })
     }
-
+    const handleWG = async () => {
+        console.log("thiiiss is hold before : ",hold)
+        hold = !hold
+        console.log("thiiiss is hold after : ",hold)
+        await fetch('api/Hold',{
+            method: 'POST',
+            body: JSON.stringify({cookie, hold})
+        })
+        document.getElementById('hold').style.background = hold ? '#00CC33' : '#FF0000'
+        document.getElementById('hold').innerText = hold ? 'Start' : 'Stop'
+    }
     useEffect(() => {
         console.log("cookie for useEffect loadprosp loadcamp : ", cookie)
         loadProspects(campaign, cookie);
@@ -92,6 +103,7 @@ export default function Prospects({cookie, cookiesSession}){
                         ))}
                         <option value="All">All</option>
                     </select>
+            <button onClick={handleWG} id="hold" className="rounded p-2 bg-red-500 my-2 w-32 h-12 text-white">{ hold ? "Start" : "Stop" }</button>
             <ProspectList2 prospects={prospects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} handleCheckAll={handleCheckAll} isCheckAll={isCheckAll} handleDelete={handleDelete} />
 
         </div>
