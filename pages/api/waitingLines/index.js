@@ -36,8 +36,12 @@ export default async (req, res) => {
         
         const waitingLine = await userClient.query(Map(
             Paginate(
+                Intersection(
                     Match(
-                        Index('waitingLine_by_user'),Select(['data','url'], Get(CurrentIdentity())))
+                        Index('waitingLine_by_user'),Select(['data','url'], Get(CurrentIdentity()))),
+                    Match(
+                        Index('waitingLine_by_done'), false),
+                )
     
             ), Lambda(['ref'], Select(['data'], Get(Var('ref'))))
         ))

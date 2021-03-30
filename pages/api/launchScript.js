@@ -125,7 +125,7 @@ export default async function(req, res){
                 args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
                 defaultViewport: chromium.defaultViewport,
                 executablePath: await chromium.executablePath,
-                headless: true,
+                headless: false,
                 ignoreHTTPSErrors: true,
                 })
             console.log("launchhhh")
@@ -173,16 +173,127 @@ export default async function(req, res){
                     try{
                         console.log("trois petits points")
                         await page.click('.ml2.mr2.pv-s-profile-actions__overflow-toggle.artdeco-button.artdeco-button--circle.artdeco-button--muted.artdeco-button--2.artdeco-button--tertiary.artdeco-dropdown__trigger.artdeco-dropdown__trigger--placement-bottom.ember-view')
+                        console.log("trois petits points1")
                         await delay(500)
                         let popupPoints = await page.$('.pv-s-profile-actions.pv-s-profile-actions--connect.pv-s-profile-actions__overflow-button.full-width.text-align-left.artdeco-dropdown__item.artdeco-dropdown__item--is-dropdown.ember-view')
+                        console.log("trois petits points2")
                         await delay(500)
                         await popupPoints.click('.pv-s-profile-actions.pv-s-profile-actions--connect.pv-s-profile-actions__overflow-button.full-width.text-align-left.artdeco-dropdown__item.artdeco-dropdown__item--is-dropdown.ember-view')
+                        console.log("trois petits points3")
                         await userClient.query(
                             Update(
                                 prospectd.ref,
                                 { data: { 'isConnected':true, 'hasAccepted':false } }
-                            )
-                        )
+                                )
+                                )
+                        console.log("trois petits points4")
+                        if(page.$(connectBtnPopup)){
+                            console.log('if statement')
+                
+                            //If no note to send
+                            if(description == '' || description == ' '){
+                                console.log("no note")
+                
+                                /* CHECK IF CONNECTED ALREADY */
+                                //Click on Connect btn in popup
+                                if(!page.$(connectBtnPopup)){
+                                    console.log("put hold")
+                                    await client.query(
+                                        Update(
+                                            Select(
+                                                ['ref'],
+                                                Get(
+                                                    Match(
+                                                        Index('users_by_url'),
+                                                        user_url
+                                                    )
+                                                ))
+                                            ,
+                                            { data : { hold: true } }
+                                        )
+                                    )
+                                }
+                                console.log("click on connect btn popup")
+                                await page.click(connectBtnPopup)
+                
+                                //Update prospects with action info
+                                await userClient.query(
+                                    Update(
+                                        prospectd.ref,
+                                        { data: { 'action':action, 'note':false, 'isConnected':true, 'hasAccepted':false } }
+                                    )
+                                )
+                            }
+                
+                            //If note to be send with connection
+                            else{
+                                console.log("note : ", description)        
+                                
+                
+                                //Click the Add note button in popup
+                                await delay(3000)
+                                try{
+                                    console.log("try add note btn popup :", !addNoteBtnPopup)
+                                    await page.click(addNoteBtnPopup)
+                                }catch(err){
+                                    console.log("err when click add note : ", err)
+
+                                }
+                                //Focus the textArea
+                                await delay(5000)
+                                
+                                try{
+                                    console.log("try add text area popup")
+                                    //await page.focus(addNoteTextAreaPopup)
+                                    const textarea = await page.evaluate(() => {
+                                        return document.getElementsByTagName('textarea')[0]
+                                    })
+                                    await delay(500)
+                                    await page.focus(textarea)
+                                }catch(err){
+                                    console.log("error for focus text area")
+                                    await page.focus('.ember-text-area.ember-view.connect-button-send-invite__custom-message.mb3')
+                                }
+                                await delay(6000)
+                                //Type the description in textArea
+                                console.log("type desc")
+                                await page.keyboard.type(description)
+                                await delay(8000)
+                
+                                //Click on connect after typing the description note
+                                try{
+                                    console.log("click on send ")
+                                    await page.click('.ml1.artdeco-button.artdeco-button--3.artdeco-button--primary.ember-view')
+                                }catch(err){
+                                    console.log("click send err : ",err)
+
+                                }
+                                await delay(3000)
+                                //Update prospects with action info
+                                await userClient.query(
+                                    Update(
+                                        prospectd.ref,
+                                        { data: { 'action':action, 'note':true, 'isConnected':true, 'hasAccepted':false, "hasResponded":false } }
+                                    )
+                                )
+                            }
+                        }else if(!page.$(connectBtnPopup)){
+                                console.log("put hold")
+                                await client.query(
+                                    Update(
+                                        Select(
+                                            ['ref'],
+                                            Get(
+                                                Match(
+                                                    Index('users_by_url'),
+                                                    user_url
+                                                )
+                                            ))
+                                        ,
+                                        { data : { hold: true } }
+                                    )
+                                )
+                        }
                     }catch(err){
                         console.log("err on trois petits points")
                         //Update user Info
