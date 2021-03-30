@@ -40,6 +40,8 @@ export default async (req, res) => {
                     Match(
                         Index('waitingLine_by_campaign'), campaign),
                     Match(
+                        Index('waitingLine_by_done'), false),
+                    Match(
                         Index('waitingLine_by_user'),Select(['data','url'], Get(CurrentIdentity())))
                 )
     

@@ -29,7 +29,8 @@ export default function Prospects({cookie, cookiesSession}){
                 const {waitingLine} = await res.json();
                 console.log("wggg : ",waitingLine.data.filter(prospect => prospect.done == false)) 
                 console.log("wGG  :", waitingLine.data)
-                setProspects(waitingLine.data.filter(prospect => prospect.done == false))
+                //setProspects(waitingLine.data.filter(prospect => prospect.done == false))
+                setProspects(waitingLine.data)
             }
 
         }catch(err){

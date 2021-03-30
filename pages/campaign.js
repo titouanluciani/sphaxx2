@@ -85,7 +85,7 @@ export default function Campaign({cookie, cookiesSession}){
     const handleCheckAll = (e) => {
         if(e.target.checked){
             setSelectedProspects([])
-            setSelectedProspects(selectedProspects.concat(prospects.map(prospect => new Object({'url':prospect.url, 'name':prospect.name}))))
+            setSelectedProspects(selectedProspects.concat(filterProspects.map(prospect => new Object({'url':prospect.url, 'name':prospect.name}))))
             setIsCheckAll(true)
         }else{
             setSelectedProspects([])
