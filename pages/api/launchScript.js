@@ -455,10 +455,10 @@ export default async function(req, res){
         
                 }
                 await browser.close()
+                res.statusCode =200
+                res.send("aha")
             }
             
             
     }
-    res.statusCode =200
-    res.send("aha")
 }
