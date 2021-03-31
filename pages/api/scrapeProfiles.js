@@ -110,13 +110,12 @@ export default async(event, context) => {
 
           //"ul" tag with list of prospects on a page
           let ul = await page.$('.reusable-search__entity-results-list.list-style-none')
-          console.log("li after ul : ")
+          console.log("li after ul")
           let li = await ul.$$('li') 
-          console.log("li done : ")
+          console.log("li done")
           //Get 1,2,3rd relation distance
-          let titles = page.$$('.entity-result__title-text.t-16')
-          console.log("titles done :")
-
+          let titles = await page.$$('.entity-result__title-text.t-16')
+          console.log("titles done")
           for(let i=0;i< linkedin_profiles.length;i++){
               //console.log("iiiii : ", i)
               try{
@@ -157,7 +156,7 @@ export default async(event, context) => {
               let state = ''
               try{
                 state = await li[i].$('.artdeco-button.artdeco-button--2.artdeco-button--secondary.ember-view')
-                console.log("staate  :")
+                console.log("staate")
                 state = await state.getProperty('innerText')
                 state = await state.jsonValue()
                 console.log("staate2  :", state)
@@ -197,7 +196,7 @@ export default async(event, context) => {
                       {data : {name:name2,url:profile_href, userUrl:c, campaign:campaign, isConnected:true, hasAccepted: false }}
                     )
                   )
-                }else if(state == 'Message' && (relation == '3rd+' || relation == '3e et +' ) ){
+                }else if(state == 'Message' && (relation == '• 3rd+' || relation == '• 3e et +' ) ){
                   console.log("3rd trois petits points")
                   await client.query(
                     q.Create(

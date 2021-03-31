@@ -33,12 +33,23 @@ export default async (req, res) => {
     await userClient.query(
         Map(Paginate(
             Intersection(
-                Match(Index('prospects_by_campaign'), "ceo londres tech&serv software"),
-                Match(Index('prospects_by_user'), "https://www.linkedin.com/in/titouan-lenormand-059218202/"),
+                Match(Index('prospects_by_campaign'), campaignName),
+                Match(Index('prospects_by_user'), user_url),
             )
           ), Lambda('ref', Delete(Var('ref')))
         )
     )
+    await userClient.query(
+        Map(Paginate(
+            Intersection(
+                Match(Index('waitingLine_by_campaign'), campaignName),
+                Match(Index('waitingLine_by_done'), false),
+                Match(Index('waitingLine_by_user'), user_url),
+            )
+          ), Lambda('ref', Delete(Var('ref')))
+        )
+    )
+
 
     console.log(deleteCampaign)
     res.statusCode = 200;
