@@ -43,7 +43,6 @@ export default async (req, res) => {
         Map(Paginate(
             Intersection(
                 Match(Index('waitingLine_by_campaign'), campaignName),
-                Match(Index('waitingLine_by_done'), false),
                 Match(Index('waitingLine_by_user'), user_url),
             )
           ), Lambda('ref', Delete(Var('ref')))
