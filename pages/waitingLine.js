@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import ProspectList2 from '../components/ProspectList2'
 
-export default function Prospects({cookie, cookiesSession}){
+export default function Prospects({cookie, cookiesSession, userInfo}){
     const [prospects, setProspects] = useState([]) 
     const [campaign, setCampaign] = useState('')
     const [campaigns, setCampaigns] = useState([])
     const [selectedProspects, setSelectedProspects] = useState([])
     const [campaignHasChanged, setCampaignHasChanged] = useState(false)
     const [isCheckAll, setIsCheckAll] = useState(false)
-    let hold = false
+    const [hold, setHold] = useState(false)
 
     const loadProspects = async (campaign, cookie) => {
         try{
@@ -75,21 +75,30 @@ export default function Prospects({cookie, cookiesSession}){
         })
     }
     const handleWG = async () => {
-        console.log("thiiiss is hold before : ",hold)
-        hold = !hold
-        console.log("thiiiss is hold after : ",hold)
+        console.log("thiiiss is hold after : ",!hold)
+        let hold2 = !hold
         await fetch('api/Hold',{
             method: 'POST',
-            body: JSON.stringify({cookie, hold})
+            body: JSON.stringify({cookie, hold:hold2})
         })
-        document.getElementById('hold').style.background = hold ? '#00CC33' : '#FF0000'
-        document.getElementById('hold').innerText = hold ? 'Start' : 'Stop'
+        document.getElementById('hold').style.background = !hold ? '#00CC33' : '#FF0000'
+        document.getElementById('hold').innerText = !hold ? 'Start' : 'Stop'
+        setHold(!hold)
+
     }
     useEffect(() => {
         console.log("cookie for useEffect loadprosp loadcamp : ", cookie)
         loadProspects(campaign, cookie);
         loadCampaigns(cookie);
+        
     }, [cookie, cookiesSession])
+    useEffect(() => {
+        if(typeof userInfo !== 'undefined' && typeof userInfo.data !== 'undefined' && typeof userInfo.data.hold !== 'undefined'){
+            console.log("this is user infop ", userInfo.data.hold)
+            setHold(userInfo.data.hold)
+            document.getElementById('hold').style.background = userInfo.data.hold ? '#00CC33' : '#FF0000'
+        }
+    }, [userInfo])
     useEffect(() => {
         loadProspects(campaign, cookie);
     }, [campaign])

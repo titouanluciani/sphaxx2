@@ -118,7 +118,7 @@ function MyApp({ Component, pageProps }) {
         (
         <div className="overscroll-none">
           <Navbar cookie={cookie} userInfo={userInfo} />
-          <Component {...pageProps} cookie={cookie} cookiesSession={cookiesSession} />
+          <Component {...pageProps} cookie={cookie} cookiesSession={cookiesSession} userInfo={userInfo} />
         </div>
         )
   )
