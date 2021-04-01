@@ -133,14 +133,14 @@ export default async function(req, res){
             const page = await browser.newPage()
             console.log("pageeee")
             
-            await delay(3000)
+            await delay(Math.random() + 3)
             await page.goto("https://linkedin.com")
             console.log("linkedin")
         
             await page.setCookie(...[cookies])
             await page.goto(url)
         
-            await delay(2500)
+            await delay(Math.random() * 1.5 + 2)
             console.log("jusqu ici tout va bien")
             //await page.waitForNavigation()
             console.log("jusqu ici tout va bien waitfor")
@@ -174,10 +174,10 @@ export default async function(req, res){
                         console.log("trois petits points")
                         await page.click('.ml2.mr2.pv-s-profile-actions__overflow-toggle.artdeco-button.artdeco-button--circle.artdeco-button--muted.artdeco-button--2.artdeco-button--tertiary.artdeco-dropdown__trigger.artdeco-dropdown__trigger--placement-bottom.ember-view')
                         console.log("trois petits points1")
-                        await delay(500)
+                        await delay(Math.random() + 0.5)
                         let popupPoints = await page.$('.pv-s-profile-actions.pv-s-profile-actions--connect.pv-s-profile-actions__overflow-button.full-width.text-align-left.artdeco-dropdown__item.artdeco-dropdown__item--is-dropdown.ember-view')
                         console.log("trois petits points2")
-                        await delay(500)
+                        await delay(Math.random() + 0.5)
                         await popupPoints.click('.pv-s-profile-actions.pv-s-profile-actions--connect.pv-s-profile-actions__overflow-button.full-width.text-align-left.artdeco-dropdown__item.artdeco-dropdown__item--is-dropdown.ember-view')
                         console.log("trois petits points3")
                         await userClient.query(
@@ -231,7 +231,7 @@ export default async function(req, res){
                                 
                 
                                 //Click the Add note button in popup
-                                await delay(3000)
+                                await delay(Math.random() + 3)
                                 try{
                                     console.log("try add note btn popup :", !addNoteBtnPopup)
                                     await page.click(addNoteBtnPopup)
@@ -240,7 +240,7 @@ export default async function(req, res){
 
                                 }
                                 //Focus the textArea
-                                await delay(5000)
+                                await delay(Math.random() + 4.5)
                                 
                                 try{
                                     console.log("try add text area popup")
@@ -248,17 +248,17 @@ export default async function(req, res){
                                     const textarea = await page.evaluate(() => {
                                         return document.getElementsByTagName('textarea')[0]
                                     })
-                                    await delay(500)
+                                    await delay(Math.random() + 0.5)
                                     await page.focus(textarea)
                                 }catch(err){
                                     console.log("error for focus text area")
                                     await page.focus('.ember-text-area.ember-view.connect-button-send-invite__custom-message.mb3')
                                 }
-                                await delay(6000)
+                                await delay(Math.random() + 5)
                                 //Type the description in textArea
                                 console.log("type desc")
                                 await page.keyboard.type(description)
-                                await delay(8000)
+                                await delay(Math.random() + 7)
                 
                                 //Click on connect after typing the description note
                                 try{
@@ -268,7 +268,7 @@ export default async function(req, res){
                                     console.log("click send err : ",err)
 
                                 }
-                                await delay(3000)
+                                await delay(Math.random() + 3)
                                 //Update prospects with action info
                                 await userClient.query(
                                     Update(
@@ -307,7 +307,7 @@ export default async function(req, res){
                 }else{
                     console.log("connect btn exist")
                     //Get the text on the connect btn profile
-                    await delay(3000)
+                    await delay(Math.random() + 2.5)
                     console.log("connect btn exist")
                     let profileBtnInnerText = ''/*
                     try{
@@ -421,7 +421,7 @@ export default async function(req, res){
                                         
                         
                                         //Click the Add note button in popup
-                                        await delay(3000)
+                                        await delay(Math.random() + 2.5)
                                         try{
                                             console.log("try add note btn popup :", !addNoteBtnPopup)
                                             await page.click(addNoteBtnPopup)
@@ -430,7 +430,7 @@ export default async function(req, res){
 
                                         }
                                         //Focus the textArea
-                                        await delay(5000)
+                                        await delay(Math.random() + 2.5)
                                         
                                         try{
                                             console.log("try add text area popup")
@@ -438,17 +438,17 @@ export default async function(req, res){
                                             const textarea = await page.evaluate(() => {
                                                 return document.getElementsByTagName('textarea')[0]
                                             })
-                                            await delay(500)
+                                            await delay(Math.random() + 0.5)
                                             await page.focus(textarea)
                                         }catch(err){
                                             console.log("error for focus text area")
                                             await page.focus('.ember-text-area.ember-view.connect-button-send-invite__custom-message.mb3')
                                         }
-                                        await delay(6000)
+                                        await delay(Math.random() + 5)
                                         //Type the description in textArea
                                         console.log("type desc")
                                         await page.keyboard.type(description)
-                                        await delay(8000)
+                                        await delay(Math.random() + 7)
                         
                                         //Click on connect after typing the description note
                                         try{
@@ -458,7 +458,7 @@ export default async function(req, res){
                                             console.log("click send err : ",err)
 
                                         }
-                                        await delay(3000)
+                                        await delay(Math.random() + 2.5)
                                         //Update prospects with action info
                                         await userClient.query(
                                             Update(
@@ -518,9 +518,9 @@ export default async function(req, res){
                 else if(connectExistPas){
                     console.log("already connected")
                     //Click on message btn
-                    await delay(1500)
+                    await delay(Math.random() + 1.5)
                     await page.click(messageBtn)
-                    await delay(1500)
+                    await delay(Math.random() + 1.5)
                     //Check if hasResponded
                     let hasResponded = false
                     const allMessages = await page.evaluate(() => {
@@ -538,12 +538,12 @@ export default async function(req, res){
                         console.log("has not responded")
         
                         // Type message description
-                        await delay(3000)
+                        await delay(Math.random() + 3)
                         await page.keyboard.type(description)
-                        await delay(3000)
+                        await delay(Math.random() + 3)
                         //Click "Envoyer"
                         await page.click('.msg-form__send-button.artdeco-button.artdeco-button--1')
-                        await delay(3000)
+                        await delay(Math.random() + 3)
         
                         const prospectUpdated = await userClient.query(
                             Update(
