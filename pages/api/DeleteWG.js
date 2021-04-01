@@ -20,7 +20,7 @@ export default async (req, res) => {
     )
     const userClient = new faunadb.Client({ secret : user_secret })
     
-    await client.query(
+    const deleted = await client.query(
             Map(
                 selectedProspects,
                 Lambda(
@@ -42,7 +42,8 @@ export default async (req, res) => {
                     )))
                 )
             )
-        
     )
+    res.statusCode = 200
+    res.send(deleted)
 
 }

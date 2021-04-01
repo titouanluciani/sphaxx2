@@ -9,6 +9,7 @@ export default function Prospects({cookie, cookiesSession, userInfo}){
     const [campaignHasChanged, setCampaignHasChanged] = useState(false)
     const [isCheckAll, setIsCheckAll] = useState(false)
     const [hold, setHold] = useState(false)
+    const [changed, setChanged] = useState(true)
 
     const loadProspects = async (campaign, cookie) => {
         try{
@@ -55,12 +56,13 @@ export default function Prospects({cookie, cookiesSession, userInfo}){
         if(e.target.checked){
             setSelectedProspects(selectedProspects => selectedProspects.concat({'url':e.target.value, 'name':e.target.name, 'campaign':e.target.placeholder}))
         }else{
-            setSelectedProspects(selectedProspects.filter(el => el !== e.target.value))
+            setSelectedProspects(selectedProspects.filter(el => el.url !== e.target.value))
         }
     }
     const handleCheckAll = (e) => {
         if(e.target.checked){
-            setSelectedProspects(prospects.map(prospect => prospect.url))
+            setSelectedProspects([])
+            setSelectedProspects(selectedProspects.concat(prospects.map(prospect => new Object({'url':prospect.url, 'name':prospect.name, 'campaign':prospect.campaign}))))
             setIsCheckAll(true)
         }else{
             setSelectedProspects([])
@@ -75,6 +77,7 @@ export default function Prospects({cookie, cookiesSession, userInfo}){
             method: 'POST',
             body:JSON.stringify({cookie, selectedProspects})
         })
+        setChanged(!changed)
         loadProspects(campaign, cookie)
         setSelectedProspects([])
     }
@@ -118,7 +121,7 @@ export default function Prospects({cookie, cookiesSession, userInfo}){
                         <option value="All">All</option>
                     </select>
             <button onClick={handleWG} id="hold" className="rounded p-2 bg-red-500 my-2 w-32 h-12 text-white">{ hold ? "Start" : "Stop" }</button>
-            <ProspectList2 prospects={prospects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} handleCheckAll={handleCheckAll} isCheckAll={isCheckAll} handleDelete={handleDelete} campaign={campaign} two={true}/>
+            <ProspectList2 prospects={prospects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} handleCheckAll={handleCheckAll} isCheckAll={isCheckAll} handleDelete={handleDelete} campaign={campaign} two={true} changed={changed} />
 
         </div>
     )
