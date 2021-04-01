@@ -81,7 +81,7 @@ export default function ProspectList({ prospects, handleCheck, campaignHasChange
                     </thead>
                     <tbody className="overflow-x-hidden bg-blue-200 mb-4">
                                 { currentProspects && currentProspects.map(prospect =>(
-                                    <ProspectCard key={prospect._id} prospect={ prospect } handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} isCheckAll={isCheckAll} />
+                                    <ProspectCard key={prospect._id} prospect={ prospect } handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} isCheckAll={isCheckAll} two={false} />
                                 )) }
                     </tbody>
                 </table>

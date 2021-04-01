@@ -1,7 +1,7 @@
 import React from 'react';
 import ProspectCard from './ProspectCard'
 
-export default function ProspectList2({ prospects, handleCheck, campaignHasChanged, handleCheckAll, isCheckAll,handleDelete, campaign }){
+export default function ProspectList2({ prospects, handleCheck, campaignHasChanged, handleCheckAll, isCheckAll,handleDelete, campaign, two }){
     return(
         <div className="h-full w-full mb-4">
             <h2>Prospect List</h2>
@@ -30,7 +30,7 @@ export default function ProspectList2({ prospects, handleCheck, campaignHasChang
                     </thead>
                     <tbody className="overflow-x-hidden overflow-y-auto bg-blue-200 mb-4">
                                 { prospects && prospects.map(prospect =>(
-                                    <ProspectCard key={prospect._id} prospect={ prospect } handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} isCheckAll={isCheckAll} index={prospects.indexOf(prospect)} campaign={campaign}/>
+                                    <ProspectCard key={prospect._id} prospect={ prospect } handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} isCheckAll={isCheckAll} index={prospects.indexOf(prospect)} campaign={campaign} two={two} />
                                 )) }
                     </tbody>
                 </table>

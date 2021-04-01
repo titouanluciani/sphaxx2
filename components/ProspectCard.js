@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-export default function ProspectCard({ prospect, handleCheck,campaignHasChanged, isCheckAll, index, campaign }){
+export default function ProspectCard({ prospect, handleCheck,campaignHasChanged, isCheckAll, index, campaign, two }){
     useEffect(() => {
         Array.from(document.getElementsByClassName('checkboxProspect')).forEach(el =>  {
             el.checked = false
@@ -21,10 +21,15 @@ export default function ProspectCard({ prospect, handleCheck,campaignHasChanged,
                 <td>
                     {prospect.prospectName ? prospect.prospectName : prospect.name}
                 </td>
-                <td className="break-all">
+                {two ? 
+                    <td className="break-all">
                     {prospect.prospectUrl && campaign=='All' ? `Launch in ${3*(index+1)} to ${5*(index+1)} minutes` : "See 'All' campaign to know wich action will be next"}
                     <br/>{prospect.prospectUrl ? prospect.prospectUrl : prospect.url}
-                </td>
+                    </td> :
+                    <td className="break-all">
+                        {prospect.prospectUrl ? prospect.prospectUrl : prospect.url}
+                    </td>
+                }
                 <td>
                     {prospect.isConnected ? "Connection send" : "Connection not send"}<br/>
                     {prospect.hasAccepted ? "Connected" : (prospect.isConnected ? "Connection in hold" : "/" ) }<br/>

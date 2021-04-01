@@ -20,7 +20,7 @@ export default async (req, res) => {
     )
     const userClient = new faunadb.Client({ secret : user_secret })
     
-    await userClient.query(
+    await client.query(
             Map(
                 selectedProspects,
                 Lambda(

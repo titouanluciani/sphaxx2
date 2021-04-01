@@ -75,6 +75,8 @@ export default function Prospects({cookie, cookiesSession, userInfo}){
             method: 'POST',
             body:JSON.stringify({cookie, selectedProspects})
         })
+        loadProspects(campaign, cookie)
+        setSelectedProspects([])
     }
     const handleWG = async () => {
         console.log("thiiiss is hold after : ",!hold)
@@ -116,7 +118,7 @@ export default function Prospects({cookie, cookiesSession, userInfo}){
                         <option value="All">All</option>
                     </select>
             <button onClick={handleWG} id="hold" className="rounded p-2 bg-red-500 my-2 w-32 h-12 text-white">{ hold ? "Start" : "Stop" }</button>
-            <ProspectList2 prospects={prospects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} handleCheckAll={handleCheckAll} isCheckAll={isCheckAll} handleDelete={handleDelete} campaign={campaign} />
+            <ProspectList2 prospects={prospects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} handleCheckAll={handleCheckAll} isCheckAll={isCheckAll} handleDelete={handleDelete} campaign={campaign} two={true}/>
 
         </div>
     )
