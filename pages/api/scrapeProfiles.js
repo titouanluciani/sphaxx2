@@ -75,7 +75,7 @@ export default async(event, context) => {
         const number_li = await page.$('.artdeco-pagination__indicator.artdeco-pagination__indicator--number.ember-view:last-child')
         const number_btn = await number_li.$('button')
         const number_span = await number_btn.$('span')
-        const number_textContent = await number_span.getProperty('textContent')
+        const number_textContent = await number_span.getProperty('innerText')
         const number_json = await number_textContent.jsonValue()
         console.log(number_json, number)
 
@@ -121,7 +121,7 @@ export default async(event, context) => {
               try{
                 try{
                   let profile_name = await page.$(`#main > div > div > div.pv2.artdeco-card.ph0.mb2 > ul > li:nth-child(${i+1}) > div > div > div.entity-result__content.entity-result__divider.pt3.pb3.t-12.t-black--light > div.mb1 > div > div.t-roman.t-sans > span > div > span.entity-result__title-line.flex-shrink-1.entity-result__title-text--black > span > a > span > span:nth-child(1)`)
-                  name2 = await profile_name.getProperty('textContent')
+                  name2 = await profile_name.getProperty('innerText')
                   name2 = await name2.jsonValue()
                   console.log(name2)
                   
@@ -132,7 +132,7 @@ export default async(event, context) => {
                   console.log(e)
                   
                   let profile_name = await page.$(`#main > div > div > div.pv2.artdeco-card.ph0.mb2 > ul > li:nth-child(${i+1}) > div > div > div.entity-result__content.entity-result__divider.pt3.pb3.t-12.t-black--light > div.mb1 > div > div.t-roman.t-sans > span > div > span.entity-result__title-line.flex-shrink-1.entity-result__title-text--black > span > a`)
-                  name2 = await profile_name.getProperty('textContent')
+                  name2 = await profile_name.getProperty('innerText')
                   name2 = await name2.jsonValue()
                   console.log(name2)
                   

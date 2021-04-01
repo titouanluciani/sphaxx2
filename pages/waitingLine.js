@@ -3,7 +3,7 @@ import ProspectList2 from '../components/ProspectList2'
 
 export default function Prospects({cookie, cookiesSession, userInfo}){
     const [prospects, setProspects] = useState([]) 
-    const [campaign, setCampaign] = useState('')
+    const [campaign, setCampaign] = useState('All')
     const [campaigns, setCampaigns] = useState([])
     const [selectedProspects, setSelectedProspects] = useState([])
     const [campaignHasChanged, setCampaignHasChanged] = useState(false)
@@ -51,8 +51,9 @@ export default function Prospects({cookie, cookiesSession, userInfo}){
         setCampaignHasChanged(prev => !prev)
     }
     const handleCheck = (e) => {
+        console.log("e target : ", e.target)
         if(e.target.checked){
-            setSelectedProspects(selectedProspects => selectedProspects.concat({'url':e.target.value, 'name':e.target.name}))
+            setSelectedProspects(selectedProspects => selectedProspects.concat({'url':e.target.value, 'name':e.target.name, 'campaign':e.target.placeholder}))
         }else{
             setSelectedProspects(selectedProspects.filter(el => el !== e.target.value))
         }
@@ -69,6 +70,7 @@ export default function Prospects({cookie, cookiesSession, userInfo}){
     }
 
     const handleDelete = async () => {
+        console.log("delete : ",selectedProspects)
         await fetch('api/DeleteWG', {
             method: 'POST',
             body:JSON.stringify({cookie, selectedProspects})
@@ -114,7 +116,7 @@ export default function Prospects({cookie, cookiesSession, userInfo}){
                         <option value="All">All</option>
                     </select>
             <button onClick={handleWG} id="hold" className="rounded p-2 bg-red-500 my-2 w-32 h-12 text-white">{ hold ? "Start" : "Stop" }</button>
-            <ProspectList2 prospects={prospects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} handleCheckAll={handleCheckAll} isCheckAll={isCheckAll} handleDelete={handleDelete} />
+            <ProspectList2 prospects={prospects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} handleCheckAll={handleCheckAll} isCheckAll={isCheckAll} handleDelete={handleDelete} campaign={campaign} />
 
         </div>
     )

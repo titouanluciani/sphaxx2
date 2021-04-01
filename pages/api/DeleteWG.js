@@ -1,10 +1,10 @@
 const faunadb = require('faunadb')
 const client = new faunadb.Client({secret: process.env.FAUNA_SECRET_KEY})
-const {Delete, Intersection, Select, Get, Match, Index} = faunadb.query
+const {Delete, Intersection, Select, Get, Match, Index, Lambda, Paginate, Let, Var, Map} = faunadb.query
 
 export default async (req, res) => {
     console.log(req.body)
-    const {cookie, selectedProspects} = JSON.parse(req.body)
+    const {cookie, selectedProspects, campaign} = JSON.parse(req.body)
     console.log(cookie, selectedProspects)
 
     const user_secret = await client.query(
@@ -21,32 +21,28 @@ export default async (req, res) => {
     const userClient = new faunadb.Client({ secret : user_secret })
     
     await userClient.query(
-        Delete(
             Map(
-                [selectedProspects],
+                selectedProspects,
                 Lambda(
-                    'selectedProspects',
-                    Paginate(
+                    'selectedProspect',
+                    Delete(Select( ['data',0] ,Paginate(
                         Select(
                             ['ref'],
                             Get(
                                 Intersection(
                                     Match(
-                                        Index("waitingLine_by_url"), campaign
+                                        Index("waitingLine_by_campaign"), Select(['campaign'], Var('selectedProspect'))
                                     ),
                                     Match(
-                                        Index("waitingLine_by_user"), user_url
-                                    ),
-                                    Match(
-                                        Index("notes_by_name"), name
+                                        Index("waitingLine_by_prospect"), Select(['url'], Var('selectedProspect'))
                                     )
                                 )
                             )
                         )
-                    )
+                    )))
                 )
             )
-        )
+        
     )
 
 }
