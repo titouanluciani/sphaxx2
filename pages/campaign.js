@@ -38,7 +38,7 @@ export default function Campaign({cookie, cookiesSession}){
                     body:JSON.stringify(cookie)
                 });
                 const {prospects, notes, messages} = await res.json();
-                setProspects(prospects.data)
+                setProspects(prospects.data.filter(prospect => prospect.url !== '' && prospect.url !== 'LinkedIn Member' && prospect.url !== 'Membre de LinkedIn' ))
                 setNotes(notes.data)
                 setMessages(messages.data)
             //}
