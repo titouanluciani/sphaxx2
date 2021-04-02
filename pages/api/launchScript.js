@@ -20,7 +20,7 @@ export default async function(req, res){
 
 
     console.log(req.body)
-    const {cookie, cookies} = JSON.parse(req.body)
+    const {cookie, cookies, userAgent} = JSON.parse(req.body)
     const user_url = cookie.value
     console.log("Launchscript : user_url & cookies : ",user_url, cookies)
     const user_secret = await client.query(
@@ -132,6 +132,8 @@ export default async function(req, res){
             
             const page = await browser.newPage()
             console.log("pageeee")
+            await page.setUserAgent(userAgent);
+
             
             await delay(Math.random() + 3)
             await page.goto("https://linkedin.com")
