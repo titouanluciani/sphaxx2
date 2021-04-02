@@ -131,7 +131,7 @@ export default async function(req, res){
             console.log("launchhhh")
             
             const page = await browser.newPage()
-            console.log("pageeee")
+            console.log("pageeee : ", userAgent)
             await page.setUserAgent(userAgent);
 
             
@@ -162,6 +162,7 @@ export default async function(req, res){
         
             //Connect action or Message action
             if(action=='connect'){
+                //await page.waitForSelector('.pv-s-profile-actions.pv-s-profile-actions--connect.ml2.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view')
                 const connectExist = await page.evaluate(() => {
                     const coBtn = document.querySelector('.pv-s-profile-actions.pv-s-profile-actions--connect.ml2.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view')
                     console.log(!coBtn)

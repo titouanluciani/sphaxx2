@@ -72,13 +72,13 @@ export default function Prospects({cookie, cookiesSession, userInfo}){
     }
 
     const handleDelete = async () => {
-        console.log("delete : ",selectedProspects)
+        console.log("delete : ",selectedProspects, campaign)
         await fetch('api/DeleteWG', {
             method: 'POST',
             body:JSON.stringify({cookie, selectedProspects})
         })
         setChanged(!changed)
-        loadProspects(campaign, cookie)
+        await loadProspects(campaign, cookie)
         setSelectedProspects([])
     }
     const handleWG = async () => {
@@ -90,7 +90,7 @@ export default function Prospects({cookie, cookiesSession, userInfo}){
         })
         document.getElementById('hold').style.background = !hold ? '#00CC33' : '#FF0000'
         document.getElementById('hold').innerText = !hold ? 'Start' : 'Stop'
-        setHold(!hold)
+        setHold(hold => !hold)
 
     }
     useEffect(() => {

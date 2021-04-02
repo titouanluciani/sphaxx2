@@ -34,6 +34,9 @@ export default async (req, res) => {
                                         Index("waitingLine_by_campaign"), Select(['campaign'], Var('selectedProspect'))
                                     ),
                                     Match(
+                                        Index("waitingLine_by_done"), false
+                                    ),
+                                    Match(
                                         Index("waitingLine_by_prospect"), Select(['url'], Var('selectedProspect'))
                                     )
                                 )
@@ -43,6 +46,7 @@ export default async (req, res) => {
                 )
             )
     )
+    console.log(deleted)
     res.statusCode = 200
     res.send(deleted)
 
