@@ -27,6 +27,21 @@ export default async function getNextUrl(req, res){
         )
     )
     //Get the associated prospect for more information
+    const prospectd = await userClient.query(
+        Select(['data',0],
+            Map(
+                Paginate(
+                    Intersection(
+                        Match(Index('prospects_by_url'), prospectUrl),
+                        Match(Index('prospects_by_user'), user_url)
+                    )
+                ),
+                Lambda('x', Get(Var('x'))
+                )
+            )
+        )
+    )
+    //Get the user info, especially for "hold"
     const user = await client.query(
         Get(
             Match(
@@ -37,5 +52,5 @@ export default async function getNextUrl(req, res){
     )
     console.log(nextAction)
     res.statusCode = 200
-    res.send(JSON.stringify({nextAction, user}))
+    res.send(JSON.stringify({nextAction, user, prospectd}))
 }
