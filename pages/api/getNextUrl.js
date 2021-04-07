@@ -27,7 +27,7 @@ export default async function getNextUrl(req, res){
         )
     )
     //Get the associated prospect for more information
-    const prospectd = await userClient.query(
+    const prospectd = await client.query(
         Select(['data',0],
             Map(
                 Paginate(
