@@ -26,14 +26,15 @@ export default async function getNextUrl(req, res){
             )
         )
     )
+    console.log(nextAction)
     //Get the associated prospect for more information
     const prospectd = await client.query(
         Select(['data',0],
             Map(
                 Paginate(
                     Intersection(
-                        Match(Index('prospects_by_url'), prospectUrl),
-                        Match(Index('prospects_by_user'), user_url)
+                        Match(Index('prospects_by_url'), nextAction.data.prospectUrl),
+                        Match(Index('prospects_by_user'), cookie)
                     )
                 ),
                 Lambda('x', Get(Var('x'))
@@ -50,7 +51,6 @@ export default async function getNextUrl(req, res){
             )
         )
     )
-    console.log(nextAction)
     res.statusCode = 200
     res.send(JSON.stringify({nextAction, user, prospectd}))
 }
