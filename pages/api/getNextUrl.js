@@ -26,9 +26,16 @@ export default async function getNextUrl(req, res){
             )
         )
     )
-
     //Get the associated prospect for more information
+    const user = await client.query(
+        Get(
+            Match(
+                Index('users_by_url'),
+                cookie
+            )
+        )
+    )
     console.log(nextAction)
     res.statusCode = 200
-    res.send(JSON.stringify(nextAction))
+    res.send(JSON.stringify({nextAction, user}))
 }
