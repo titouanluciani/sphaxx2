@@ -12,14 +12,14 @@ export default async (req, res) => {
     console.log(req.body)
     const { info, user, nextAction, prospectd } = JSON.parse(req.body)
     console.log(info, user, nextAction, prospectd)
-    const { action, wgDone, hasAccepted, isConnected, hasResponded, hold, note } = info.info
-    console.log(action, wgDone, hasAccepted, isConnected, hasResponded, hold, note )
+    const { action, wgDone, hasAccepted, isConnected, hasResponded, hold, note, prospectdref, userref, wgref } = info.info
+    console.log(action, wgDone, hasAccepted, isConnected, hasResponded, hold, note, prospectdref, userref, wgref )
 
     //Update user
     const updatedUser = await client.query(
         Update(
             Get(
-                Match(Index("user_by_url"), user.data.url)
+                userref
             ),
             { data : { 'hold': hold } }
         )
@@ -29,7 +29,7 @@ export default async (req, res) => {
     const updatedWg = await client.query(
         Update(
             Get(
-                nextAction.ref
+                wgref.ref
             ),
             { data : { done: wgDone } }
         )
@@ -39,7 +39,7 @@ export default async (req, res) => {
     const updatedProspect = await client.query(
         Update(
             Get(
-                prospectd.ref
+                prospectdref
             ),
             { data : { 'action':action, 'note':note, 'isConnected' :isConnected , 'hasAccepted':hasAccepted, 'hasResponded':hasResponded } }
         )
