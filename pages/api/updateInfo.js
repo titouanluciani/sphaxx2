@@ -12,7 +12,7 @@ export default async (req, res) => {
     console.log(req.body)
     const { info, user, nextAction, prospectd } = JSON.parse(req.body)
     console.log(info, user, nextAction, prospectd)
-    const { action, wgDone, hasAccepted, isConnected, hasResponded, hold, note } = info
+    const { action, wgDone, hasAccepted, isConnected, hasResponded, hold, note } = info.info
     console.log(action, wgDone, hasAccepted, isConnected, hasResponded, hold, note )
 
     //Update user
