@@ -16,9 +16,10 @@ export default async (req, res) => {
     console.log(action, wgDone, hasAccepted, isConnected, hasResponded, hold, note, prospectdref, userref, wgref )
 
     //Update user
+    console.log(userref)
     const updatedUser = await client.query(
         Update(
-                userref
+                Var(userref)
             ,
             { data : { 'hold': hold } }
         )
