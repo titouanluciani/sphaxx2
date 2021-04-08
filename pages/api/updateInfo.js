@@ -6,7 +6,7 @@ const faunadb = require('faunadb')
 const q = faunadb.query
 const client = new faunadb.Client({ secret: process.env.FAUNA_SECRET_KEY })
 
-const { Select, Map, Paginate, Match, Index, Lambda, Get, Var, Delete, Update, Intersection, Ref } = faunadb.query
+const { Select, Map, Paginate, Match, Index, Lambda, Get, Var, Delete, Update, Intersection, Ref, Collection } = faunadb.query
 
 export default async (req, res) => {
     console.log(req.body)
@@ -19,7 +19,7 @@ export default async (req, res) => {
     console.log(userref)
     const updatedUser = await client.query(
         Update(
-                Get(Ref(userref))
+                Get(Ref(Collection('users'),userref))
             ,
             { data : { 'hold': hold } }
         )
@@ -28,7 +28,7 @@ export default async (req, res) => {
     //Update wg
     const updatedWg = await client.query(
         Update(
-                Get(Ref(wgref))
+                Get(Ref(Collection('waitingLine'),wgref))
             ,
             { data : { done: wgDone } }
         )
@@ -37,7 +37,7 @@ export default async (req, res) => {
     //Update prospect
     const updatedProspect = await client.query(
         Update(
-                Get(Ref(prospectdref))
+                Get(Ref(Collection('prospects'),prospectdref))
             ,
             { data : { 'action':action, 'note':note, 'isConnected' :isConnected , 'hasAccepted':hasAccepted, 'hasResponded':hasResponded } }
         )
