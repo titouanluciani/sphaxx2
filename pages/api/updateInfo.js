@@ -18,9 +18,8 @@ export default async (req, res) => {
     //Update user
     const updatedUser = await client.query(
         Update(
-            Get(
                 userref
-            ),
+            ,
             { data : { 'hold': hold } }
         )
     )
@@ -28,9 +27,8 @@ export default async (req, res) => {
     //Update wg
     const updatedWg = await client.query(
         Update(
-            Get(
                 wgref.ref
-            ),
+            ,
             { data : { done: wgDone } }
         )
     )
@@ -38,9 +36,8 @@ export default async (req, res) => {
     //Update prospect
     const updatedProspect = await client.query(
         Update(
-            Get(
                 prospectdref
-            ),
+            ,
             { data : { 'action':action, 'note':note, 'isConnected' :isConnected , 'hasAccepted':hasAccepted, 'hasResponded':hasResponded } }
         )
     )
