@@ -19,7 +19,7 @@ export default async (req, res) => {
     console.log(userref)
     const updatedUser = await client.query(
         Update(
-                Get(Ref(Collection('users'),userref))
+                Select(['ref'],Get(Ref(Collection('users'),userref)))
             ,
             { data : { 'hold': hold } }
         )
@@ -28,16 +28,16 @@ export default async (req, res) => {
     //Update wg
     const updatedWg = await client.query(
         Update(
-                Get(Ref(Collection('waitingLine'),wgref))
+                Select(['ref'],Get(Ref(Collection('waitingLine'),wgref)))
             ,
-            { data : { done: wgDone } }
+            { data : { 'done': wgDone } }
         )
     )
     console.log(updatedWg)
     //Update prospect
     const updatedProspect = await client.query(
         Update(
-                Get(Ref(Collection('prospects'),prospectdref))
+                Select(['ref'],Get(Ref(Collection('prospects'),prospectdref)))
             ,
             { data : { 'action':action, 'note':note, 'isConnected' :isConnected , 'hasAccepted':hasAccepted, 'hasResponded':hasResponded } }
         )
