@@ -10,10 +10,10 @@ const { Select, Map, Paginate, Match, Index, Lambda, Get, Var, Delete, Update, I
 
 export default async (req, res) => {
     console.log(req.body)
-    const { info } = JSON.parse(req.body)
-    console.log(info)
-    const { nextAction, user, prospectd } = info
-    console.log(nextAction, user, prospectd)
+    const { info, user, nextAction, prospectd } = JSON.parse(req.body)
+    console.log(info, user, nextAction, prospectd)
+    const { action, wgDone, hasAccepted, isConnected, hasResponded, hold, note } = info
+    console.log(action, wgDone, hasAccepted, isConnected, hasResponded, hold, note )
 
     //Update user
     const updatedUser = await client.query(
@@ -21,7 +21,7 @@ export default async (req, res) => {
             Get(
                 Match(Index("user_by_url"), user.data.url)
             ),
-            { data : { 'hold': user.data.hold } }
+            { data : { 'hold': hold } }
         )
     )
     console.log(updatedUser)
@@ -29,9 +29,9 @@ export default async (req, res) => {
     const updatedWg = await client.query(
         Update(
             Get(
-                info.nextAction.ref
+                nextAction.ref
             ),
-            { data : { done: nextAction.data.done } }
+            { data : { done: wgDone } }
         )
     )
     console.log(updatedWg)
@@ -39,9 +39,9 @@ export default async (req, res) => {
     const updatedProspect = await client.query(
         Update(
             Get(
-                info.prospectd.ref
+                prospectd.ref
             ),
-            { data : { 'action':prospectd.data.action, 'note':prospectd.data.note, 'isConnected' :prospectd.data.isConnected , 'hasAccepted':prospectd.data.hasAccepted, 'hasResponded':prospectd.data.hasResponded } }
+            { data : { 'action':action, 'note':note, 'isConnected' :isConnected , 'hasAccepted':hasAccepted, 'hasResponded':hasResponded } }
         )
     )
     console.log(updatedProspect)
