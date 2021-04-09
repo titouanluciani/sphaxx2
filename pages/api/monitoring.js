@@ -8,7 +8,8 @@ const { Select, Map, Paginate, Match, Index, Lambda, Get, Var, Intersection } = 
 
 export default async function(req,res){
     console.log(req.body)
-    const { cookies, userUrl } = JSON.parse(req.body)
+    const { cookies, cookie } = JSON.parse(req.body)
+    const userUrl = cookie
     console.log( cookies, userUrl )
 
     //Get secret
