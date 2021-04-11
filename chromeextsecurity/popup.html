@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="./styles.css" media="all"/>
+</head>
+<body>
+    <div class="loader" id="loader"></div>
+    <div class="container" id="container">
+        
+        <h2>Make a linkedin search - Select "People" on LinkedIn - Select a campaign - Click "Import Prospects"</h2><br/>
+        <br><a id="dashboard" href="https://sphaxx-five.vercel.app/" target="_blank" ><h3>Go to Dashboard</h3></a>
+        <h3>Your prospects will be imported in the selected campaign</h3>
+        <h3>After you have created a campaign, close and open the extension to be able to select it</h3>
+        <div class="select">
+            <select name="campaigns" id="campaigns">
+            </select>
+            <button id="create">Or Create One</button>
+        </div><br/>
+        <label for="number">How many prospects do you want to import ? (Default 100)</label><br/>
+        <input name="number" type="text" value="100">
+        <br><button id="import">Import Prospects</button>
+        <h3>"Refresh" button is used to solve authenticate issues in the app</h3>
+        <br><button id="refresh">Refresh</button>
+        <h3>"Start Connect Launch Script" should only be used by our development teams</h3>
+        <br><button id="startConnect">Start Connect Launch Script</button>
+        <br><button id="launch">Launch</button>
+    </div>
+    <script src="popup.js"></script> 
+</body>
+</html>

@@ -12,7 +12,7 @@ function MyApp({ Component, pageProps }) {
   let i = 0;
   let random = Math.random() * 2 + 3
   let date = new Date();
-  setInterval(async () => {
+  /*setInterval(async () => {
       i+=1;
       random = Math.random() * 2 + 3
       let currentDate = new Date()
@@ -29,7 +29,7 @@ function MyApp({ Component, pageProps }) {
           currentDate = new Date()
       }
 
-  }, random*60*1000*5)
+  }, random*60*1000*5)*/
 
   useEffect(async () => {
     try{
@@ -71,10 +71,10 @@ function MyApp({ Component, pageProps }) {
     }
   }, [cookiesSession])*/
   const handleGetUserUrl = async () => {
-    await fetch('api/monitoring', {
+    /*await fetch('api/monitoring', {
       method:'POST',
       body:JSON.stringify({ cookies:cookiesSession, userUrl:cookie })
-    })
+    })*/
     /*try{
       console.log("getuserurl cookiesSesion : ", cookiesSession)
       let url = 'https://www.linkedin.com/feed/'

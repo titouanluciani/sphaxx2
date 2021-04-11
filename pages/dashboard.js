@@ -1,14 +1,30 @@
 import { React, useEffect, useState } from 'react';
 
 export default function Dashboard({ cookie, cookiesSession }){
+    const [campaign, setCampaign] = useState('Default Campaign')
+    const [campaigns, setCampaigns] = useState([])
     
     const monitore = async () => {
-        await fetch('/api/monitoring', {
+        /*await fetch('/api/monitoring', {
             method:'POST',
             body:JSON.stringify({ cookie, cookiesSession})
-          })
+          })*/
     }
-
+    const loadCampaigns = async (cookie) => {
+        const res = await fetch('/api/getCampaigns',{
+            method:'POST',
+            body: JSON.stringify(cookie)
+        })
+        const res_campaigns = await res.json();
+        setCampaigns(res_campaigns.data)
+        console.log("campaigns after loadcampaigns : ",campaigns)
+    }
+    useEffect(() => {
+        console.log("cookie for useEffect loadcamp in dash : ", cookie)
+        console.log("cookiesSession for useEffect loadcamp in dash : ", cookiesSession)
+        loadCampaigns(cookie);
+        //setFilterProspects(selectedProspects)
+    }, [cookie, cookiesSession])
     return(
         <div className="ml-48 grid grid-cols-3 grid-rows-4 h-screen gap-1">
             <div className="bg-red-300 row-span-2">
@@ -33,6 +49,16 @@ export default function Dashboard({ cookie, cookiesSession }){
             <div className="bg-blue-300 row-span-2 col-span-2">
                 Global Performance
                 <button className="inline-block ml-4 mt-2 bg-purple-500 p-1 rounded text-white" onClick={monitore()}>Refresh Stats</button>
+                <select name="" id="">
+                {campaigns.map(campaign => campaign == 'Default Campaign' ? 
+                            (
+                                <option selected value={campaign.name}>{campaign.name}</option>
+                            )
+                        : (
+                            <option value={campaign.name}>{campaign.name}</option>
+                            )
+                )}
+                </select>
             </div>
             <div className="bg-green-300 col-span-full row-span-2">
                 Activity Report

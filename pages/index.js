@@ -3,10 +3,10 @@ import { React, useEffect, useState } from 'react';
 export default function Dashboard({ cookie, cookiesSession }){
     
     const monitore = async () => {
-        await fetch('/api/monitoring', {
+        /*await fetch('/api/monitoring', {
             method:'POST',
             body:JSON.stringify({ cookie, cookiesSession})
-          })
+          })*/
     }
 
     return(
