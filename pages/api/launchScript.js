@@ -125,7 +125,7 @@ export default async function(req, res){
                 args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
                 defaultViewport: chromium.defaultViewport,
                 executablePath: await chromium.executablePath,
-                headless: false,
+                headless: true,
                 ignoreHTTPSErrors: true,
                 })
             console.log("launchhhh")

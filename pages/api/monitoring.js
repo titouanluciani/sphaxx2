@@ -26,7 +26,13 @@ export default async function(req,res){
     )
     //Initiate user client
     const userClient = new faunadb.Client({ secret: user_secret })
-    const browser = await puppeteer.launch({defaultViewport: null,headless:false})
+    const browser = await puppeteer.launch({
+        args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath,
+        headless: false,
+        ignoreHTTPSErrors: true,
+        })
     const page = await browser.newPage()
     await delay(3000)
     //Connect to linkedin session
@@ -45,6 +51,7 @@ export default async function(req,res){
                 Paginate(
                     Intersection(
                         Match(Index('waitingLine_by_done'), true),
+                        Match(Index('waitingLine_by_monitored'), false),
                         Match(Index('waitingLine_by_user'), user_url)
                     )
                 ),
@@ -85,6 +92,7 @@ export default async function(req,res){
             if(!prospectExist){
                 console.log("does prospect exist ? (false) : ",prospectExist)
                 //Update it's state
+                // Not necessary : hasAccepted should be false already
                 await userClient.query(
                     Update(
                         Select(['data',0, 'ref'],
@@ -124,7 +132,15 @@ export default async function(req,res){
                         { data: { 'hasAccepted':true } }
                     )
                 )
-                if(d.data.description !== ''){
+                //Update wg action
+                await userClient.query(
+                    Update(
+                        d.ref,
+                        { data : { 'monitored': true } }
+                    )
+                )
+                if(d.data.description == ''){ // Shouldn't it be d.data.description == '' ?? So there is nothing else to monitore
+                    //Update the wg actions too ie: monitored: true
                     await userClient.query(
                         Update(
                             Select(['data',0, 'ref'],
@@ -141,6 +157,12 @@ export default async function(req,res){
                                 )
                             ),
                             { data: { 'monitored':true } }
+                        )
+                    )
+                    await userClient.query(
+                        Update(
+                            d.ref,
+                            { data : { 'monitored': true } }
                         )
                     )
                 }
@@ -160,6 +182,7 @@ export default async function(req,res){
                     }
                 }
                 if(hasResponded){
+                    //Update the wg actions too ie: monitored: true
                     await userClient.query(
                         Update(
                             Select(['data',0, 'ref'],
@@ -176,6 +199,12 @@ export default async function(req,res){
                                 )
                             ),
                             { data: { 'hasResponded':true, 'monitored':true } }
+                        )
+                    )
+                    await userClient.query(
+                        Update(
+                            d.ref,
+                            { data : { 'monitored': true } }
                         )
                     )
                 }else{
