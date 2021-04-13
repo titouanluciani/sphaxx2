@@ -8,6 +8,8 @@ function MyApp({ Component, pageProps }) {
   const [cookiesSession, setCookiesSession] = useState({})
   const [userInfo, setUserInfo] = useState({})
 
+  //let firststep = require("../public/firsstep.jpg")
+
   //Launch monitoring every 15 minutes
   let i = 0;
   let random = Math.random() * 2 + 3
@@ -113,7 +115,7 @@ function MyApp({ Component, pageProps }) {
           <li><a className="text-blue-600 underline" href="https://www.linkedin.com/in/valentin-pouxguirimand/">https://www.linkedin.com/in/valentin-pouxguirimand/</a></li>
           <li><a className="text-blue-600 underline" href="https://www.linkedin.com/in/ilias-khattabi-0282631b1/">https://www.linkedin.com/in/ilias-khattabi-0282631b1/</a></li>
           <li><a className="text-blue-600 underline" href="https://www.linkedin.com/in/titouan-lenormand-059218202/">https://www.linkedin.com/in/titouan-lenormand-059218202/</a></li>
-          </ul>
+          </ul><br/>
         </div>) : 
         (
         <div className="overscroll-none">

@@ -56,6 +56,15 @@ export default function SimpleTabs({ notes, messages, campaign, loadProspects, s
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const createProspect = async () => {
+    const url = document.getElementById('linkedinUrl').value
+    const name = document.getElementById('linkedinName').value
+    console.log(url, name)
+    await fetch('api/createProspect', {
+      method:'POST',
+      body:JSON.stringify({ cookie, url, campaign, name })
+    })
+  }
 
   return (
     <div className="h-full bg-indigo-400 w-5/12 p-6">
@@ -73,7 +82,9 @@ export default function SimpleTabs({ notes, messages, campaign, loadProspects, s
         <Connect connect={false} notes={messages} campaign={campaign} loadProspects={loadProspects} selectedProspects={selectedProspects} cookie={cookie} setChanged={setChanged} changed={changed} campaignHasChanged={campaignHasChanged} handleMessageFilter={handleMessageFilter} />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Item Three
+        <input id="linkedinUrl" type="text" placeholder="Linkedin Url"/>
+        <input id="linkedinName" type="text" placeholder="FirstName & Name"/>
+        <button onClick={createProspect} >Submit</button>
       </TabPanel>
     </div>
   );
