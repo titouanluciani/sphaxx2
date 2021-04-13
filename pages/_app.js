@@ -51,7 +51,7 @@ function MyApp({ Component, pageProps }) {
     })
     const info = await res.json()
     setUserInfo(info)
-    console.log(info)
+    console.log("thiiiss iss info : ",info)
   },[cookie])
 
   /*useEffect(async ()=>{
