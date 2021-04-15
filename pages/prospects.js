@@ -7,7 +7,7 @@ export default function Prospects({cookie, cookiesSession}){
     const [campaigns, setCampaigns] = useState([])
     const [selectedProspects, setSelectedProspects] = useState([])
     const [campaignHasChanged, setCampaignHasChanged] = useState(false)
-
+    const [changed, setChanged] = useState(true)
 
     const loadProspects = async (campaign, cookie) => {
         try{
@@ -54,7 +54,16 @@ export default function Prospects({cookie, cookiesSession}){
 
         }
     }
-
+    const handleDelete = async () => {
+        console.log("delete : ",selectedProspects, campaign)
+        await fetch('api/DeleteProspects', {
+            method: 'POST',
+            body:JSON.stringify({cookie, selectedProspects})
+        })
+        setChanged(!changed)
+        await loadProspects(campaign, cookie)
+        setSelectedProspects([])
+    }
 
     useEffect(() => {
         console.log("cookie for useEffect loadprosp loadcamp : ", cookie)
@@ -73,7 +82,7 @@ export default function Prospects({cookie, cookiesSession}){
                         ))}
                         <option value="All">All</option>
                     </select>
-            <ProspectList2 prospects={prospects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} />
+            <ProspectList2 prospects={prospects} handleCheck={handleCheck} handleDelete={handleDelete} campaignHasChanged={campaignHasChanged} />
 
         </div>
     )
