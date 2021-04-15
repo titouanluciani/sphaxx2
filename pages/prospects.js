@@ -46,13 +46,23 @@ export default function Prospects({cookie, cookiesSession}){
         setCampaignHasChanged(prev => !prev)
     }
     const handleCheck = (e) => {
+        console.log("e target : ", e.target)
         if(e.target.checked){
-            setSelectedProspects(selectedProspects => selectedProspects.concat([e.target.value]))
-
+            setSelectedProspects(selectedProspects => selectedProspects.concat({'url':e.target.value, 'name':e.target.name, 'campaign':e.target.placeholder}))
         }else{
-            setSelectedProspects(selectedProspects.filter(el => el !== e.target.value))
-
+            setSelectedProspects(selectedProspects.filter(el => el.url !== e.target.value))
         }
+    }
+    const handleCheckAll = (e) => {
+        if(e.target.checked){
+            setSelectedProspects([])
+            setSelectedProspects(selectedProspects.concat(prospects.map(prospect => new Object({'url':prospect.prospectUrl, 'name':prospect.prospectName, 'campaign':prospect.campaign}))))
+            setIsCheckAll(true)
+        }else{
+            setSelectedProspects([])
+            setIsCheckAll(false)
+        }
+        console.log("handlecheckAll : ", isCheckAll)
     }
     const handleDelete = async () => {
         console.log("delete : ",selectedProspects, campaign)
@@ -82,7 +92,7 @@ export default function Prospects({cookie, cookiesSession}){
                         ))}
                         <option value="All">All</option>
                     </select>
-            <ProspectList2 prospects={prospects} handleCheck={handleCheck} handleDelete={handleDelete} campaignHasChanged={campaignHasChanged} />
+            <ProspectList2 prospects={prospects} handleCheck={handleCheck} handleCheckAll={handleCheckAll} handleDelete={handleDelete} campaignHasChanged={campaignHasChanged} />
 
         </div>
     )
