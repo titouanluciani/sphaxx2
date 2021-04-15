@@ -1,7 +1,7 @@
 import React from 'react';
 import ProspectCard from './ProspectCard'
 
-export default function ProspectList2({ prospects, handleCheck, campaignHasChanged, handleCheckAll, isCheckAll,handleDelete, campaign, two, changed }){
+export default function ProspectList2({ prospects, handleCheck, campaignHasChanged, handleCheckAll, isCheckAll,handleDelete, campaign, two, changed, handleDelete }){
     return(
         <div className="h-full w-full mb-4">
             <h2>Prospect List</h2>
