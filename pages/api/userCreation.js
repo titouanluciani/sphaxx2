@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
-export default (req, res) => {
+export default async (req, res) => {
   console.log(req.body)
   const { userUrl, imgUrl, name } = JSON.parse(req.body)
   const c = userUrl
