@@ -182,7 +182,7 @@ export default function Campaign({cookie, cookiesSession}){
     }, [filterProspects])
     //<option value="All" selected>Default Campaign</option>
     return(
-        <div className="bg-gray-200 p-4 ml-48 overflow-x-hidden w-full h-screen">
+        <div className="bg-gray-200 p-4 ml-48 overflow-x-hidden h-screen">
             <Modal showModal={showModal} setShowModal={setShowModal} cookie={cookie} />
 
             <div className="flex flex-row m-2 mb-4 bg-gray-200 ">

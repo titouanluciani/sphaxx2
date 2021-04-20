@@ -80,8 +80,8 @@ export default function Navbar({ cookie, userInfo }){
                         <NavBlock data={data} campaignsNumber={campaignsNumber} />
                 </div>
                 <div className="block">
-                    <a className="bg-indigo-400 p-1 rounded" href="https://sphaxx.co/tutorials">Need Help ?</a><br/>
-                    <a className="bg-indigo-400 p-1 rounded" href="https://sphaxx.co/tutorials">See our Tutorial</a>
+                    <a className="bg-indigo-400 p-1 rounded" href="https://sphaxx.co/tutorials" target="_blank">Need Help ?</a><br/>
+                    <a className="bg-indigo-400 p-1 rounded" href="https://sphaxx.co/tutorials" target="_blank">See our Tutorial</a>
                 </div>
             </div>
             

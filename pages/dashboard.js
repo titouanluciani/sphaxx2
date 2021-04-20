@@ -52,7 +52,7 @@ export default function Dashboard({ cookie, cookiesSession }){
             <div className="bg-red-300 row-span-2">
                 LinkedIn Stats
                 <div className="flex flex-row text-center my-2">
-                        <img width='32' height='32' src="https://cdn4.iconfinder.com/data/icons/glyphs/24/icons_send-512.png" alt=""/>
+                        <img width='32' height='32' src="https://cdn1.iconfinder.com/data/icons/feather-2/24/link-512.png" alt=""/>
                         <p className="ml-4">123</p>
                 </div>
                 <div className="flex flex-row text-center my-2">
@@ -60,11 +60,11 @@ export default function Dashboard({ cookie, cookiesSession }){
                         <p className="ml-4">123</p>
                 </div>
                 <div className="flex flex-row text-center my-2">
-                        <img width='32' height='32' src="https://cdn4.iconfinder.com/data/icons/glyphs/24/icons_send-512.png" alt=""/>
+                        <img width='32' height='32' src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-eye-512.png" alt=""/>
                         <p className="ml-4">123</p>
                 </div>
                 <div className="flex flex-row text-center my-2">
-                        <img width='32' height='32' src="https://cdn4.iconfinder.com/data/icons/glyphs/24/icons_send-512.png" alt=""/>
+                        <img width='32' height='32' src="https://cdn0.iconfinder.com/data/icons/users-android-l-lollipop-icon-pack/24/group2-512.png" alt=""/>
                         <p className="ml-4">123</p>
                 </div>
             </div>

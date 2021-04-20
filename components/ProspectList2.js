@@ -1,11 +1,11 @@
 import React from 'react';
 import ProspectCard from './ProspectCard'
 
-export default function ProspectList2({ prospects, handleCheck, campaignHasChanged, handleCheckAll, isCheckAll,handleDelete, campaign, two, changed }){
+export default function ProspectList2({ prospects, handleCheck, campaignHasChanged, handleCheckAll, isCheckAll,handleDelete, campaign, two, changed, prospectPage }){
     return(
         <div className="h-full w-full mb-4">
-            <h2>Prospect List</h2>
-            <button onClick={handleDelete} className="bg-red-400 py-2 px-3 rounded">Delete Action</button>
+            <h2> {prospectPage ? "Prospect List" : "Waiting Line List" } </h2>
+            <button onClick={handleDelete} className="bg-red-400 py-2 px-3 rounded">{prospectPage ? "Delete Prospect" : "Delete Action" }</button>
 
             <div className="h-full pb-4">
                 <table className="border-collapse my-6 text-sm w-full rounded overflow-x-hidden shadow-md">
@@ -20,10 +20,10 @@ export default function ProspectList2({ prospects, handleCheck, campaignHasChang
                             <th scope="col">
                                 Status
                             </th>
-                            <th scope="border-black border-2">
+                            <th scope="">
                                 Action
                             </th>
-                            <th className="border-black border-2">
+                            <th className="">
                                 Campaign
                             </th>
                         </tr>

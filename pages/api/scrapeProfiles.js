@@ -11,11 +11,13 @@ import chromium from 'chrome-aws-lambda';
 
 
 export default async(event, context) => {
+  
+
     try {
         let name2 = ""
         let profile_href = ""
         console.log(event.body)
-        const {url:url2, cookie, cookies, number, campaign} = JSON.parse(event.body)
+        const {url:url2, cookie, cookies, number, campaign, i} = JSON.parse(event.body)
         console.log(cookies)
         let data2 = []
         console.log("start",campaign)
@@ -23,13 +25,20 @@ export default async(event, context) => {
           args: [...chromium.args,  "--disable-web-security"],//"--hide-scrollbars",
         defaultViewport: null,//chromium.defaultViewport
         executablePath: await chromium.executablePath,
-        headless: true,
+        headless: false,
         ignoreHTTPSErrors: true,
         })
         console.log("launch", number)
 
         const page = await browser.newPage()
         console.log("page")
+        setTimeout(async () => {
+          console.log("60 sec has past : ", page.url())
+          await browser.close()
+          //context.setHeader('Access-Control-Allow-Origin','http://localhost:3000/api/scrapeProfiles')
+          context.statusCode = 200
+          //context.send(page.url())
+        }, 57*1000);
         //await delay(3000)
         await page.setViewport({ width: 1280, height: 800 })
         //await delay(3000)
@@ -58,6 +67,13 @@ export default async(event, context) => {
         }
         */
         //await delay(3000)
+        console.log("url2 : ", url2)
+        if(url2.includes("&page=")){
+          url2 = url2.replace(`&page=${parseInt(url2.slice(-1))}`, "") + `&page=${parseInt(url2.slice(-1)) + i}`
+        }else{
+          url2 = url2 + `&page=${i+1}`
+        }
+        console.log("url2 : ", url2)
         await page.goto(url2)
         console.log("url")
         await delay(3000)

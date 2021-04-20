@@ -8,6 +8,7 @@ export default function Prospects({cookie, cookiesSession}){
     const [selectedProspects, setSelectedProspects] = useState([])
     const [campaignHasChanged, setCampaignHasChanged] = useState(false)
     const [changed, setChanged] = useState(true)
+    const prospectPage = true
 
     const loadProspects = async (campaign, cookie) => {
         try{
@@ -66,7 +67,8 @@ export default function Prospects({cookie, cookiesSession}){
     }
     const handleDelete = async () => {
         console.log("delete : ",selectedProspects, campaign)
-        await fetch('api/DeleteProspects', {
+        await fetch('https://sphaxx-five.vercel.app/api/DeleteProspects', {
+            mode: 'no-cors',
             method: 'POST',
             body:JSON.stringify({cookie, selectedProspects})
         })
@@ -92,7 +94,7 @@ export default function Prospects({cookie, cookiesSession}){
                         ))}
                         <option value="All">All</option>
                     </select>
-            <ProspectList2 prospects={prospects} handleCheck={handleCheck} handleCheckAll={handleCheckAll} handleDelete={handleDelete} campaignHasChanged={campaignHasChanged} />
+            <ProspectList2 prospects={prospects} handleCheck={handleCheck} handleCheckAll={handleCheckAll} handleDelete={handleDelete} campaignHasChanged={campaignHasChanged} prospectPage={prospectPage} />
 
         </div>
     )

@@ -10,6 +10,7 @@ export default function Prospects({cookie, cookiesSession, userInfo}){
     const [isCheckAll, setIsCheckAll] = useState(false)
     const [hold, setHold] = useState(false)
     const [changed, setChanged] = useState(true)
+    const prospectPage = false
 
     const loadProspects = async (campaign, cookie) => {
         try{
@@ -121,7 +122,7 @@ export default function Prospects({cookie, cookiesSession, userInfo}){
                         <option value="All">All</option>
                     </select>
             <button onClick={handleWG} id="hold" className="rounded p-2 bg-red-500 my-2 w-32 h-12 text-white">{ hold ? "Start" : "Stop" }</button>
-            <ProspectList2 prospects={prospects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} handleCheckAll={handleCheckAll} isCheckAll={isCheckAll} handleDelete={handleDelete} campaign={campaign} two={true} changed={changed} />
+            <ProspectList2 prospects={prospects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} handleCheckAll={handleCheckAll} isCheckAll={isCheckAll} handleDelete={handleDelete} campaign={campaign} two={true} changed={changed} prospectPage={prospectPage} />
 
         </div>
     )

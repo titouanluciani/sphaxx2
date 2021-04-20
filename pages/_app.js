@@ -105,6 +105,13 @@ function MyApp({ Component, pageProps }) {
   useEffect(() => {
     console.log(userInfo.data)
   },[userInfo])
+  useEffect(() => {
+    if(!cookie){
+      document.cookie = "state=loading"
+    }else{
+      document.cookie = "state=notLoading"
+    }
+  },[cookie])
   return (
       
         !cookie ? (<div>
