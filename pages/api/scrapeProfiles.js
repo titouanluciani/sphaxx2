@@ -34,7 +34,7 @@ export default async(event, context) => {
         console.log("page")
         setTimeout(async () => {
           console.log("60 sec has past : ", page.url())
-          await browser.close()
+          //await browser.close()
           //context.setHeader('Access-Control-Allow-Origin','http://localhost:3000/api/scrapeProfiles')
           context.statusCode = 200
           //context.send(page.url())
@@ -68,13 +68,14 @@ export default async(event, context) => {
         */
         //await delay(3000)
         console.log("url2 : ", url2)
+        let url3 = ""
         if(url2.includes("&page=")){
-          url2 = url2.replace(`&page=${parseInt(url2.slice(-1))}`, "") + `&page=${parseInt(url2.slice(-1)) + i}`
+          url3 = url2.replace(`&page=${parseInt(url2.slice(-1))}`, "") + `&page=${parseInt(url2.slice(-1)) + i}`
         }else{
-          url2 = url2 + `&page=${i+1}`
+          url3 = url2 + `&page=${i+1}`
         }
-        console.log("url2 : ", url2)
-        await page.goto(url2)
+        console.log("url2 : ", url3)
+        await page.goto(url3)
         console.log("url")
         await delay(3000)
         const x = await page.viewport().width
