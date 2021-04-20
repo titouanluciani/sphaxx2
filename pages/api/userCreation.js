@@ -4,7 +4,7 @@ const delay = require('./utils/delay')
 const faunadb = require('faunadb')
 const q = faunadb.query
 const client = new faunadb.Client({ secret:process.env.FAUNA_SECRET_KEY })
-const { Map, Create, Collection, Select, Get, Var, CurrentIdentity, Lambda, Match, Index, Paginate, Intersection } = faunadb.query
+const { Map, Create, Collection,Exists, Update, Match, Index, Paginate, Intersection } = faunadb.query
 
 export default async (req, res) => {
   console.log(req.body)
