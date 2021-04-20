@@ -37,7 +37,7 @@ function MyApp({ Component, pageProps }) {
     try{
       setCookie(document.cookie.split(";").find(row=>row.startsWith('userUrl')).split('=')[1] ? document.cookie.split(";").find(row=>row.startsWith('userUrl')).split('=')[1] : document.cookie.split(";").find(row=>row.startsWith(' userUrl')).split('=')[1] )
       //const cook = document.cookie.split(";").find(row=>row.startsWith(' userUrl')).split('=')[1]
-      setCookiesSession(document.cookie.split(";").find(row=>row.startsWith(' cookiesSession')).split('=')[1] ? document.cookie.split(";").find(row=>row.startsWith(' cookiesSession') : document.cookie.split(";").find(row=>row.startsWith('cookiesSession') )
+      setCookiesSession(document.cookie.split(";").find(row=>row.startsWith(' cookiesSession')).split('=')[1] ? document.cookie.split(";").find(row=>row.startsWith(' cookiesSession')) : document.cookie.split(";").find(row=>row.startsWith('cookiesSession') ))
     }catch(err){
       console.error(err)
     }
