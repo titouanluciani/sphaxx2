@@ -35,14 +35,14 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(async () => {
     try{
-      if(document.cookie.split(";").find(row=>row.startsWith('userUrl')).split('=')[1]){
+      if(document.cookie.split(";").find(row=>row.startsWith('userUrl'))){
         setCookie(document.cookie.split(";").find(row=>row.startsWith('userUrl')).split('=')[1])
-      }else if(document.cookie.split(";").find(row=>row.startsWith(' userUrl')).split('=')[1]){
+      }else if(document.cookie.split(";").find(row=>row.startsWith(' userUrl'))){
         setCookie(document.cookie.split(";").find(row=>row.startsWith(' userUrl')).split('=')[1])
       }
-      if(document.cookie.split(";").find(row=>row.startsWith(' cookiesSession')).split('=')[1]){
+      if(document.cookie.split(";").find(row=>row.startsWith(' cookiesSession'))){
         setCookiesSession(document.cookie.split(";").find(row=>row.startsWith(' cookiesSession')).split('=')[1])
-      }else if(document.cookie.split(";").find(row=>row.startsWith('cookiesSession')).split('=')[1]){
+      }else if(document.cookie.split(";").find(row=>row.startsWith('cookiesSession'))){
         setCookiesSession(document.cookie.split(";").find(row=>row.startsWith('cookiesSession')).split('=')[1])
       }
       //const cook = document.cookie.split(";").find(row=>row.startsWith(' userUrl')).split('=')[1]
