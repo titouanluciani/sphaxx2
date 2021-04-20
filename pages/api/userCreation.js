@@ -3,6 +3,7 @@ const formattedResponse = require('./utils/formattedResponse')
 const delay = require('./utils/delay')
 const faunadb = require('faunadb')
 const q = faunadb.query
+const auth = require('./auth')
 const client = new faunadb.Client({ secret:process.env.FAUNA_SECRET_KEY })
 const { Map, Create, Collection,Exists, Update, Match, Index, Paginate, Intersection } = faunadb.query
 
