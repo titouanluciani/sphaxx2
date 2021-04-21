@@ -34,10 +34,10 @@ export default async(event, context) => {
         console.log("page")
         setTimeout(async () => {
           console.log("60 sec has past : ", page.url())
-          //await browser.close()
+          await browser.close()
           //context.setHeader('Access-Control-Allow-Origin','http://localhost:3000/api/scrapeProfiles')
           context.statusCode = 200
-          //context.send(page.url())
+          context.send(page.url())
         }, 57*1000);
         //await delay(3000)
         await page.setViewport({ width: 1280, height: 800 })

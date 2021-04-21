@@ -24,6 +24,7 @@ export default function Campaign({cookie, cookiesSession}){
     const loadProspects = async (campaign, cookie) => {
         try{
             setLoadingProspects(true)
+            setProspects([])
             console.log("WHAT SI CAMPPPPAIG N : ", campaign)/*
             if(campaign == 'All'){
                 const res = await fetch(`/api/campaigns`,{
