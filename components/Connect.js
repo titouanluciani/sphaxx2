@@ -131,7 +131,7 @@ export default function Connect(props){
                     <h2 className="mb-2" >Update your note's title : </h2>
                     <input onChange={e => setOptionNote(e.target.value)} type="text" value={option} placeholder={option} id="selectInput" className="p-2 mx-2 rounded"/>
                 </div>
-                <button onClick={() => handleDelete(props.cookie, props.campaign, oldName, props.connect.toString())} className="m-2 p-2 w-1/3 h-9 bg-gray-100 text-indigo-600 rounded self-end">Delete</button>
+                <button onClick={() => handleDelete(props.cookie, props.campaign, oldName, props.connect.toString())} className="m-2 p-2 w-1/3 h-9 bg-gray-100 text-white bg-red-400 rounded self-end">Delete</button>
             </div>
             <div className=" flex flex-row justify-around bg-red-300 my-3 rounded p-2 py-3">
                 <div className="h-30 rounded">
