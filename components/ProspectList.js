@@ -58,7 +58,7 @@ export default function ProspectList({ prospects, handleCheck, campaignHasChange
                 <input type="checkbox" id="Has responded" name="hasResponded" onClick={handleCheckFilter} />
                 <label for="Has responded">Has responded</label>
             </div>
-            <div className="h-full pb-4">
+            <div className="h-full pb-4 shadow-lg">
                 <table data-pagecount="3" className="pagination border-collapse my-6 text-sm w-full rounded overflow-x-hidden shadow-md">
                     <thead className="">
                         <tr className="bg-red-400 text-white font-bold">

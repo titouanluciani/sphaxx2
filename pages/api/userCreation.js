@@ -58,8 +58,8 @@ export default async (req, res) => {
           await client.query(Create(
             Collection('notes'),
               {data : { 
-                  name: "Default Campaign", 
-                  description: "Message to be sent. Click 'Add note' to add a note. Click 'Save' to save your note. Check the prospects before clicking 'Launch' to start automate",
+                  name: "Default Note", 
+                  description: "Type here the message to be sent. Click 'Add note' to add a note. Click 'Save' to save your note. Check the prospects before clicking 'Launch' to start sending connection requests",
                   userUrl:c,
                   campaign:"Default Campaign"
                 } 

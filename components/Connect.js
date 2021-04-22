@@ -104,45 +104,53 @@ export default function Connect(props){
         props.handleMessageFilter(props.connect)
     }, [])
     return(
-        <div className="w-full h-full">
-            <div className="flex flex-row justify-center">
-                <select onChange={e => {
-                    setOptionNote(e.target.value)
-                    setOldName(e.target.value)
-                    props.notes.map(note => note.name === e.target.value ? setOldDescription(note.description) : '')
-                    props.notes.map(note => note.name === e.target.value ? setDescription(note.description) : '')
-                    console.log("desc ",description, document.getElementById('textarea').value)
-                    document.getElementById('count').innerHTML = "Characters left: " + (299 - document.getElementById('textarea').value.length);
+        <div className="w-full">
+            <div className="flex flex-row justify-between mb-2 px-2 py-3 bg-red-300 rounded">
+                <div className="w-1/2">
+                    <h2 className="">Your notes : </h2>
+                    <select onChange={e => {
+                        setOptionNote(e.target.value)
+                        setOldName(e.target.value)
+                        props.notes.map(note => note.name === e.target.value ? setOldDescription(note.description) : '')
+                        props.notes.map(note => note.name === e.target.value ? setDescription(note.description) : '')
+                        console.log("desc ",description, document.getElementById('textarea').value)
+                        document.getElementById('count').innerHTML = "Characters left: " + (299 - document.getElementById('textarea').value.length);
 
-                    }} name="note" id="noteSelect" className="w-1/2 m-2 p-2 rounded">
-                    {props.notes.map(note => {
-                        return <option value={note.name}>{note.name}</option>
-                    })}
-                </select>
-                <button onClick={() => handleNewNote(props.cookie, props.campaign, props.connect.toString())} className="m-2 p-2 w-1/3 bg-red-500 rounded">{props.connect ? "Add note" : "Add message"}</button>
+                        }} name="note" id="noteSelect" className="w-full m-2 p-2 rounded">
+                        {props.notes.map(note => {
+                            return <option value={note.name}>{note.name}</option>
+                        })}
+                    </select>
+                </div>
+                <button onClick={() => handleNewNote(props.cookie, props.campaign, props.connect.toString())} className="m-2 p-2 w-1/3 h-9 bg-gray-100 text-indigo-600 rounded self-end">{props.connect ? "Add note" : "Add message"}</button>
                 
             </div>
-            <div className="flex flex-row bg-red-100 justify-between">
-                <input onChange={e => setOptionNote(e.target.value)} type="text" value={option} placeholder={option} id="selectInput" className="p-2 m-2 rounded"/>
-                <button onClick={() => handleSave(option,oldName,oldDescription, props.campaign, props.connect.toString(), props.cookie)} className="m-2 p-2 w-1/3 bg-red-500 rounded">Save</button>
-                <button onClick={() => handleDelete(props.cookie, props.campaign, oldName, props.connect.toString())} className="m-2 p-2 w-1/3 bg-red-500 rounded">Delete</button>
+            <div className="flex flex-row justify-between items-end bg-indigo-300 p-2 py-3 rounded">
+                <div className="">
+                    <h2 className="mb-2" >Update your note's title : </h2>
+                    <input onChange={e => setOptionNote(e.target.value)} type="text" value={option} placeholder={option} id="selectInput" className="p-2 mx-2 rounded"/>
+                </div>
+                <input onClick={() => handleSave(option,oldName,oldDescription, props.campaign, props.connect.toString(), props.cookie)} className="m-2 p-0.5 w-1/2 bg-blue-500 rounded-full" type="image" src="https://cdn1.iconfinder.com/data/icons/feather-2/24/check-512.png" width="32" height="32"/>
+                <input onClick={() => handleDelete(props.cookie, props.campaign, oldName, props.connect.toString())} type="image" src="https://cdn3.iconfinder.com/data/icons/user-interface-169/32/cross-512.png"  className="m-2 p-0.5 w-1/2 bg-red-500 rounded-full" width="32" height="32"/>
             </div>
-            <div className="bg-red-300 flex flex-row justify-around">
-                <textarea id='textarea' value={description.toString()} onChange={e => {
-                    console.log(e.target.value)
-                    setDescription(e.target.value.toString())
-                    document.getElementById('count').innerHTML = "Characters left: " + (299 - e.target.value.length);
-                    console.log(description)
-                    }} cols="30" rows="7" className="w-2/3 h-full m-4 rounded"> { description } </textarea>
-                <div className="flex flex-col justify-evenly items-stretch bg-red-100">
-                    <button className="bg-red-500 h-1/4 p-4 flex items-center justify-center rounded" onClick={handleName} value='{{name}}'>Name</button>
-                    <button className="bg-red-500 h-1/4 p-4 flex items-center justify-center rounded" onClick={handleName} value='{{firstname}}'>FirstName</button>
-                    <button disabled className="bg-red-500 h-1/4 p-4 flex items-center justify-center rounded">Smileys</button>
+            <div className=" flex flex-row justify-around bg-red-300 my-3 rounded p-2 py-3">
+                <div className="h-30 rounded">
+                    <h2 className="" >Update your note's content : </h2>
+                    <textarea id='textarea' value={description.toString()} onChange={e => {
+                        console.log(e.target.value)
+                        setDescription(e.target.value.toString())
+                        document.getElementById('count').innerHTML = "Characters left: " + (299 - e.target.value.length);
+                        console.log(description)
+                        }} cols="30" rows="7" className="w-full m-2 rounded p-1"> { description } </textarea>
+                    <h4 className="" id="count">Characters left: {299 - description.length}</h4>
+                </div>
+                <div className="flex flex-col justify-evenly items-stretch ml-4">
+                    <button className="bg-gray-100 text-indigo-600 h-10 p-2 w-24  items-center justify-center rounded" onClick={handleName} value='{{name}}'>Name</button>
+                    <button className="bg-gray-100 text-indigo-600 h-10 p-2 w-24 items-center justify-center rounded" onClick={handleName} value='{{firstname}}'>FirstName</button>
                 </div>
             </div>
-            <h4 className="" id="count">Characters left: {299 - description.length}</h4>
-            <button onClick={() => handleSave(option,oldName,description.toString(), props.campaign, props.connect.toString(), props.cookie)} className="m-2 p-2 w-1/3 bg-red-500 rounded text-white">Save</button>
-            <button onClick={() => handleLaunch(props.campaign, props.selectedProspects, option, description.toString(), props.connect.toString(), oldName, props.cookie, props.connect ? 'connect' : 'message')} className="m-2 p-2 w-1/3 bg-blue-700 rounded text-white">Launch</button>
+            <button onClick={() => handleSave(option,oldName,description.toString(), props.campaign, props.connect.toString(), props.cookie)} className="m-2 p-2 w-1/3 bg-blue-500 rounded text-white">Save Note</button>
+            <button onClick={() => handleLaunch(props.campaign, props.selectedProspects, option, description.toString(), props.connect.toString(), oldName, props.cookie, props.connect ? 'connect' : 'message')} className="m-2 ml-8 p-2 w-1/2 bg-purple-700 rounded text-white">Save & Launch</button>
         </div>
         
     )

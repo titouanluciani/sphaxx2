@@ -67,7 +67,7 @@ export default function SimpleTabs({ notes, messages, campaign, loadProspects, s
   }
 
   return (
-    <div className="h-full bg-indigo-400 w-5/12 p-6">
+    <div className=" bg-blue-200 w-5/12 p-6 rounded shadow-lg">
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange} className="" aria-label="simple tabs example">
           <Tab label="Connect" {...a11yProps(0)} />

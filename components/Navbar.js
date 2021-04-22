@@ -21,11 +21,6 @@ export default function Navbar({ cookie, userInfo }){
         number:campaignsNumber,
         page:"/campaign"
     },{
-        name:"Funnel",
-        icon:"https://cdn1.iconfinder.com/data/icons/youtuber/256/storytelling-storyboard-scenario-script-screenplay-512.png",
-        number:null,
-        page:"/funnel"
-    },{
         name:"Waiting Line",
         icon:"https://cdn2.iconfinder.com/data/icons/font-awesome/1792/hourglass-o-512.png",
         number:wg,
