@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 //<option value={props.notes[0] ? props.notes[0].name : "Default Note"} selected>{props.notes[0] ? props.notes[0].name : "Default Note"}</option>
-
+//<input onClick={() => handleSave(option,oldName,oldDescription, props.campaign, props.connect.toString(), props.cookie)} className="m-2 p-0.5 w-1/2 bg-blue-500 rounded-full" type="image" src="https://cdn1.iconfinder.com/data/icons/feather-2/24/check-512.png" width="32" height="32"/>
 export default function Connect(props){
     console.log("notes in connect components", props.notes)
     const [option, setOptionNote] = useState('')
@@ -130,8 +130,7 @@ export default function Connect(props){
                     <h2 className="mb-2" >Update your note's title : </h2>
                     <input onChange={e => setOptionNote(e.target.value)} type="text" value={option} placeholder={option} id="selectInput" className="p-2 mx-2 rounded"/>
                 </div>
-                <input onClick={() => handleSave(option,oldName,oldDescription, props.campaign, props.connect.toString(), props.cookie)} className="m-2 p-0.5 w-1/2 bg-blue-500 rounded-full" type="image" src="https://cdn1.iconfinder.com/data/icons/feather-2/24/check-512.png" width="32" height="32"/>
-                <input onClick={() => handleDelete(props.cookie, props.campaign, oldName, props.connect.toString())} type="image" src="https://cdn3.iconfinder.com/data/icons/user-interface-169/32/cross-512.png"  className="m-2 p-0.5 w-1/2 bg-red-500 rounded-full" width="32" height="32"/>
+                <input onClick={() => handleDelete(props.cookie, props.campaign, oldName, props.connect.toString())} type="image" src="https://cdn3.iconfinder.com/data/icons/user-interface-169/32/cross-512.png"  className="m-2 p-0.5 w-1/2 bg-red-500 rounded-full" width="16" height="16"/>
             </div>
             <div className=" flex flex-row justify-around bg-red-300 my-3 rounded p-2 py-3">
                 <div className="h-30 rounded">
