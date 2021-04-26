@@ -128,8 +128,8 @@ function MyApp({ Component, pageProps }) {
       
         !cookie ? (<div>
           <div className="loader" id="loader"></div>
-          <h2 className="font-bold">Click the "refresh" button in the extension. Wait a little (~ 15 sec) then refresh the app.</h2>
-          <h2>If that still don't work, contact one of us.</h2>
+          <h2 className="font-bold">Wait a little (~ 15 sec) then refresh the app.</h2>
+          <h2>If that still don't work, <p className="font-bold">click the "refresh" button in the extension</p> or contact one of us.</h2>
           <ul>
           <li><a className="text-blue-600 underline" href="https://www.linkedin.com/in/valentin-pouxguirimand/">https://www.linkedin.com/in/valentin-pouxguirimand/</a></li>
           <li><a className="text-blue-600 underline" href="https://www.linkedin.com/in/ilias-khattabi-0282631b1/">https://www.linkedin.com/in/ilias-khattabi-0282631b1/</a></li>
