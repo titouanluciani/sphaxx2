@@ -14,6 +14,8 @@ export default async(event, context) => {
   
 
     try {
+        let j = 0
+        let h = 0
         let name2 = ""
         let profile_href = ""
         console.log(event.body)
@@ -38,7 +40,7 @@ export default async(event, context) => {
           //context.setHeader('Access-Control-Allow-Origin','http://localhost:3000/api/scrapeProfiles')
           context.statusCode = 200
           context.send(page.url())
-        }, 57*1000);
+        }, 55*1000);
         //await delay(3000)
         await page.setViewport({ width: 1280, height: 800 })
         //await delay(3000)
@@ -72,7 +74,7 @@ export default async(event, context) => {
         if(url2.includes("&page=")){
           url3 = url2.replace(`&page=${parseInt(url2.slice(-1))}`, "") + `&page=${parseInt(url2.slice(-1)) + i}`
         }else{
-          url3 = url2 + `&page=${i+1}`
+          url3 = url2 + `&page=${i}`
         }
         console.log("url2 : ", url3)
         await page.goto(url3)
@@ -147,20 +149,44 @@ export default async(event, context) => {
                   profile_href = await profile_url.getProperty('href')
                   profile_href = await profile_href.jsonValue()
                 } catch(e) {
-                  console.log(e)
+                  console.log("error on get property I guess : ",e)
                   
                   let profile_name = await page.$(`#main > div > div > div.pv2.artdeco-card.ph0.mb2 > ul > li:nth-child(${i+1}) > div > div > div.entity-result__content.entity-result__divider.pt3.pb3.t-12.t-black--light > div.mb1 > div > div.t-roman.t-sans > span > div > span.entity-result__title-line.flex-shrink-1.entity-result__title-text--black > span > a`)
-                  name2 = await profile_name.getProperty('innerText')
+                  profile_href = await profile_name.getProperty('href')
+                  profile_href = await profile_href.jsonValue()
+
+                  try{
+                    name2 = await profile_name.getProperty('innerText')
+                  }catch(e){
+                    console.log("error on name 2 get property")
+                    profile_name = await page.$(`#main > div > div > div.pv2.artdeco-card.ph0.mb2 > ul > li:nth-child(${i+1}) > div > div > div.entity-result__content.entity-result__divider.pt3.pb3.t-12.t-black--light > div > div > div.t-roman.t-sans > span > div > span.entity-result__title-line.flex-shrink-1.entity-result__title-text--black > span > a > span > span:nth-child(1)`)
+                    name2 = await profile_name.getProperty('innerText')
+                    console.log("name2 rectrified")
+                  }
                   name2 = await name2.jsonValue()
                   console.log(name2)
                   
-                  profile_href = await profile_name.getProperty('href')
-                  profile_href = await profile_href.jsonValue()
                 }
               }catch(e){
                 console.log("this is an error : ", e)
-                name2 = ""
-                profile_href = ""
+                console.log("this is profile href : ", profile_href)
+                console.log("this is name2: ", name2)
+                if(profile_href == undefined){
+                  console.log("error on href getproperty")
+                  let profile_href = await page.$(`document.querySelector('#main > div > div > div.pv2.artdeco-card.ph0.mb2 > ul > li:nth-child(${i+1}) > div > div > div.entity-result__content.entity-result__divider.pt3.pb3.t-12.t-black--light > div > div > div.t-roman.t-sans > span > div > span.entity-result__title-line.flex-shrink-1.entity-result__title-text--black > span > a')`)
+                  profile_href = await profile_href.getProperty('href')
+                  profile_href = await profile_href.jsonValue()
+                  console.log("href rectified : ", profile_href)
+                }
+                if(name2 == undefined){
+                  console.log("error on name2 get property")
+                  profile_name = await page.$(`#main > div > div > div.pv2.artdeco-card.ph0.mb2 > ul > li:nth-child(${i+1}) > div > div > div.entity-result__content.entity-result__divider.pt3.pb3.t-12.t-black--light > div > div > div.t-roman.t-sans > span > div > span.entity-result__title-line.flex-shrink-1.entity-result__title-text--black > span > a > span > span:nth-child(1)`)
+                  name2 = await profile_name.getProperty('innerText')
+                  name2 = await name2.jsonValue()
+                  console.log(name2)
+                }
+                //name2 = ""
+                //profile_href = ""
               }
               name2 = name2.split('Voir le profil de')[0]
               name2 = name2.trim()
@@ -195,8 +221,13 @@ export default async(event, context) => {
                 relation = ''
               }
               //state == (Se connecter' || 'Connect') |||| ('En attente' || 'Pending') || Message
+              if(profile_href == ""){
+                h+=1;
+                console.log("profile url empty : ", h)
+              }
               console.log("prospectsUrl includeds url ? ",prospectsUrl.includes(profile_href))
-              if(!prospectsUrl.includes(profile_href) && (profile_href !== "LinkedIn Member" && profile_href !== 'Membre de LinkedIn')){
+              if(!prospectsUrl.includes(profile_href) && (profile_href !== "LinkedIn Member" && profile_href !== 'Membre de LinkedIn' && profile_href !== '' )){
+                j+=1;
                 if(state == 'Se connecter' || state ==  'Connect'){
                   console.log("connnecctt")
                   await client.query(
@@ -235,7 +266,7 @@ export default async(event, context) => {
           }
           console.log(data2)
           console.log(data2.length)
-          console.log("Next page")
+          console.log("Next page : ", j)
           
 
           await page.waitForSelector('.artdeco-pagination__button.artdeco-pagination__button--next.artdeco-button.artdeco-button--muted.artdeco-button--icon-right.artdeco-button--1.artdeco-button--tertiary.ember-view')
@@ -245,6 +276,7 @@ export default async(event, context) => {
         }
         console.log(data2)
         console.log("done",data2.length)
+        console.log("j ",j)
         context.setHeader('Access-Control-Allow-Origin','chrome-extension://eiglnhpkhijlbopnpcdddiaagdgelamd')
         context.statusCode = 200
         context.send(data2)
