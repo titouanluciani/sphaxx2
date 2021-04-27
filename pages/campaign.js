@@ -5,6 +5,7 @@ import Modal from '../components/createCampModal'
 
 
 export default function Campaign({cookie, cookiesSession}){
+
     const [prospects, setProspects] = useState([]) 
     const [notes, setNotes] = useState([]) 
     const [messages, setMessages] = useState([])
@@ -120,10 +121,19 @@ export default function Campaign({cookie, cookiesSession}){
             console.log("connect tab clicked")
             document.getElementById('Connected').checked = false
             document.getElementById('Has not responded').checked = false
-            setFilter([])
+            document.getElementById('Connection not send').checked = true
+            setFilter(["isNotConnected"])
             setFilterProspects([])
         }
     }
+    //Pagination
+    const [currentPage, setCurrentPage] = useState(1)
+    const [rowsPerPage, setRowsPerPage] = useState(20)
+    const [previousPage, setPreviousPage] = useState(1)
+
+    const indexOfLastItem = rowsPerPage * currentPage
+    const indexOfFirstItem = indexOfLastItem - rowsPerPage
+    let currentProspects = prospects.slice(indexOfFirstItem, indexOfLastItem)
 
     useEffect(() => {
         console.log("cookie for useEffect loadprosp loadcamp : ", cookie)
@@ -147,7 +157,7 @@ export default function Campaign({cookie, cookiesSession}){
         loadProspects(campaign, cookie);
     }, [changed])
     useEffect(() => {
-        console.log(selectedProspects)  
+        console.log(selectedProspects)
     }, [selectedProspects])
     useEffect(() => {
         console.log("this is filter : ",filter)
@@ -179,7 +189,7 @@ export default function Campaign({cookie, cookiesSession}){
     }, [prospects])
     useEffect(() => {
         console.log("filter prospects : ",filterProspects)
-
+        currentProspects = filterProspects.slice(indexOfFirstItem, indexOfLastItem)
     }, [filterProspects])
     //<option value="All" selected>Default Campaign</option>
     return(
@@ -202,7 +212,7 @@ export default function Campaign({cookie, cookiesSession}){
                     <button className="p-2 px-3 mr-4 bg-blue-500 rounded">Tools</button>
             </div>
             <div className="flex flex-row flex-wrap justify-between h-screen h-full">
-                <ProspectList prospects={filterProspects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} handleCheckAll={handleCheckAll} isCheckAll={isCheckAll} handleCheckFilter={handleCheckFilter} loadingProspects={loadingProspects} />
+                <ProspectList prospects={filterProspects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} handleCheckAll={handleCheckAll} isCheckAll={isCheckAll} handleCheckFilter={handleCheckFilter} loadingProspects={loadingProspects} setIsCheckAll={setIsCheckAll} selectedProspects={selectedProspects} />
                 <TabPanel notes={notes} messages={messages} campaign={campaign} loadProspects={loadProspects} selectedProspects={selectedProspects} cookie={cookie} changed={changed} setChanged={setChanged} campaignHasChanged={setCampaignHasChanged} handleMessageFilter={handleMessageFilter} />
             </div>
             

@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import ProspectCard from './ProspectCard'
 import Pagination from './Pagination'
 
-export default function ProspectList({ prospects, handleCheck, campaignHasChanged, handleCheckAll, isCheckAll, handleCheckFilter, loadingProspects }){
+export default function ProspectList({ prospects, handleCheck, campaignHasChanged, handleCheckAll, isCheckAll, setIsCheckAll, handleCheckFilter, loadingProspects, selectedProspects }){
+    let selectedProspectsUrls = []
 
     //Pagination
     const [currentPage, setCurrentPage] = useState(1)
@@ -26,6 +27,11 @@ export default function ProspectList({ prospects, handleCheck, campaignHasChange
             console.log("remove first : ",document.querySelector('.pageBtn') )
             document.querySelector('.pageBtn').classList.remove('active')
         }
+        /*Array.from(document.getElementsByClassName('checkboxProspect')).forEach(el =>  {
+            el.checked = false
+        })
+        document.getElementById('checkAll').checked = false
+        setIsCheckAll(false)*/
         e.target.classList.add('active')
         setPreviousPage(e.target)
         setCurrentPage(pageNumber)
@@ -35,6 +41,9 @@ export default function ProspectList({ prospects, handleCheck, campaignHasChange
         console.log("PROSPECTS IN PROSPECT LIST : ", prospects)
         console.log("PROSPECTS IN PROSPECT LIST : ", currentProspects)
     }, [currentProspects])
+    useEffect(()=>{
+        selectedProspectsUrls = selectedProspectsUrls.map(el => el.url)
+    }, [selectedProspects])
     return(
         <div className="h-full w-6/12 mb-4">
             <h2>Prospect List</h2>
@@ -63,7 +72,7 @@ export default function ProspectList({ prospects, handleCheck, campaignHasChange
                     <thead className="">
                         <tr className="bg-red-400 text-white font-bold">
                             <th>
-                                <input type="checkbox" onClick={handleCheckAll} name="" id=""/>
+                                <input type="checkbox" onClick={handleCheckAll} name="" id="checkAll"/>
                             </th>
                             <th className="text-right">
                                 Name
@@ -81,7 +90,7 @@ export default function ProspectList({ prospects, handleCheck, campaignHasChange
                     </thead>
                     <tbody className="overflow-x-hidden bg-blue-200 mb-4">
                                 { currentProspects && currentProspects.map(prospect =>(
-                                    <ProspectCard key={prospect._id} prospect={ prospect } handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} isCheckAll={isCheckAll} two={false} />
+                                    <ProspectCard key={prospect._id} prospect={ prospect } handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} isCheckAll={isCheckAll} two={false} selectedProspectsUrls={selectedProspectsUrls}/>
                                 )) }
                     </tbody>
                 </table>
