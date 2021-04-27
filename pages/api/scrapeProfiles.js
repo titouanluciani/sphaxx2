@@ -40,7 +40,7 @@ export default async(event, context) => {
           //context.setHeader('Access-Control-Allow-Origin','http://localhost:3000/api/scrapeProfiles')
           context.statusCode = 200
           context.send(page.url())
-        }, 55*1000);
+        }, 52*1000);
         //await delay(3000)
         await page.setViewport({ width: 1280, height: 800 })
         //await delay(3000)
@@ -264,8 +264,8 @@ export default async(event, context) => {
               }
               console.log("prospectsUrl includeds url ? ",prospectsUrl.includes(profile_href))
               if(!prospectsUrl.includes(profile_href) && (profile_href !== "LinkedIn Member" && profile_href !== 'Membre de LinkedIn' && profile_href !== '' )){
-                j+=1;
                 if(state == 'Se connecter' || state ==  'Connect'){
+                  j+=1;
                   console.log("connnecctt")
                   await client.query(
                     q.Create(
@@ -275,6 +275,7 @@ export default async(event, context) => {
                   )
                 }
                 else if(state == 'En attente' || state ==  'Pending'){
+                  j+=1;
                   console.log("pendingggg")
                   await client.query(
                     q.Create(
@@ -283,6 +284,7 @@ export default async(event, context) => {
                     )
                   )
                 }else if(state == 'Message' && (relation == '• 3rd+' || relation == '• 3e et +' ) ){
+                  j+=1;
                   console.log("3rd trois petits points")
                   await client.query(
                     q.Create(
@@ -291,6 +293,7 @@ export default async(event, context) => {
                     )
                   )
                 }else{
+                  j+=1;
                   console.log("alreaaddyy connecteddd")
                   await client.query(
                     q.Create(
@@ -301,7 +304,7 @@ export default async(event, context) => {
                 }
               }
           }
-          console.log(data2)
+          //console.log(data2)
           console.log(data2.length)
           console.log("Next page : ", j)
           
@@ -314,7 +317,7 @@ export default async(event, context) => {
         console.log(data2)
         console.log("done",data2.length)
         console.log("j ",j)
-        context.setHeader('Access-Control-Allow-Origin','chrome-extension://eiglnhpkhijlbopnpcdddiaagdgelamd')
+        //context.setHeader('Access-Control-Allow-Origin','chrome-extension://eiglnhpkhijlbopnpcdddiaagdgelamd')
         context.statusCode = 200
         context.send(data2)
         
