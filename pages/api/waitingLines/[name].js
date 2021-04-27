@@ -43,7 +43,7 @@ export default async (req, res) => {
                         Index('waitingLine_by_done'), false),
                     Match(
                         Index('waitingLine_by_user'),Select(['data','url'], Get(CurrentIdentity())))
-                )
+                ),{size : 100000}
     
             ), Lambda(['ref'], Select(['data'], Get(Var('ref'))))
         ))

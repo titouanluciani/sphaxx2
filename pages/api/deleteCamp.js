@@ -35,8 +35,8 @@ export default async (req, res) => {
             Intersection(
                 Match(Index('prospects_by_campaign'), campaignName),
                 Match(Index('prospects_by_user'), user_url),
-            )
-          ), Lambda('ref', Delete(Var('ref')))
+            ),
+            {size : 100000}), Lambda('ref', Delete(Var('ref')))
         )
     )
     await userClient.query(
@@ -44,7 +44,7 @@ export default async (req, res) => {
             Intersection(
                 Match(Index('waitingLine_by_campaign'), campaignName),
                 Match(Index('waitingLine_by_user'), user_url),
-            )
+            ), {size : 100000}
           ), Lambda('ref', Delete(Var('ref')))
         )
     )

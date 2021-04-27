@@ -34,7 +34,7 @@ export default async (req, res) => {
     const usersIndex = await client.query(
         Paginate(
             Match(Index('users_by_url'),user_url)
-        )
+        , {size : 100000})
     )
     console.log(usersIndex)
 
@@ -54,7 +54,7 @@ export default async (req, res) => {
     const prospects = await userClient.query(Map(
         Paginate(Match(
             Index('prospects_by_user'), Select(['data','url'],Get(CurrentIdentity())))
-            ), Lambda(['ref'], Select( ['data'], Get(Var('ref'))))
+            , {size : 100000}), Lambda(['ref'], Select( ['data'], Get(Var('ref'))))
     ))
     //console.log(login)
     console.log(login_url)

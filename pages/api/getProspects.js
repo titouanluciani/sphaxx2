@@ -15,10 +15,10 @@ export default async (req, res) => {
         Paginate(
             Intersection(
                 Match(
-                    Index('pro_by_campaign'),Select(['data','url'], Get(CurrentIdentity()))),
+                    Index('prospects_by_campaign'),Select(['data','url'], Get(CurrentIdentity()))),
                 Match(
                     Index('prospects_by_campaign'), campaign)
-            )
+            ), {size : 100000}
 
         ), Lambda(['ref'], Select(['data'], Get(Var('ref'))))
     ))

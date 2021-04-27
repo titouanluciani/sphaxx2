@@ -26,7 +26,7 @@ export default async function(req, res){
                 Paginate(
                     Match(
                         Index("users_by_url"), user_url
-                    )
+                    ), {size : 100000}
                 )
             )
         )

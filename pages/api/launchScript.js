@@ -62,7 +62,7 @@ export default async function(req, res){
                             Intersection(
                                 Match(Index('waitingLine_by_done'), false),
                                 Match(Index('waitingLine_by_user'), user_url)
-                            )
+                            ), {size : 100000}
                         ),
                         Lambda('x', Get(Var('x'))
                         )
@@ -84,7 +84,7 @@ export default async function(req, res){
                             Intersection(
                                 Match(Index('prospects_by_url'), prospectUrl),
                                 Match(Index('prospects_by_user'), user_url)
-                            )
+                            ), {size : 100000}
                         ),
                         Lambda('x', Get(Var('x'))
                         )
@@ -109,7 +109,7 @@ export default async function(req, res){
                                     Match(Index('waitingLine_by_done'), false),
                                     Match(Index('waitingLine_by_prospectUrl'), prospectUrl),
                                     Match(Index('waitingLine_by_user'),user_url)
-                                )
+                                ), {size : 100000}
                             ),
                             Lambda('x', Get(Var('x'))
                             )

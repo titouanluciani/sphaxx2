@@ -40,7 +40,7 @@ export default async (req, res) => {
                         Index('prospects_by_campaign'), campaign),
                     Match(
                         Index('prospects_by_user'),Select(['data','url'], Get(CurrentIdentity())))
-                )
+                ), {size : 100000}
     
             ), Lambda(['ref'], Select(['data'], Get(Var('ref'))))
         ))
@@ -52,7 +52,7 @@ export default async (req, res) => {
                         Index('notes_by_campaign'), campaign),
                     Match(
                         Index('notes_by_user'),Select(['data','url'], Get(CurrentIdentity())))
-                )
+                ), {size : 100000}
             ), Lambda(['ref'], Select(['data'], Get(Var('ref'))))
         ))
         const messages = await userClient.query(Map(
@@ -62,7 +62,7 @@ export default async (req, res) => {
                         Index('messages_by_campaign'), campaign),
                     Match(
                         Index('messages_by_user'),Select(['data','url'], Get(CurrentIdentity())))
-                )
+                ), {size : 100000}
             ), Lambda(['ref'], Select(['data'], Get(Var('ref'))))
         ))
         console.log(notes)

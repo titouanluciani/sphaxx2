@@ -21,7 +21,7 @@ export default async function getNextUrl(req, res){
                             Index("waitingLine_by_user"),
                             cookie
                         )
-                    )
+                    ), {size : 100000}
                 )
             )
         )
@@ -35,7 +35,7 @@ export default async function getNextUrl(req, res){
                     Intersection(
                         Match(Index('prospects_by_url'), nextAction.data.prospectUrl),
                         Match(Index('prospects_by_user'), cookie)
-                    )
+                    ), {size : 100000}
                 ),
                 Lambda('x', Get(Var('x'))
                 )

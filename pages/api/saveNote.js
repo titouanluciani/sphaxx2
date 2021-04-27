@@ -37,7 +37,7 @@ export default async (req, res) => {
                     Match(Index('notes_by_name'), oldName),
                     Match(Index('notes_by_campaign'), campaign),
                     Match(Index('notes_by_user'), Select(['data','url'], Get(CurrentIdentity())))
-                ))
+                ), {size : 100000})
             ), {data : { name:name, description:description } }
         ))
         console.log('ref : ', ref)
@@ -50,7 +50,7 @@ export default async (req, res) => {
                     Match(Index('messages_by_name'), oldName),
                     Match(Index('messages_by_campaign'), campaign),
                     Match(Index('messages_by_user'), Select(['data','url'], Get(CurrentIdentity())))
-                ))
+                ), {size : 100000})
             ), {data : { name:name, description:description } }
         ))
         console.log('ref : ', ref)

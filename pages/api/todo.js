@@ -25,7 +25,7 @@ export default async (req, res) => {
             Paginate(
                 Match(
                     Index("waitingLine_by_user"), user_url)
-                )
+                , {size : 100000})
             )
     )
     console.log("todo count : ", todo)

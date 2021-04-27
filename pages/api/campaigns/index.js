@@ -38,7 +38,7 @@ export default async (req, res) => {
                     Match(
                         Index('prospects_by_user'),Select(['data','url'], Get(CurrentIdentity())))
     
-            ), Lambda(['ref'], Select(['data'], Get(Var('ref'))))
+            , {size : 100000}), Lambda(['ref'], Select(['data'], Get(Var('ref'))))
         ))
 
         console.log(campaign)

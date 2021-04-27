@@ -38,7 +38,7 @@ export default async function(req, res){
                 Match(
                 "waitingLine_by_user",
                 cookie
-                )   
+                ), {size : 100000}
             )
             ),
             Lambda("wg", Get(Var("wg")))

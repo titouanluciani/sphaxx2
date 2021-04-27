@@ -37,7 +37,7 @@ export default async (req, res) => {
         const campaigns = await userClient.query(Map(
             Paginate(Match(
                 Index('campaigns_by_user'),Select(['data','url'], Get(CurrentIdentity()))
-            )), Lambda(['ref'], Select(['data'], Get(Var('ref'))))
+            ), {size : 100000}), Lambda(['ref'], Select(['data'], Get(Var('ref'))))
         ))
         console.log(campaigns)
         res.statusCode = 200;

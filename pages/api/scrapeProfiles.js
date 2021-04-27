@@ -118,7 +118,7 @@ export default async(event, context) => {
                     c
                   )
                   //Match("prospects_by_campaign", campaign)
-                )
+                ), {size : 100000}
               ), Lambda('prospect', Get(Var('prospect')))
             ))
           )

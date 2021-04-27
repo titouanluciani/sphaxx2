@@ -15,7 +15,7 @@ export default async (req, res) => {
                   Intersection(
                     Match(Index("waitingLine_by_done"), true),
                     Match(Index("waitingLine_by_user"), cookie),
-                    )
+                    ), {size : 100000}
                   ), Lambda('x', Get(Var('x')))
                 )
         )
@@ -24,7 +24,7 @@ export default async (req, res) => {
                 Paginate(
                   Intersection(
                     Match(Index("prospects_by_user"), cookie),
-                    )
+                    ), {size : 100000}
                   )), Lambda('x', Get(Var('x')))
                 )
         )
@@ -59,7 +59,7 @@ export default async (req, res) => {
                     Match(Index("waitingLine_by_done"), true),
                     Match(Index("waitingLine_by_campaign"), campaign),
                     Match(Index("waitingLine_by_user"), cookie),
-                    )
+                    ), {size : 100000}
                   ), Lambda('x', Get(Var('x')))
                 )
         )
@@ -69,7 +69,7 @@ export default async (req, res) => {
                   Intersection(
                     Match(Index("prospects_by_campaign"), campaign),
                     Match(Index("prospects_by_user"), cookie)
-                    )
+                    ), {size : 100000}
                   )), Lambda('x', Get(Var('x')))
                 )
         )

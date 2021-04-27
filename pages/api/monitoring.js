@@ -55,7 +55,7 @@ export default async function(req,res){
                         Match(Index('waitingLine_by_done'), true),
                         Match(Index('waitingLine_by_monitored'), false),
                         Match(Index('waitingLine_by_user'), user_url)
-                    )
+                    ), {size : 100000}
                 ),
                 Lambda('x', Get(Var('x'))
                 )
@@ -73,7 +73,7 @@ export default async function(req,res){
                                         Match(
                                             Index("prospects_by_user"), d.data.userUrl
                                         )
-                                    )),
+                                    ), {size : 100000}),
                                     Lambda("x", Get(Var("x")))
                                 )
                             ))
@@ -106,7 +106,7 @@ export default async function(req,res){
                                     Match(
                                         Index("prospects_by_user"), d.data.userUrl
                                     )
-                                )),
+                                ), {size : 100000}),
                                 Lambda("x", Get(Var("x")))
                             )
                         ), 
@@ -127,7 +127,7 @@ export default async function(req,res){
                                     Match(
                                         Index("prospects_by_user"), d.data.userUrl
                                     )
-                                )),
+                                ), {size : 100000}),
                                 Lambda("x", Get(Var("x")))
                             )
                         ),
@@ -154,7 +154,7 @@ export default async function(req,res){
                                         Match(
                                             Index("prospects_by_user"), d.data.userUrl
                                         )
-                                    )),
+                                    ), {size : 100000}),
                                     Lambda("x", Get(Var("x")))
                                 )
                             ),
@@ -196,7 +196,7 @@ export default async function(req,res){
                                         Match(
                                             Index("prospects_by_user"), d.data.userUrl
                                         )
-                                    )),
+                                    ), {size : 100000}),
                                     Lambda("x", Get(Var("x")))
                                 )
                             ),
@@ -221,7 +221,7 @@ export default async function(req,res){
                                         Match(
                                             Index("prospects_by_user"), d.data.userUrl
                                         )
-                                    )),
+                                    ), {size : 100000}),
                                     Lambda("x", Get(Var("x")))
                                 )
                             ),
