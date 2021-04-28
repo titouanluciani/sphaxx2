@@ -114,7 +114,7 @@ export default async function(req,res){
                     )
                 )
             }else{
-                console.log(prospectExist)
+                console.log("prospect do exist (prospectExist) : ",prospectExist)
                 //Update it's state
                 await userClient.query(
                     Update(

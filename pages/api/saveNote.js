@@ -36,7 +36,7 @@ export default async (req, res) => {
             Select(['data',0], Paginate(Intersection(
                     Match(Index('notes_by_name'), oldName),
                     Match(Index('notes_by_campaign'), campaign),
-                    Match(Index('notes_by_user'), Select(['data','url'], Get(CurrentIdentity())))
+                    Match(Index('notes_by_user'), cookie)
                 ), {size : 100000})
             ), {data : { name:name, description:description } }
         ))

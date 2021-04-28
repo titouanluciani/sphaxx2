@@ -96,8 +96,9 @@ export default function Connect(props){
     };*/
     useEffect(()=>{        
         setOptionNote(document.getElementById('noteSelect').value)
+        setOldName(document.getElementById('noteSelect').value)
         document.getElementById('selectInput').value = document.getElementById('noteSelect').value
-        setDescription('')
+        setDescription(document.getElementById('textarea') ? document.getElementById('textarea').value : '')
         props.notes.filter(note => note.name === document.getElementById('noteSelect').value ? setOldDescription(note.description) : '')
         props.notes.filter(note => note.name === document.getElementById('noteSelect').value ? setDescription(note.description) : '')
     },[props.notes])

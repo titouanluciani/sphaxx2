@@ -26,6 +26,7 @@ export default function Campaign({cookie, cookiesSession}){
         try{
             setLoadingProspects(true)
             setProspects([])
+            setFilterProspects([])
             console.log("WHAT SI CAMPPPPAIG N : ", campaign)/*
             if(campaign == 'All'){
                 const res = await fetch(`/api/campaigns`,{
@@ -114,6 +115,8 @@ export default function Campaign({cookie, cookiesSession}){
             console.log("message tab clicked")
             document.getElementById('Connected').checked = true
             document.getElementById('Has not responded').checked = true
+            document.getElementById('Connection not send').checked = false
+            setFilter(filter => filter.filter(el => el != 'Connection not send'))
             setFilter(filter => filter.concat("hasAccepted"))
             setFilter(filter => filter.concat("hasNotResponded"))
             setFilterProspects([])
@@ -130,7 +133,7 @@ export default function Campaign({cookie, cookiesSession}){
     const [currentPage, setCurrentPage] = useState(1)
     const [rowsPerPage, setRowsPerPage] = useState(20)
     const [previousPage, setPreviousPage] = useState(1)
-
+ 
     const indexOfLastItem = rowsPerPage * currentPage
     const indexOfFirstItem = indexOfLastItem - rowsPerPage
     let currentProspects = prospects.slice(indexOfFirstItem, indexOfLastItem)
@@ -153,6 +156,9 @@ export default function Campaign({cookie, cookiesSession}){
     }, [showModal])
     useEffect(() => {
         console.log("changed use effect trigger : ", changed)
+        setProspects([])
+        setSelectedProspects([])
+        setFilterProspects([])
         loadCampaigns(cookie)
         loadProspects(campaign, cookie);
     }, [changed])
