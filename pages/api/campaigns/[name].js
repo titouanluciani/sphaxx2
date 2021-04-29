@@ -33,7 +33,7 @@ export default async (req, res) => {
 
         const userClient = new faunadb.Client({ secret:user_secret })
         
-        const prospects = await userClient.query(Map(
+        const prospects = await client.query(Map(
             Paginate(
                 Intersection(
                     Match(
@@ -45,7 +45,7 @@ export default async (req, res) => {
             ), Lambda(['ref'], Select(['data'], Get(Var('ref'))))
         ))
         
-        const notes = await userClient.query(Map(
+        const notes = await client.query(Map(
             Paginate(
                 Intersection(
                     Match(
@@ -55,7 +55,7 @@ export default async (req, res) => {
                 ), {size : 100000}
             ), Lambda(['ref'], Select(['data'], Get(Var('ref'))))
         ))
-        const messages = await userClient.query(Map(
+        const messages = await client.query(Map(
             Paginate(
                 Intersection(
                     Match(
