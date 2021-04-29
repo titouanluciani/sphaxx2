@@ -24,7 +24,7 @@ export default async (req, res) => {
     )
     console.log("CREATE CAMP user secret createCamp : ", user_secret)
     const userClient = new faunadb.Client({ secret:user_secret })
-
+    campaignName = campaignName.trim()
     const newCampaign = await client.query(Create(
         Collection('Campaigns'),
         { data : { name:  campaignName , userUrl : user_url } }

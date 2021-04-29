@@ -60,6 +60,7 @@ export default function Campaign({cookie, cookiesSession}){
         const res_campaigns = await res.json();
         setCampaigns(res_campaigns.data)
         console.log("campaigns after loadcampaigns : ",campaigns)
+        //setCampaign(res_campaigns.data[0])
     }
 
     const handleCampaigns = (e) => {
