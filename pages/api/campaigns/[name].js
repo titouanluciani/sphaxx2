@@ -39,7 +39,7 @@ export default async (req, res) => {
                     Match(
                         Index('prospects_by_campaign'), campaign),
                     Match(
-                        Index('prospects_by_user'),Select(['data','url'], Get(CurrentIdentity())))
+                        Index('prospects_by_user'),user_url))
                 ), {size : 100000}
     
             ), Lambda(['ref'], Select(['data'], Get(Var('ref'))))
@@ -51,7 +51,7 @@ export default async (req, res) => {
                     Match(
                         Index('notes_by_campaign'), campaign),
                     Match(
-                        Index('notes_by_user'),Select(['data','url'], Get(CurrentIdentity())))
+                        Index('notes_by_user'),user_url))
                 ), {size : 100000}
             ), Lambda(['ref'], Select(['data'], Get(Var('ref'))))
         ))
@@ -61,7 +61,7 @@ export default async (req, res) => {
                     Match(
                         Index('messages_by_campaign'), campaign),
                     Match(
-                        Index('messages_by_user'),Select(['data','url'], Get(CurrentIdentity())))
+                        Index('messages_by_user'),user_url)
                 ), {size : 100000}
             ), Lambda(['ref'], Select(['data'], Get(Var('ref'))))
         ))
