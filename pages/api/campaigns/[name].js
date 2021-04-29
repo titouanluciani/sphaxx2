@@ -69,6 +69,7 @@ export default async (req, res) => {
         console.log(messages)
         console.log(campaign)
         console.log(typeof campaign)
+        console.log(prospects)
         res.statusCode = 200;
         res.json({prospects, notes, messages})
 
