@@ -8,7 +8,7 @@ const {Paginate, Select, Create, Get, Lambda, Var, Index, Match,
 
 export default async (req, res) => {
     console.log(JSON.parse(req.body))
-    const campaignName = JSON.parse(req.body).name
+    let campaignName = JSON.parse(req.body).name
     const user_url = JSON.parse(req.body).cookie
 
     const user_secret = await client.query(
