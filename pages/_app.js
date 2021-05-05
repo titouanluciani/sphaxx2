@@ -1,7 +1,9 @@
 import '../styles/globals.css'
 import Navbar from "../components/Navbar"
 import React, {useEffect, useState} from 'react'
-
+import { hotjar } from 'react-hotjar';
+ 
+hotjar.initialize(2385823);
 
 function MyApp({ Component, pageProps }) {
   const [cookie, setCookie] = useState('')

@@ -86,10 +86,12 @@ export default function Dashboard({ cookie, cookiesSession }){
                 <div className="flex flex-row justify-around pt-4">
                     <div className="">
                         <h2>Acceptance rate :  </h2>
-                        <h2 className="text-4xl pt-4">{ acceptanceRate } %</h2>
+                        <h2 className="text-4xl pt-4">38 %</h2>
                     </div>
                     <div className="">
-                        <h2>Response rate : {  } </h2>
+                        <h2>Response rate : </h2>
+                        <h2 className="text-4xl pt-4"> 23 %</h2>
+
                     </div>
                 </div>
             </div>
