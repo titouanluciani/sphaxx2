@@ -127,7 +127,7 @@ function MyApp({ Component, pageProps }) {
   }, 500)
   useEffect(() => {
     hotjar.initialize(2385823);
-  }, [window])
+  }, [])
   return (
       
         !cookie ? (<div>
