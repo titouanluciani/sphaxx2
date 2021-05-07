@@ -49,7 +49,7 @@ function MyApp({ Component, pageProps }) {
       //const cook = document.cookie.split(";").find(row=>row.startsWith(' userUrl')).split('=')[1]
       setCookiesSession(document.cookie.split(";").find(row=>row.startsWith(' cookiesSession')).split('=')[1] ? document.cookie.split(";").find(row=>row.startsWith(' cookiesSession')) : document.cookie.split(";").find(row=>row.startsWith('cookiesSession') ))
     }catch(err){
-      console.error(err)
+      console.error("cookie err : ",err)
     }
     
   }, [])

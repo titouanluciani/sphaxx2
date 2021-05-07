@@ -8,7 +8,7 @@ export default async function(req, res){
     const {cookie} = JSON.parse(req.body)
     const user_url = cookie
     console.log(user_url)
-    const user_secret = await client.query(
+    /*const user_secret = await client.query(
         Select(
             ['data', 'token', 'secret'],
             Get(
@@ -18,7 +18,7 @@ export default async function(req, res){
                 )
             )
         )
-    )
+    )*/
     const info = await client.query(
         Get(
             Select(
