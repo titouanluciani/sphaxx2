@@ -1,3 +1,4 @@
+//<br><button id="startConnect">Start Connect Launch Script</button>
 
 /* FUNCTION USED TO LAUNCH SCRAPE PROFILE */
 
@@ -8,28 +9,82 @@ chrome.runtime.sendMessage({ 'message': 'scraping state changed' })
 
 async function getCookies({url,number=100, function_name="scrapeProfiles", campaign}){
     console.log("function name ",function_name, number, campaign)
-    const response = await chrome.cookies.get({"url":"https://www.linkedin.com/","name":"li_at"}, async cookies=> {
-        console.log(cookies)
-        await chrome.cookies.get({"url":"https://www.linkedin.com/","name":"userUrl"}, async cookie => {
+    const response = chrome.cookies.get({"url":"https://www.linkedin.com/","name":"li_at"}, async cookies=> {
+        console.log("tthiiis is cookies li at : ",cookies)
+        chrome.cookies.get({"url":"https://sphaxx-five.vercel.app/","name":"userUrl"}, async cookie => {
             chrome.storage.local.set({ 'scraping': 'current' })
+            console.log("tthiiis is cookie userUrl: ",cookie)
+
+            cookie = cookie
             chrome.runtime.sendMessage({ 'message': 'scraping state changed' })
+            const range = Math.ceil(number / 50) * 5
+            let i = 1
+            console.log("while loop")
+            console.log("going for scrape profiles : ", url, cookie, cookies, number, campaign, range, i)
+            do {
+                console.log("for loop to fetch scrape profiles : ", i)
+                console.log("going for scrape profiles : ", url, cookie, cookies, number, campaign, range, i)
+                fetch(`https://sphaxxscraping.vercel.app/api/${function_name}`, {
+                    method:"POST",
+                    body: JSON.stringify({url, cookie, cookies, number, campaign, i}),
+                }).then(async (scrapeResponse) => {
+                    console.log("this is scrapeResponse : ", scrapeResponse) 
+                    console.log("this is scrapeResponse json await : ", await scrapeResponse.json())
+                    //chrome.storage.local.set({ 'scraping': 'done' })
+                    //chrome.runtime.sendMessage({ 'message': 'scraping state changed' })
+                    //chrome.runtime.sendMessage({ 'message': 'Import proceed' })
+                }).catch(() => {
+                    //chrome.storage.local.set({ 'scraping': 'done' })
+                    //chrome.runtime.sendMessage({ 'message': 'scraping state changed' })
+
+                })
+                i+=3
+                console.log("scraping done ??", i)
+                await delay(70*1000)
+                /*console.log("for loop 2 to fetch scrape profiles : ", i)
+                fetch(`http://localhost:3000/api/${function_name}`, {
+                    method:"POST",
+                    body: JSON.stringify({url, cookie, cookies, number, campaign, i}),
+                }).then(async (scrapeResponse) => {
+                    console.log("this is scrapeResponse : ", scrapeResponse) 
+                    console.log("this is scrapeResponse json await : ", await scrapeResponse.json())
+                    chrome.storage.local.set({ 'scraping': 'done' })
+                    chrome.runtime.sendMessage({ 'message': 'scraping state changed' })
+                    chrome.runtime.sendMessage({ 'message': 'Import proceed' })
+                }).catch(() => {
+                    chrome.storage.local.set({ 'scraping': 'done' })
+                    chrome.runtime.sendMessage({ 'message': 'scraping state changed' })
+
+                })
+                i+=1
+                console.log("scraping done  2??")*/
+            }while(i <= range+1);
+            chrome.storage.local.set({ 'scraping': 'done' })
+            chrome.runtime.sendMessage({ 'message': 'scraping state changed' })
+            chrome.runtime.sendMessage({ 'message': 'Import proceed' })
+            /*if(i < range){
+                console.log("for loop to fetch scrape profiles : ", i)
+                fetch(`http://localhost:3000/api/${function_name}`, {
+                    method:"POST",
+                    body: JSON.stringify({url, cookie, cookies, number, campaign, i}),
+                    //headers:{
+                    //    'Content-Type':'application/json'
+                    //}
+                }).then(async (scrapeResponse) => {
+                    console.log("this is scrapeResponse : ", scrapeResponse) 
+                    console.log("this is scrapeResponse json await : ", await scrapeResponse.json())
+                    chrome.storage.local.set({ 'scraping': 'done' })
+                    chrome.runtime.sendMessage({ 'message': 'scraping state changed' })
+                    chrome.runtime.sendMessage({ 'message': 'Import proceed' })
+                }).catch(() => {
+                    chrome.storage.local.set({ 'scraping': 'done' })
+                    chrome.runtime.sendMessage({ 'message': 'scraping state changed' })
+
+                })
+                i+=1
+            }*/
+            console.log("interval after first scraping ")
             
-            fetch(`https://sphaxx-five.vercel.app/api/${function_name}`, {
-                method:"POST",
-                body: JSON.stringify({url, cookie, cookies, number, campaign}),
-                /*headers:{
-                    'Content-Type':'application/json'
-                }*/
-            }).then(async (scrapeResponse) => {
-                console.log("this is scrapeResponse : ", scrapeResponse) 
-                chrome.storage.local.set({ 'scraping': 'done' })
-                chrome.runtime.sendMessage({ 'message': 'scraping state changed' })
-                chrome.runtime.sendMessage({ 'message': 'Import proceed' })
-                console.log("this is scrapeResponse : ", await scrapeResponse.json())
-            }).catch(() => {
-                chrome.storage.local.set({ 'scraping': 'done' })
-                chrome.runtime.sendMessage({ 'message': 'scraping state changed' })
-            })
         })
 
     })
@@ -53,7 +108,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     
                     console.log(data)
                 })
-                
             }
         }) 
     }
@@ -69,9 +123,25 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 tabs.forEach(async tab => {
                     if(/^https:\/\/www\.linkedin\.com/.test(tab.url)){
                         console.log(tab.url)
-                        launch = true
+                        //launch = true
                         launch2 = false
                         console.log('refresh & linkedin tab open : ', launch)
+                        console.log("launch local auth when tab is clicked")
+                        launch = false
+                        chrome.tabs.create( {url:"https://www.linkedin.com" ,active:false, index:0}, tab => {
+                            chrome.tabs.update(tab.id, { pinned : true} )
+                            chrome.tabs.executeScript(tab.id,{  file: './localAuth.js'})
+                            chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+                                if(request.message === 'got the user url'){
+                                    launch = false
+                                    console.log("launch after localauth : ", launch)
+                                    chrome.tabs.remove(tab.id)
+                                    /*chrome.runtime.storage.get("userUrl", userUrl => {
+                                        await fetch('https://sphaxx-five.vercel.app/getUserUrl')
+                                    })*/
+                                }
+                            })
+                        })
 
                     }
                 })
@@ -109,7 +179,37 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 let launch = true
 let launch2 = false
-chrome.webNavigation.onCommitted.addListener(() => {//chrome.tabs.onActivated.addListener
+//Auth when tab is clicked
+chrome.tabs.onActivated.addListener(() => {
+    chrome.windows.getCurrent( {'populate':true} , (currentWindow) =>{
+        chrome.tabs.query({windowId: currentWindow.id }, (tabs) => {
+            tabs.forEach(async tab => {
+                console.log("tab clicked")
+                if(/^https:\/\/sphaxx-five\.vercel\.app/.test(tab.url) && launch == true){
+                    console.log("launch local auth when tab is clicked")
+                    launch = false
+                    chrome.tabs.create( {url:"https://www.linkedin.com" ,active:false, index:0}, tab => {
+                        chrome.tabs.update(tab.id, { pinned : true} )
+                        chrome.tabs.executeScript(tab.id,{  file: './localAuth.js'})
+                        chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+                            if(request.message === 'got the user url'){
+                                launch = false
+                                console.log("launch after localauth : ", launch)
+                                chrome.tabs.remove(tab.id)
+                                /*chrome.runtime.storage.get("userUrl", userUrl => {
+                                    await fetch('https://sphaxx-five.vercel.app/getUserUrl')
+                                })*/
+                            }
+                        })
+                    })
+                }
+            })
+        })
+    })
+})
+
+
+/*chrome.webNavigation.onCommitted.addListener(() => {//chrome.tabs.onActivated.addListener
     chrome.windows.getCurrent( {'populate':true} , (currentWindow) =>{//chrome.windows.getAll
         console.log(currentWindow)
         //windows.forEach(window => {
@@ -118,6 +218,31 @@ chrome.webNavigation.onCommitted.addListener(() => {//chrome.tabs.onActivated.ad
                 tabs.forEach(async tab => {
                     console.log('this is launch wtf : ', launch)
                     if(/^https:\/\/www\.linkedin\.com/.test(tab.url) && launch){
+                        launch = false
+                        //Test local auth
+                        chrome.tabs.onUpdated.addListener(async (tabId, tabInfo) => {
+                            if(tabId == tab.id && tabInfo.status === 'complete'){
+                                await delay(1000)
+                                console.log("launch local auth")
+                                launch = false
+                                chrome.tabs.create( {url:"https://www.linkedin.com" ,active:false, index:0}, tab => {
+                                    chrome.tabs.update(tab.id, { pinned : true} )
+                                    chrome.tabs.executeScript(tab.id,{  file: './localAuth.js'})
+                                    chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+                                        if(request.message === 'got the user url'){
+                                            launch = false
+                                            console.log("launch after localauth 2 : ", launch)
+                                            chrome.tabs.remove(tab.id)
+                                            //chrome.runtime.storage.get("userUrl", userUrl => {
+                                            //    await fetch('https://sphaxx-five.vercel.app/getUserUrl')
+                                            //})
+                                        }
+                                    })
+                                })
+                            }
+            
+                        })
+
                         launch = false
                         //launch2 = true
                         console.log('this is launch IN wtf : ', launch, launch2)
@@ -132,35 +257,28 @@ chrome.webNavigation.onCommitted.addListener(() => {//chrome.tabs.onActivated.ad
                                 console.log("Cookie set : ", cookie)
                                 console.log("Cookie set : ", JSON.stringify(cookie.value))
                             })
-                            /*
-                            await fetch('https://sphaxx-five.vercel.app/api/linkedinAuth', {
-                                method:"post",
-                                body: JSON.stringify({cookies}),
-                                headers:{
-                                    'Content-Type':'application/json'
-                                }
-                            })*/
-                            const res = await fetch(`https://sphaxx-five.vercel.app/api/getUserUrl`, {
-                                //mode:'no-cors',
-                                method:"POST",
-                                body: JSON.stringify({cookies}),
-                                /*headers:{
-                                    'Content-Type':'application/json',
-                                    'Access-Control-Allow-Origin':'https://sphaxx-five.vercel.app'
-                                }*/
-                            })
                             
-                            console.log("res",res)
-                            console.log("res",res.body)
-                            const data = await res.json()
-                            console.log("data",data)
-                            chrome.cookies.remove({"name":"userUrl", "url":"https://www.linkedin.com/"})
+                            //const res = await fetch(`https://sphaxx-five.vercel.app/api/getUserUrl`, {
+                                //mode:'no-cors',
+                            //    method:"POST",
+                            //    body: JSON.stringify({cookies}),
+                                //headers:{
+                                //    'Content-Type':'application/json',
+                                //    'Access-Control-Allow-Origin':'https://sphaxx-five.vercel.app'
+                                //}
+                            //})
+                            
+                            // console.log("res",res)
+                            // console.log("res",res.body)
+                            // const data = await res.json()
+                            // console.log("data",data)
+                            // chrome.cookies.remove({"name":"userUrl", "url":"https://www.linkedin.com/"})
                     
-                            chrome.cookies.set({"name":"userUrl", "value":`${data}`, "url":"https://www.linkedin.com/"}, (cookie) => {
-                                console.log("Cookie set : ", JSON.stringify(cookie))
-                                launch2=true
-                                console.log("launches : ", launch, launch2)
-                            })
+                            // chrome.cookies.set({"name":"userUrl", "value":`${data}`, "url":"https://www.linkedin.com/"}, (cookie) => {
+                            //     console.log("Cookie set : ", JSON.stringify(cookie))
+                            //     launch2=true
+                            //     console.log("launches : ", launch, launch2)
+                            // })
                 
                         })
                     }
@@ -168,7 +286,7 @@ chrome.webNavigation.onCommitted.addListener(() => {//chrome.tabs.onActivated.ad
             })
         //})
     })
-})
+})*/
 
 /* COOKIES SET IN APPLICATION TAB */
 
@@ -188,7 +306,7 @@ chrome.webNavigation.onCompleted.addListener(() => {//chrome.tabs.onActivated.ad
             console.log("launch2")
             launch2 = false
             try{
-                chrome.cookies.remove({"name":"userUrl", "url":tab.url})
+                /*chrome.cookies.remove({"name":"userUrl", "url":tab.url})
                 chrome.cookies.get({"url":"https://www.linkedin.com/","name":"userUrl"}, (cookie) => {
                     console.log("got cookie userUrl from linkedin : ",cookie)
                     chrome.cookies.set({"url":tab.url, "name":"userUrl","value":cookie.value}, (cookie) => {
@@ -202,7 +320,7 @@ chrome.webNavigation.onCompleted.addListener(() => {//chrome.tabs.onActivated.ad
                     chrome.cookies.set({"url":tab.url, "name":"cookiesSession","value":cookie.value}, (cookie) => {
                         console.log("cookieSession set in app : ", cookie)
                     })
-                })
+                })*/
             }catch(err){
                 console.error(err)
             }
@@ -215,9 +333,8 @@ chrome.webNavigation.onCompleted.addListener(() => {//chrome.tabs.onActivated.ad
 /* FUNCTION TO START THE NEXT ACTION IN WAITING LINE */
 
 const startConnect = async () => {
-    chrome.windows.getAll((windows) =>{
-        windows.forEach(window => {
-            chrome.tabs.query({windowId: window.id }, (tabs) => {
+    chrome.windows.getCurrent( {'populate':true} , (currentWindow) => {
+        chrome.tabs.query({windowId: currentWindow.id }, (tabs) => {
                 tabs.forEach(async tab => {
                     if(/^https:\/\/www\.linkedin\.com/.test(tab.url)){
                         await chrome.cookies.get({"url":"https://www.linkedin.com/","name":"li_at"}, async cookies=> {
@@ -236,22 +353,21 @@ const startConnect = async () => {
         })
     })
 })
-})
 }
 //setInterval(startConnect(), 1*20*1000)
 
 /* HANDLE START CONNECT ie: LAUNCH IT EVERY 3 TO 5 MIN */
 
 let i = 0;
-let random = Math.random() * 2 + 3
-let randomActions = Math.random() * 20 + 80
+let random = Math.random() * 3 + 5
+let randomActions = Math.random() * 20 + 60
 let date = new Date();
 setInterval(() => {
-    i+=1;
-    random = Math.random() * 2 + 3
+    random = Math.random() * 3 + 5
     let currentDate = new Date()
-    console.log("counting i : ",i)
-    if(i<randomActions && currentDate.getHours() > 6 && currentDate.getHours() < 20 && currentDate.getDay() < 6 ){
+    console.log("counting i : ",i, randomActions)
+    if(i<randomActions && currentDate.getHours() > 6 && currentDate.getHours() < 23 && currentDate.getDay() < 6 ){
+        i+=1;
         startConnect2()
     }
     if(date.getDay() !== currentDate.getDay() ){
@@ -281,7 +397,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
       if(i2<101 && currentDate2.getHours() > 8 && currentDate2.getHours() < 18 && currentDate2.getDay() < 6 ){
         await chrome.cookies.get({"url":"https://www.linkedin.com/","name":"li_at"}, async cookies => {
             await chrome.cookies.get({"url":"https://sphaxx-five.vercel.app/","name":"userUrl"}, async (cookie) => {
-                    await fetch('https://localhost:3000/api/monitoring', {
+                    await fetch('https://sphaxx-five.vercel.app/api/monitoring', {
                         method:'POST',
                         body:JSON.stringify({ cookies:cookiesSession, cookie })
                     })
@@ -307,9 +423,8 @@ const delay = (time) => {
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     if(request.message=='launch script locally'){
         console.log('launch script locally')
-        chrome.windows.getAll((windows) =>{
-            windows.forEach(window => {
-                chrome.tabs.query({windowId: window.id }, (tabs) => {
+        chrome.windows.getCurrent( {'populate':true} , (currentWindow) => {
+                chrome.tabs.query({windowId: currentWindow.id }, (tabs) => {
                     tabs.forEach(async tab => {
                         if(/^https:\/\/sphaxx-five\.vercel\.app/.test(tab.url)){
                             await chrome.cookies.get({ "url":"https://sphaxx-five.vercel.app/", "name":"userUrl" }, async (cookie) => {
@@ -325,6 +440,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
                                     console.log("user on hold")
                                 }else{
                                     chrome.tabs.create({ url: response.nextAction.data.prospectUrl,  active:false, index:0, windowId:window.id }, tab => {
+                                        chrome.tabs.update(tab.id, { pinned : true} )
                                         console.log("linkedin tab created")
                                         chrome.storage.local.set({ "response":response })
                                         chrome.tabs.onUpdated.addListener(async (tabId, tabInfo) => {
@@ -332,7 +448,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
                                                 await delay(500)
                                                 chrome.tabs.executeScript(tab.id,{  file: './content.js'})
                                             }
-                            
                                         })
                                     })  
                                 }
@@ -340,7 +455,6 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
                         }
                     })
                 })
-            })
         })
     }
 })
@@ -367,10 +481,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 })
 
 const startConnect2 = async () => {
-    console.log('launch script locally')
-    chrome.windows.getAll((windows) =>{
-        windows.forEach(window => {
-            chrome.tabs.query({windowId: window.id }, (tabs) => {
+    console.log('launch script locally startconnect')
+    chrome.windows.getCurrent( {'populate':true} , (currentWindow) => {
+            chrome.tabs.query({windowId: currentWindow.id }, (tabs) => {
                 tabs.forEach(async tab => {
                     if(/^https:\/\/sphaxx-five\.vercel\.app/.test(tab.url)){
                         
@@ -388,6 +501,7 @@ const startConnect2 = async () => {
                             }else{
                                 chrome.tabs.create({ url: response.nextAction.data.prospectUrl, active:false, index:0, windowId:window.id }, tab => {
                                     console.log("linkedin tab created")
+                                    chrome.tabs.update(tab.id, { pinned : true} )
                                     chrome.storage.local.set({ "response":response })
                                     chrome.tabs.onUpdated.addListener(async (tabId, tabInfo) => {
                                         if(tabId == tab.id && tabInfo.status === 'complete'){
@@ -402,6 +516,55 @@ const startConnect2 = async () => {
                     }
                 })
             })
-        })
     })
 }
+
+//Get user url from local
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if(request.message == 'got the user url'){
+        console.log(request.message)
+        chrome.storage.local.get(["userUrl","imgUrl", "name"], async all => {
+            const { userUrl, imgUrl, name } = all
+            //const { userUrl, cookiesSession } = all
+            console.log("going to be set user url local : ", userUrl)
+            chrome.cookies.remove({"name":"userUrl", "url":"https://sphaxx-five.vercel.app/"})
+            chrome.cookies.remove({"name":"cookiesSession", "url":"https://sphaxx-five.vercel.app/"})
+            chrome.cookies.get({"url":"https://www.linkedin.com/","name":"li_at"}, async cookies=> {
+                console.log(cookies.value)
+                chrome.cookies.set({"name":"cookiesSession", "value":cookies.value, "url":"https://sphaxx-five.vercel.app/"})
+            })
+            chrome.cookies.set({"name":"userUrl", "value":userUrl, "url":"https://sphaxx-five.vercel.app/"}, () => {
+                console.log("should be set local user url")
+                /*chrome.cookies.set({"name":"cookiesSession", "value":JSON.stringify(cookiesSession), "url":"https://sphaxx-five.vercel.app/"})*/
+            })
+            await fetch('https://sphaxx-five.vercel.app/api/userCreation', {
+                method:'POST',
+                body:JSON.stringify({userUrl, imgUrl, name })
+            })
+        })
+    }
+})
+
+/*chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if(request.message === "launch personal stats"){
+        chrome.cookies.get({ "url":"https://sphaxx-five.vercel.app/", "name":"userUrl" }, async (cookie) => {
+            cookie = cookie.value
+            chrome.tabs.create({ url: cookie,  active:false, index:0 }, tab => {
+                chrome.tabs.update(tab.id, { pinned : true} )
+                console.log("personal stats going to be executed")
+                chrome.tabs.executeScript(tab.id,{  file: './personalStats.js'})
+            })    
+        })
+    }
+})*/
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if(request.message === "got the numbers"){
+        chrome.storage.local.get(["relationsNumber", "viewedProfile", "postViewedNumber"], all => {
+            const { relationsNumber, viewedProfile, postViewedNumber } = all
+            console.log(JSON.stringify(relationsNumber), viewedProfile, postViewedNumber)
+            chrome.cookies.set({ "name": "relationsNumber" , "value": JSON.stringify(relationsNumber) , "url": "https://sphaxx-five.vercel.app/" }, (relation) => console.log("set relation number : ", relation))
+            chrome.cookies.set({ "name": "viewedProfile" , "value": JSON.stringify(viewedProfile) , "url": "https://sphaxx-five.vercel.app/" })
+            chrome.cookies.set({ "name": "postViewedNumber" , "value": JSON.stringify(postViewedNumber) , "url": "https://sphaxx-five.vercel.app/" })
+        })
+    } 
+})

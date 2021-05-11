@@ -56,25 +56,69 @@ chrome.storage.local.get("response", async (response) => {
         const connectExist = !document.querySelector('.pv-s-profile-actions.pv-s-profile-actions--connect.ml2.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view')
         console.log("connect exist (true=does not, false=exist) ",connectExist)
         //If connect btn doesn't exist
-        if(connectExist){
+        if(connectExist && !document.querySelector('.pvs-profile-actions__action.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view')){
             console.log("connect btn doesn't exist")
             //Click on trois petits points
             try{
                 console.log("trois petits points")
                 await delay(1000)
-                document.querySelector('.ml2.mr2.pv-s-profile-actions__overflow-toggle.artdeco-button.artdeco-button--circle.artdeco-button--muted.artdeco-button--2.artdeco-button--tertiary.artdeco-dropdown__trigger.artdeco-dropdown__trigger--placement-bottom.ember-view').click()
-                console.log("trois petits points1")
+                if(document.querySelector(".artdeco-dropdowntrigger.artdeco-dropdowntrigger--placement-bottom.ember-view.pvs-profile-actions__action.artdeco-button.artdeco-button--secondary.artdeco-button--muted.artdeco-button--2")){
+                    console.log("first sel")
+                    document.querySelector(".artdeco-dropdowntrigger.artdeco-dropdowntrigger--placement-bottom.ember-view.pvs-profile-actions__action.artdeco-button.artdeco-button--secondary.artdeco-button--muted.artdeco-button--2").click()
+                }else if(document.querySelector('.ml2.mr2.pv-s-profile-actions__overflow-toggle.artdeco-button.artdeco-button--circle.artdeco-button--muted.artdeco-button--2.artdeco-button--tertiary.artdeco-dropdown__trigger.artdeco-dropdown__trigger--placement-bottom.ember-view')){
+                    console.log("second sel")
+                    document.querySelector('.ml2.mr2.pv-s-profile-actions__overflow-toggle.artdeco-button.artdeco-button--circle.artdeco-button--muted.artdeco-button--2.artdeco-button--tertiary.artdeco-dropdown__trigger.artdeco-dropdown__trigger--placement-bottom.ember-view').click()
+                    console.log("trois petits points1")
+                }else if(document.querySelector('.artdeco-dropdown__trigger.artdeco-dropdown__trigger--placement-bottom.ember-view.pvs-profile-actions__action.artdeco-button.artdeco-button--secondary.artdeco-button--muted.artdeco-button--2')){
+                    console.log("third sel")
+                    document.querySelector('.artdeco-dropdown__trigger.artdeco-dropdown__trigger--placement-bottom.ember-view.pvs-profile-actions__action.artdeco-button.artdeco-button--secondary.artdeco-button--muted.artdeco-button--2').click()
+                }
                 await delay(Math.random() + 500)
-                let popup = document.querySelector('.pv-s-profile-actions__overflow-dropdown.display-flex.artdeco-dropdown__content.artdeco-dropdown--is-dropdown-element.artdeco-dropdown__content--justification-left.artdeco-dropdown__content--placement-bottom.ember-view')
+                let popup = document.querySelector('.pv-s-profile-actions__overflow-dropdown.display-flex.artdeco-dropdown__content.artdeco-dropdown--is-dropdown-element.artdeco-dropdown__content--justification-left.artdeco-dropdown__content--placement-bottom.ember-view') ? document.querySelector('.pv-s-profile-actions__overflow-dropdown.display-flex.artdeco-dropdown__content.artdeco-dropdown--is-dropdown-element.artdeco-dropdown__content--justification-left.artdeco-dropdown__content--placement-bottom.ember-view') : document.querySelector('.pv-s-profile-actions__overflow-dropdown.display-flex.artdeco-dropdown__content.artdeco-dropdown__content--is-open.artdeco-dropdown--is-dropdown-element.artdeco-dropdown__content--justification-left.artdeco-dropdown__content--placement-bottom.ember-view')
                 let popupPoints = popup.querySelector('.pv-s-profile-actions.pv-s-profile-actions--connect.pv-s-profile-actions__overflow-button.full-width.text-align-left.artdeco-dropdown__item.artdeco-dropdown__item--is-dropdown.ember-view')
                 console.log("trois petits points2")
                 await delay(Math.random() + 500)
+                //Try if "Se connecter or en Attente exist"
+                await delay(2000)
+                let spans = document.querySelectorAll('span')
+                let co = false
+                let pe = false
+                await delay(1500)
+                var checkExist = setInterval(function() {
+                    if (document.querySelector('.pv-s-profile-actions__overflow-dropdown.display-flex.artdeco-dropdown__content.artdeco-dropdown__content--is-open.artdeco-dropdown--is-dropdown-element.artdeco-dropdown__content--justification-left.artdeco-dropdown__content--placement-bottom.ember-view').length) {
+                       console.log("Exists!");
+                       clearInterval(checkExist);
+                    }else if(document.querySelector('.pvs-profile-actionsaction.display-flex.align-items-center.artdeco-dropdownitem.artdeco-dropdown__item--is-dropdown.ember-view').length){
+                        console.log("Exists!");
+                       clearInterval(checkExist);
+                    }
+                 }, 100)
+                let spansPopup = document.querySelector('.pv-s-profile-actions__overflow-dropdown.display-flex.artdeco-dropdown__content.artdeco-dropdown__content--is-open.artdeco-dropdown--is-dropdown-element.artdeco-dropdown__content--justification-left.artdeco-dropdown__content--placement-bottom.ember-view').querySelectorAll('span')
+                for(let spanPopup of spansPopup){
+                    console.log(spanPopup.innerText)
+                    if(spanPopup.innerText == 'Se connecter' || spanPopup.innerText == 'Connect' ){
+                        co = true
+                    }else if(spanPopup.innerText == 'En attente' || spanPopup.innerText == 'Pending' ){
+                        pe = true
+                    }
+                }
+                for(let span of spans){
+                    console.log(span.innerText)
+                    if(span.innerText == 'Se connecter' || span.innerText == 'Connect' ){
+                        co = true
+                    }else if(span.innerText == 'En attente' || span.innerText == 'Pending' ){
+                        pe = true
+                    }
+                }
+                console.log("co & pe : ", co, pe)
                 //popupPoints.querySelector('.pv-s-profile-actions.pv-s-profile-actions--connect.pv-s-profile-actions__overflow-button.full-width.text-align-left.artdeco-dropdown__item.artdeco-dropdown__item--is-dropdown.ember-view').click()
                 let pending = false
-                if(popupPoints.innerText.includes("En attente") || popupPoints.innerText.includes("Pending")){
+                await delay(2000)
+                console.log("is pending ??? ", (popupPoints.innerText.includes("En attente") || popupPoints.innerText.includes("Pending")))
+                if(popupPoints.innerText.includes("En attente") || popupPoints.innerText.includes("Pending") || pe){
                     console.log("trois petits points en attente")
                     pending = true
-                }else if(popupPoints.innerText.includes("Se connecter") || popupPoints.innerText.includes("Connect")){
+                }else if(popupPoints.innerText.includes("Se connecter") || popupPoints.innerText.includes("Connect") || co){
                     console.log("trois petits points Connect")
                     popupPoints.click()
                 }
@@ -88,16 +132,25 @@ chrome.storage.local.get("response", async (response) => {
                         )*/
                 info = { ...info, 'isConnected':true, 'hasAccepted':false }
                 console.log("trois petits points4 & info : ", info)
-                if(document.querySelector(connectBtnPopup)){
+                //Check if there is the "ajouter une note" btn
+                let spans2 = document.querySelectorAll('span')
+                let putHold = false
+                for(let span of spans2){
+                    if(span.innerText !== 'Ajouter une note' || span.innerText !== 'Add a note'){
+                        console.log(span.innerText)
+                        putHold = true
+                    }
+                }
+                if(document.querySelector(connectBtnPopup) || !!popupPoints){
                     console.log('if statement')
         
                     //If no note to send
                     if(description == '' || description == ' '){
                         console.log("no note")
-        
                         /* CHECK IF CONNECTED ALREADY */
                         //Click on Connect btn in popup
-                        if(!document.querySelector(connectBtnPopup) && !(popupPoints.innerText.includes("En attente") || popupPoints.innerText.includes("Pending"))){
+                        
+                        if(!document.querySelector(connectBtnPopup) && !(popupPoints.innerText.includes("En attente") || popupPoints.innerText.includes("Pending")) && putHold ){
                             console.log("put holdddd")
                             //Hold to true in info
                             /*
@@ -133,16 +186,26 @@ chrome.storage.local.get("response", async (response) => {
                     //If note to be send with connection
                     else{
                         console.log("note : ", description)        
-                        
-        
                         //Click the Add note button in popup
                         await delay(Math.random() + 3000)
                         try{
+                            popupPoints.click()
+                            await delay(1000)
+                            if(document.querySelector('.artdeco-button.artdeco-button--muted.artdeco-button--2.artdeco-button--secondary.ember-view')
+                            ){
+                                document.querySelector('.artdeco-button.artdeco-button--muted.artdeco-button--2.artdeco-button--secondary.ember-view').click()
+                                await delay(500)
+                                if(document.querySelector('.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view')
+                                ){
+                                    document.querySelector('.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view').click()
+                                    await delay(500)
+                                }
+                            }
                             console.log("try add note btn popup :", !addNoteBtnPopup)
                             document.querySelector(addNoteBtnPopup).click()
                         }catch(err){
-                            console.log("err when click add note : ", err)
-
+                            console.log("err when click add note (put hold) : ", err)
+                            info = { ...info, hold:true }
                         }
                         //Focus the textArea
                         await delay(Math.random() + 4500)
@@ -185,16 +248,20 @@ chrome.storage.local.get("response", async (response) => {
 
                         }
                         await delay(Math.random() + 3000)
-                        //Update prospects with action info
-                        /*await userClient.query(
-                            Update(
-                                prospectd.ref,
-                                { data: { 'action':action, 'note':true, 'isConnected':true, 'hasAccepted':false, "hasResponded":false } }
-                            )
-                        )*/
-                        info = { ...info, 'action':action, 'note':true, 'isConnected':true, 'hasAccepted':false, "hasResponded":false }
+                        if(!document.querySelector('.artdeco-modal.artdeco-modal--layer-default.ip-fuse-limit-alert')){
+                            //Update prospects with action info
+                            /*await userClient.query(
+                                Update(
+                                    prospectd.ref,
+                                    { data: { 'action':action, 'note':true, 'isConnected':true, 'hasAccepted':false, "hasResponded":false } }
+                                )
+                            )*/
+                            info = { ...info, 'action':action, 'note':true, 'isConnected':true, 'hasAccepted':false, "hasResponded":false }
+                        }else if(document.querySelector('.artdeco-modal.artdeco-modal--layer-default.ip-fuse-limit-alert')){
+                            info = { ...info, 'hold':true }
+                        }
                     }
-                }else if(!document.querySelector(connectBtnPopup) && !pending){
+                }else if(!document.querySelector(connectBtnPopup) && pending==false && !(popupPoints.innerText.includes("En attente") || popupPoints.innerText.includes("Pending")) && pe == false && putHold ){
                         console.log("put hold2")
                         /*await client.query(
                             Update(
@@ -292,10 +359,45 @@ chrome.storage.local.get("response", async (response) => {
                     }else if(profileBtnInnerText == 'Se connecter' || profileBtnInnerText == 'Connect' ){// || prospectData.isConnected == false
                         //Click on "Se connecter"
                         console.log("se connecter")
-
-                        const click_response = document.querySelector(connectBtn).click()
-                        console.log(click_response)
-                            
+                        if(document.querySelector(connectBtn)){
+                            console.log("click connect btn")
+                            const click_response = document.querySelector(connectBtn).click()
+                            console.log(click_response)
+                            if(document.querySelector('.artdeco-button.artdeco-button--muted.artdeco-button--2.artdeco-button--secondary.ember-view')
+                            ){
+                                document.querySelector('.artdeco-button.artdeco-button--muted.artdeco-button--2.artdeco-button--secondary.ember-view').click()
+                                await delay(500)
+                                if(document.querySelector('.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view')
+                                ){
+                                    document.querySelector('.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view').click()
+                                    await delay(500)
+                                }
+                            }
+                        }else if(document.querySelector('.pvs-profile-actions__action.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view')){
+                            console.log("click connect btn 2")
+                            const click_response = document.querySelector('.pvs-profile-actions__action.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view').click()
+                            console.log(click_response)
+                            if(document.querySelector('.artdeco-button.artdeco-button--muted.artdeco-button--2.artdeco-button--secondary.ember-view')
+                            ){
+                                document.querySelector('.artdeco-button.artdeco-button--muted.artdeco-button--2.artdeco-button--secondary.ember-view').click()
+                                await delay(500)
+                                if(document.querySelector('.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view')
+                                ){
+                                    document.querySelector('.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view').click()
+                                    await delay(500)
+                                }
+                            }
+                        }
+                        await delay(1500)
+                        //Check if there is the "ajouter une note btn"
+                        let spans3 = document.querySelectorAll('span')
+                        let putHold = true
+                        for(let span of spans3){
+                            if(span.innerText == 'Ajouter une note' || span.innerText == 'Add a note'){
+                                console.log(span.innerText)
+                                putHold = false
+                            }
+                        }
                         //Check if popup appears
                         if(document.querySelector(connectBtnPopup)){
                             console.log('if statement')
@@ -306,7 +408,7 @@ chrome.storage.local.get("response", async (response) => {
                 
                                 /* CHECK IF CONNECTED ALREADY */
                                 //Click on Connect btn in popup
-                                if(!document.querySelector(connectBtnPopup)){
+                                if(!document.querySelector(connectBtnPopup) && putHold){
                                     console.log("put hold3")
                                     /*await client.query(
                                         Update(
@@ -345,6 +447,16 @@ chrome.storage.local.get("response", async (response) => {
                                 //Click the Add note button in popup
                                 await delay(Math.random() + 2500)
                                 try{
+                                    if(document.querySelector('.artdeco-button.artdeco-button--muted.artdeco-button--2.artdeco-button--secondary.ember-view')
+                                    ){
+                                        document.querySelector('.artdeco-button.artdeco-button--muted.artdeco-button--2.artdeco-button--secondary.ember-view').click()
+                                        await delay(500)
+                                        if(document.querySelector('.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view')
+                                        ){
+                                            document.querySelector('.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view').click()
+                                            await delay(500)
+                                        }
+                                    }
                                     console.log("try add note btn popup :", !addNoteBtnPopup)
                                     await document.querySelector(addNoteBtnPopup).click()
                                 }catch(err){
@@ -391,16 +503,20 @@ chrome.storage.local.get("response", async (response) => {
                                     console.log("click send err : ",err)
                                 }
                                 await delay(Math.random() + 2500)
-                                //Update prospects with action info
-                                info = { ...info, 'action':action, 'note':true, 'isConnected':true, 'hasAccepted':false, "hasResponded":false }
-                                /*await userClient.query(
-                                    Update(
-                                        prospectd.ref,
-                                        { data: { 'action':action, 'note':true, 'isConnected':true, 'hasAccepted':false, "hasResponded":false } }
-                                    )
-                                )*/
+                                if(!document.querySelector('.artdeco-modal.artdeco-modal--layer-default.ip-fuse-limit-alert')){
+                                    //Update prospects with action info
+                                    info = { ...info, 'action':action, 'note':true, 'isConnected':true, 'hasAccepted':false, "hasResponded":false }
+                                    /*await userClient.query(
+                                        Update(
+                                            prospectd.ref,
+                                            { data: { 'action':action, 'note':true, 'isConnected':true, 'hasAccepted':false, "hasResponded":false } }
+                                        )
+                                    )*/
+                                }else if(document.querySelector('.artdeco-modal.artdeco-modal--layer-default.ip-fuse-limit-alert')){
+                                    info = { ...info, 'hold':true }
+                                }
                             }
-                        }else if(!document.querySelector(connectBtnPopup)){
+                        }else if(!document.querySelector(connectBtnPopup) && putHold){
                                 console.log("put hold4")
                                 /*await client.query(
                                     Update(
@@ -504,6 +620,4 @@ chrome.storage.local.get("response", async (response) => {
     }
             
 })
-
-
 //Close & update state somewhere (cookies ?)
