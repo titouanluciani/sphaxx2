@@ -31,7 +31,7 @@ export default async (req, res) => {
                     img:imgUrl
                   }
                 }))
-          const token = await auth(c)
+          token = await auth(c)
           console.log('token after user creation : ',token)
 
           //Create default campaign with default prospects
@@ -44,6 +44,15 @@ export default async (req, res) => {
                   }
               )
           )
+          await client.query(Create(
+                  Collection('notes'),
+                  { data : {
+                        userUrl: c,
+                        campaign: "Default Campaign",
+                        name: "Default Note",
+                        description: "Hi ! Happy to connect !"
+                  } }
+          ))
           await client.query(Create(
                   Collection('prospects'),
                   {data : { 

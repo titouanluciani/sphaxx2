@@ -29,6 +29,15 @@ export default async (req, res) => {
         Collection('Campaigns'),
         { data : { name:  campaignName , userUrl : user_url } }
     ))
+    await client.query(Create(
+        Collection('notes'),
+        { data : {
+              userUrl: user_url,
+              campaign: campaignName,
+              name: "First Note",
+              description: "Hi ! Happy to connect !"
+        } }
+    ))
 
     console.log(newCampaign)
     res.statusCode = 200;
