@@ -99,7 +99,7 @@ export default function Dashboard({ cookie, cookiesSession }){
             <div className="bg-blue-300 row-span-2 col-span-2 p-2 h-3/4 w-3/4 rounded shadow-lg">
                 <h1 className="text-center font-bold">Global Performance</h1>
                 <div className="flex flex-row space-x-4">
-                    <button className="inline-block ml-4 mt-2 bg-purple-500 p-1 rounded text-white h-10 px-2" onClick={getRates}>Refresh Stats</button>
+                    {/*<button className="inline-block ml-4 mt-2 bg-purple-500 p-1 rounded text-white h-10 px-2" onClick={getRates}>Refresh Stats</button>*/}
                     <select className="rounded h-10 mt-2 px-1" onChange={handleCampaigns} name="" id="">
                     {campaigns.map(campaign => campaign == 'Default Campaign' ? 
                                 (

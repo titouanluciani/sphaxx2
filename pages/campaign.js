@@ -59,7 +59,9 @@ export default function Campaign({cookie, cookiesSession}){
         })
         const res_campaigns = await res.json();
         setCampaigns(res_campaigns.data)
-        console.log("campaigns after loadcampaigns : ",campaigns)
+        setCampaign(res_campaigns.data[0].name)
+        console.log("campaigns after loadcampaigns : ",res_campaigns.data)
+        document.querySelector("#pet-select").value = res_campaigns.data[0].name
         //setCampaign(res_campaigns.data[0])
     }
 
@@ -107,8 +109,8 @@ export default function Campaign({cookie, cookiesSession}){
             method:'POST',
             body:JSON.stringify({campaignName, cookie})
         })
-        loadCampaigns(cookie)
-        setChanged('del')
+        //loadCampaigns(cookie)
+        setChanged(prev => !prev)
     }
 
     const handleMessageFilter = (connect) => {
@@ -148,20 +150,21 @@ export default function Campaign({cookie, cookiesSession}){
     }, [cookie, cookiesSession])
 
     useEffect(() => {
+        console.log("campaign useffect trigger : ", campaign)
         loadProspects(campaign, cookie);
-        setFilterProspects([])
+        //setFilterProspects([])
     }, [campaign])
     useEffect(() => {
         console.log("modal in campaign : ",showModal);
         loadCampaigns(cookie)
     }, [showModal])
     useEffect(() => {
-        console.log("changed use effect trigger : ", changed)
+        console.log("changed use effect trigger : ", changed, document.querySelector('#pet-select').value)
         setProspects([])
         setSelectedProspects([])
         setFilterProspects([])
         loadCampaigns(cookie)
-        loadProspects(campaign, cookie);
+        //loadProspects(document.querySelector('#pet-select').value, cookie);
     }, [changed])
     useEffect(() => {
         console.log(selectedProspects)
@@ -216,7 +219,7 @@ export default function Campaign({cookie, cookiesSession}){
                     </select>
                     <button onClick={openModal} className="p-2 px-3 mr-4 bg-blue-500 rounded">Create</button>
                     <button onClick={() => handleDelete(campaign, cookie)} className="p-2 px-3 mr-4 bg-red-500 rounded">Delete</button>
-                    <button className="p-2 px-3 mr-4 bg-blue-500 rounded">Tools</button>
+                    {/*<button className="p-2 px-3 mr-4 bg-blue-500 rounded">Tools</button>*/}
             </div>
             <div className="flex flex-row flex-wrap justify-between h-screen h-full">
                 <ProspectList prospects={filterProspects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} handleCheckAll={handleCheckAll} isCheckAll={isCheckAll} handleCheckFilter={handleCheckFilter} loadingProspects={loadingProspects} setIsCheckAll={setIsCheckAll} selectedProspects={selectedProspects} />
