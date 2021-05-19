@@ -10,6 +10,7 @@ export default function Campaign({cookie, cookiesSession}){
     const [notes, setNotes] = useState([]) 
     const [messages, setMessages] = useState([])
     const [campaignHasChanged, setCampaignHasChanged] = useState(false)
+    const [createdCampaign, setCreatedCampaign] = useState(false)
     const [campaign, setCampaign] = useState('Default Campaign')
     const [campaigns, setCampaigns] = useState([])
     const [selectedProspects, setSelectedProspects] = useState([{}])
@@ -110,7 +111,7 @@ export default function Campaign({cookie, cookiesSession}){
             body:JSON.stringify({campaignName, cookie})
         })
         //loadCampaigns(cookie)
-        setChanged(prev => !prev)
+        setCreatedCampaign(prev => !prev)
     }
 
     const handleMessageFilter = (connect) => {
@@ -160,12 +161,18 @@ export default function Campaign({cookie, cookiesSession}){
     }, [showModal])
     useEffect(() => {
         console.log("changed use effect trigger : ", changed, document.querySelector('#pet-select').value)
+        //setProspects([])
+        //setSelectedProspects([])
+        //setFilterProspects([])
+        loadProspects(document.querySelector('#pet-select').value, cookie);
+    }, [changed])
+    useEffect(() => {
+        console.log("changed use effect trigger : ", changed, document.querySelector('#pet-select').value)
         setProspects([])
         setSelectedProspects([])
         setFilterProspects([])
         loadCampaigns(cookie)
-        //loadProspects(document.querySelector('#pet-select').value, cookie);
-    }, [changed])
+    }, [createdCampaign])
     useEffect(() => {
         console.log(selectedProspects)
     }, [selectedProspects])
@@ -204,7 +211,7 @@ export default function Campaign({cookie, cookiesSession}){
     //<option value="All" selected>Default Campaign</option>
     return(
         <div className="bg-gray-200 p-4 ml-48 overflow-x-hidden h-screen">
-            <Modal showModal={showModal} setShowModal={setShowModal} cookie={cookie} />
+            <Modal showModal={showModal} setShowModal={setShowModal} cookie={cookie} setCreatedCampaign={setCreatedCampaign} />
 
             <div className="flex flex-row m-2 mb-4 bg-gray-200 ">
                     <select onChange={handleCampaigns} name="pets" id="pet-select" className="p-2 w-5/12 mr-6 bg-red-300 rounded">

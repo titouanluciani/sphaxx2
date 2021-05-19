@@ -44,8 +44,7 @@ export default function Connect(props){
         console.log(todo.data[0])
         setWaitingLine(todo.data[0])
         console.log("waiting line : ",waitingLine)
-        props.setChanged(prev => !prev)
-
+        //props.setChanged(prev => !prev)
 
     }
 

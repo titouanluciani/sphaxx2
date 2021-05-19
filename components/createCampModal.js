@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-export default function Modal({ showModal, setShowModal, cookie}){
+export default function Modal({ showModal, setShowModal, cookie, setCreatedCampaign}){
     console.log("shoow mdoal ",showModal)
     
     const [name, setName] = useState('')
@@ -11,6 +11,7 @@ export default function Modal({ showModal, setShowModal, cookie}){
         setName(inputValue)
         console.log("name of the new camp : ", name)
         createCampaign(inputValue, cookie).then(res => setShowModal(false))
+        setCreatedCampaign(prev => !prev)
     }
     const createCampaign = async (name, cookie) => await fetch('/api/createCampaign', {
         method:'POST',
