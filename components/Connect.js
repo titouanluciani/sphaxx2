@@ -147,7 +147,7 @@ export default function Connect(props){
                 <div className="flex flex-col justify-evenly items-stretch ml-4">
                     <button className="bg-gray-100 text-indigo-600 h-10 p-2 w-24 items-center justify-center rounded" onClick={handleName} value='{{firstname}}'>FirstName</button>
                     <button className="bg-gray-100 text-indigo-600 h-10 p-2 w-24  items-center justify-center rounded" onClick={handleName} value='{{name}}'>Name</button>
-                    <button className="bg-gray-100 text-indigo-600 h-10 p-2 w-24  items-center justify-center rounded" onClick={handleName} value='{{firstname}} {{name}}'>FirstName Name</button>
+                    <button className="bg-gray-100 text-indigo-600 h-16 p-2 w-24  items-center justify-center rounded" onClick={handleName} value='{{firstname}} {{name}}'>FirstName Name</button>
                 </div>
             </div>
             <button onClick={() => handleSave(option,oldName,description.toString(), props.campaign, props.connect.toString(), props.cookie)} className="m-2 p-2 w-1/3 bg-blue-500 rounded text-white">Save Note</button>
