@@ -258,7 +258,7 @@ export default function Campaign({cookie, cookiesSession}){
                     >
                         Drop here your CSV file
                     </div>
-                    <p className="text-sm h-8 w-32 text-red-600">Your CSV file must have an "url" and can have a "name" field.</p>
+                    <p className="text-sm h-8 w-40 text-red-600">Your CSV (.csv) file must have an "url" field and can have a "name" field.</p>
             </div>
             <div className="flex flex-row flex-wrap justify-between h-screen h-full">
                 <ProspectList prospects={filterProspects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} handleCheckAll={handleCheckAll} isCheckAll={isCheckAll} handleCheckFilter={handleCheckFilter} loadingProspects={loadingProspects} setIsCheckAll={setIsCheckAll} selectedProspects={selectedProspects} />
