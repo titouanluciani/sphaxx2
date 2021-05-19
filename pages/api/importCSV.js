@@ -4,7 +4,7 @@ const faunadb = require('faunadb')
 const q = faunadb.query
 const client = new faunadb.Client({ secret: process.env.FAUNA_SECRET_KEY })
 
-const { Select, Map, Paginate, Match, Index, Lambda, Get, Var, Collection, Create, Intersection } = faunadb.query
+const { Select, Map, Paginate, Match, Index, Lambda, Get, Var, Collection, Create, If, ContainsField } = faunadb.query
 
 export default async (req, res) => {
     console.log("import csv req body : ",req.body)
@@ -31,7 +31,7 @@ export default async (req, res) => {
                     Collection("prospects"),
                     {
                         data:{
-                            name:Select(['name'],Var('prospect')),
+                            name:If(ContainsField('name', 'prospect'),Select(['name'],Var('prospect')), ''),
                             url:Select(['url'],Var('prospect')),
                             userUrl:user_url,
                             campaign:campaign,
