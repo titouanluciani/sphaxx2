@@ -242,7 +242,7 @@ export default function Campaign({cookie, cookiesSession}){
                             e.preventDefault()
                             console.log(e.dataTransfer.files)
                             Array.from(e.dataTransfer.files)
-                                .filter((file) => file.type === 'text/csv' || file.type === 'application/vnd.ms-excel' )
+                                .filter((file) => file.type === 'text/csv' || file.type === 'application/vnd.ms-excel')
                                 .forEach(async (file) => {
                                     const text = await file.text()
                                     const data = parse(text, { header: true })
