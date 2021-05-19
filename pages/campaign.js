@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import ProspectList from  '../components/ProspectList'
 import TabPanel from '../components/TabPanel'
 import Modal from '../components/createCampModal'
+import { parse } from 'papaparse'
 
 
 export default function Campaign({cookie, cookiesSession}){
@@ -209,6 +210,7 @@ export default function Campaign({cookie, cookiesSession}){
         currentProspects = filterProspects.slice(indexOfFirstItem, indexOfLastItem)
     }, [filterProspects])
     //<option value="All" selected>Default Campaign</option>
+    const [highlighted, setHighlighted] = useState(false)
     return(
         <div className="bg-gray-200 p-4 ml-48 overflow-x-hidden h-screen">
             <Modal showModal={showModal} setShowModal={setShowModal} cookie={cookie} setCreatedCampaign={setCreatedCampaign} />
@@ -227,6 +229,34 @@ export default function Campaign({cookie, cookiesSession}){
                     <button onClick={openModal} className="p-2 px-3 mr-4 bg-blue-500 rounded">Create</button>
                     <button onClick={() => handleDelete(campaign, cookie)} className="p-2 px-3 mr-4 bg-red-500 rounded">Delete</button>
                     {/*<button className="p-2 px-3 mr-4 bg-blue-500 rounded">Tools</button>*/}
+                    <div 
+                        className={`p-2 px-3 mr-4 border-2  rounded ${highlighted ? "border-red-600 bg-green-100" : "border-gray-600 bg-green-400" } `}
+                        title='Your CSV file must have an "url" field for the linkedin url profiles. It also can have a "name" field with the name and/or firstname of the prospects.'
+                        onDragEnter={() => setHighlighted(true)}
+                        onDragLeave={() => setHighlighted(false)}
+                        onDragOver={e => {
+                            e.preventDefault()
+                        }}
+                        onDrop={e => {
+                            setHighlighted(false)
+                            e.preventDefault()
+                            console.log(e.dataTransfer.files)
+                            Array.from(e.dataTransfer.files)
+                                .filter((file) => file.type === 'text/csv' || file.type === 'application/vnd.ms-excel' )
+                                .forEach(async (file) => {
+                                    const text = await file.text()
+                                    const data = parse(text, { header: true })
+                                    console.log("this is info from csv : ",data, cookie, campaign)
+                                    await fetch('api/importCSV', {
+                                        method: 'POST',
+                                        body: JSON.stringify({data, cookie, campaign})
+                                    })
+                                })
+                        }}
+                    >
+                        Drop here your CSV file
+                    </div>
+                    <p className="text-sm h-8 w-32 text-red-600">Your CSV file must have an "url" and a "name" field.</p>
             </div>
             <div className="flex flex-row flex-wrap justify-between h-screen h-full">
                 <ProspectList prospects={filterProspects} handleCheck={handleCheck} campaignHasChanged={campaignHasChanged} handleCheckAll={handleCheckAll} isCheckAll={isCheckAll} handleCheckFilter={handleCheckFilter} loadingProspects={loadingProspects} setIsCheckAll={setIsCheckAll} selectedProspects={selectedProspects} />
