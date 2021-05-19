@@ -44,5 +44,5 @@ export default async (req, res) => {
     )
 
     res.statusCode = 200
-    //res.send("All is ok")
+    res.send("All is ok")
 }
