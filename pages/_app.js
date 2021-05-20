@@ -61,7 +61,7 @@ function MyApp({ Component, pageProps }) {
   useEffect(() => {
     let i = 0
     let stop = false
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
       if(!cookie == false){
         console.log('cookie should be set')
         stop = true
@@ -164,7 +164,7 @@ function MyApp({ Component, pageProps }) {
   return (
         !cookie ? (<div>
           <div className="loader" id="loader"></div>
-          <h2 className="font-bold">Wait a little (~ 15 sec) then refresh the app.</h2>
+          <h2 className="font-bold">Please wait</h2>
           <h2>If that still don't work, <p className="font-bold">click the "refresh" button in the extension</p> or contact one of us.</h2>
           <ul>
           <li><a className="text-blue-600 underline" href="https://www.linkedin.com/in/valentin-pouxguirimand/">https://www.linkedin.com/in/valentin-pouxguirimand/</a></li>

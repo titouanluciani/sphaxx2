@@ -98,8 +98,8 @@ export default function Dashboard({ cookie, cookiesSession }){
             </div>
             <div className="bg-blue-300 row-span-2 col-span-2 p-2 h-3/4 w-3/4 rounded shadow-lg">
                 <h1 className="text-center font-bold">Global Performance</h1>
-                <div className="flex flex-row space-x-4">
-                    <button className="inline-block ml-4 mt-2 bg-purple-500 p-1 rounded text-white h-10 px-2" onClick={getRates}>Refresh Stats</button>
+                <div className="flex flex-row space-x-4 justify-around">
+                    {/*<button className="inline-block ml-4 mt-2 bg-purple-500 p-1 rounded text-white h-10 px-2" onClick={getRates}>Refresh Stats</button>*/}
                     <select className="rounded h-10 mt-2 px-1" onChange={handleCampaigns} name="" id="">
                     {campaigns.map(campaign => campaign == 'Default Campaign' ? 
                                 (
@@ -114,17 +114,18 @@ export default function Dashboard({ cookie, cookiesSession }){
                 <div className="flex flex-row justify-around pt-4">
                     <div className="">
                         <h2>Acceptance rate :  </h2>
-                        <h2 className="text-4xl pt-4">38 %</h2>
+                        <h2 className="text-4xl pt-4">{acceptanceRate} %</h2>
                     </div>
                     <div className="">
                         <h2>Response rate : </h2>
-                        <h2 className="text-4xl pt-4"> 23 %</h2>
+                        <h2 className="text-4xl pt-4">{} %</h2>
 
                     </div>
                 </div>
             </div>
             <div className="bg-green-300 col-span-full row-span-2 h-3/4 w-3/4 rounded shadow-lg">
                 <h1 className="p-2 text-center font-bold">Activity Report</h1>
+                <h2 className="p-2 text-center">Coming Soon !</h2>
             </div>
         </div>
 

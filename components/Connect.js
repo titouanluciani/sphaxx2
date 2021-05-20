@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import ProspectList from './ProspectList'
 //<option value={props.notes[0] ? props.notes[0].name : "Default Note"} selected>{props.notes[0] ? props.notes[0].name : "Default Note"}</option>
 //<input onClick={() => handleSave(option,oldName,oldDescription, props.campaign, props.connect.toString(), props.cookie)} className="m-2 p-0.5 w-1/2 bg-blue-500 rounded-full" type="image" src="https://cdn1.iconfinder.com/data/icons/feather-2/24/check-512.png" width="32" height="32"/>
 //<input onClick={() => handleDelete(props.cookie, props.campaign, oldName, props.connect.toString())} type="image" src="https://cdn3.iconfinder.com/data/icons/user-interface-169/32/cross-512.png"  className="m-2 p-0.5 w-1/2 bg-red-500 rounded-full" width="16" height="16"/>
@@ -108,7 +109,7 @@ export default function Connect(props){
         <div className="w-full">
             <div className="flex flex-row justify-between mb-2 px-2 py-3 bg-red-300 rounded">
                 <div className="w-1/2">
-                    <h2 className="">Your notes : </h2>
+                    <h2 className="">{props.connect ? "Your notes : " : "Your messages : "}</h2>
                     <select onChange={e => {
                         setOptionNote(e.target.value)
                         setOldName(e.target.value)
@@ -123,26 +124,26 @@ export default function Connect(props){
                         })}
                     </select>
                 </div>
-                <button onClick={() => handleNewNote(props.cookie, props.campaign, props.connect.toString())} className="m-2 p-2 w-1/3 h-9 bg-gray-100 text-indigo-600 rounded self-end">{props.connect ? "Add note" : "Add message"}</button>
+                <button onClick={() => handleNewNote(props.cookie, props.campaign, props.connect.toString())} className={`m-2 p-2 w-1/3 h-9 bg-gray-100 text-indigo-600 rounded self-end ${props.connect ? "" : "flex-grow ml-8"}`}>{props.connect ? "Add note" : "Add message"}</button>
                 
             </div>
             <div className="flex flex-row justify-between items-end bg-indigo-300 p-2 py-3 rounded">
                 <div className="">
-                    <h2 className="mb-2" >Update your note's title : (Click on "Save note" below)</h2>
+                    <h2 className="mb-2" >{props.connect ? "Update your note's title : (Click on 'Save note' below)" : "Update your message's title : (Click on 'Save message' below)"}</h2>
                     <input onChange={e => setOptionNote(e.target.value)} type="text" value={option} placeholder={option} id="selectInput" className="p-2 mx-2 rounded"/>
                 </div>
                 <button onClick={() => handleDelete(props.cookie, props.campaign, oldName, props.connect.toString())} className="m-2 p-2 w-1/3 h-9 bg-gray-100 text-white bg-red-400 rounded self-end" title="It will delete your note">Delete</button>
             </div>
             <div className=" flex flex-row justify-around bg-red-300 my-3 rounded p-2 py-3">
                 <div className="h-30 rounded">
-                    <h2 className="" >Update your note's content : (Click on "Save Note" below) </h2>
+                    <h2 className="" >{props.connect ? "Update your note's content : (Click on 'Save Note' below)" : "Update your message's content : (Click on 'Save Message' below)"} </h2>
                     <textarea id='textarea' value={description.toString()} onChange={e => {
                         console.log(e.target.value)
                         setDescription(e.target.value.toString())
                         document.getElementById('count').innerHTML = "Characters left: " + (299 - e.target.value.length);
                         console.log(description)
                         }} cols="30" rows="7" className="w-full m-2 rounded p-1"> { description } </textarea>
-                    <h4 className="" id="count">Characters left: {299 - description.length}</h4>
+                    <h4 className="" id="count">{props.connect ? `Characters left: ${299 - description.length}` : ""}</h4>
                 </div>
                 <div className="flex flex-col justify-evenly items-stretch ml-4">
                     <button className="bg-gray-100 text-indigo-600 h-10 p-2 w-24 items-center justify-center rounded" onClick={handleName} value='{{firstname}}'>FirstName</button>
@@ -150,7 +151,7 @@ export default function Connect(props){
                     <button className="bg-gray-100 text-indigo-600 h-16 p-2 w-24  items-center justify-center rounded" onClick={handleName} value='{{firstname}} {{name}}'>FirstName Name</button>
                 </div>
             </div>
-            <button onClick={() => handleSave(option,oldName,description.toString(), props.campaign, props.connect.toString(), props.cookie)} className="m-2 p-2 w-1/3 bg-blue-500 rounded text-white">Save Note</button>
+            <button onClick={() => handleSave(option,oldName,description.toString(), props.campaign, props.connect.toString(), props.cookie)} className="m-2 p-2 w-1/3 bg-blue-500 rounded text-white">{props.connect ?"Save Note" : "Save Message"}</button>
             <button onClick={() => handleLaunch(props.campaign, props.selectedProspects, option, description.toString(), props.connect.toString(), oldName, props.cookie, props.connect ? 'connect' : 'message')} className="m-2 ml-8 p-2 w-1/2 bg-purple-700 rounded text-white">Save & Launch</button>
         </div>
         
