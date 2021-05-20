@@ -8,6 +8,7 @@ function MyApp({ Component, pageProps }) {
   const [cookie, setCookie] = useState('')
   const [cookiesSession, setCookiesSession] = useState({})
   const [userInfo, setUserInfo] = useState({})
+  const [stop, setStop] = useState(false)
 
   //let firststep = require("../public/firsstep.jpg")
 
@@ -33,13 +34,49 @@ function MyApp({ Component, pageProps }) {
       }
 
   }, random*60*1000*5)*/
-
-  useEffect(async () => {
-    try{
+  /*if(stop === false){
+    var checkCookie = setInterval(() => {
+        if(document.cookie.split(";").find(row=>row.startsWith('userUrl'))){
+          setCookie(document.cookie.split(";").find(row=>row.startsWith('userUrl')).split('=')[1])
+        }else if(document.cookie.split(";").find(row=>row.startsWith(' userUrl'))){
+          setCookie(document.cookie.split(";").find(row=>row.startsWith(' userUrl')).split('=')[1])
+        }
+        if(document.cookie.split(";").find(row=>row.startsWith(' cookiesSession'))){
+          setCookiesSession(document.cookie.split(";").find(row=>row.startsWith(' cookiesSession')).split('=')[1])
+        }else if(document.cookie.split(";").find(row=>row.startsWith('cookiesSession'))){
+          setCookiesSession(document.cookie.split(";").find(row=>row.startsWith('cookiesSession')).split('=')[1])
+        }
+        //const cook = document.cookie.split(";").find(row=>row.startsWith(' userUrl')).split('=')[1]
+        setCookiesSession(document.cookie.split(";").find(row=>row.startsWith(' cookiesSession')).split('=')[1] ? document.cookie.split(";").find(row=>row.startsWith(' cookiesSession')) : document.cookie.split(";").find(row=>row.startsWith('cookiesSession') ))
+        if(cookie !== ''){
+          setStop(true)
+          console.log("STOOP")
+        }
+        if(stop == true){
+          console.log(cookie)
+          clearInterval(checkCookie)
+        }
+    }, 1000)
+  }*/
+  useEffect(() => {
+    let i = 0
+    let stop = false
+    const interval = setInterval(() => {
+      if(!cookie == false){
+        console.log('cookie should be set')
+        stop = true
+      }
+      if(stop==true){
+        clearInterval(interval);
+      }
+      i+=1
+      console.log('This will run every second! : ',i);
       if(document.cookie.split(";").find(row=>row.startsWith('userUrl'))){
         setCookie(document.cookie.split(";").find(row=>row.startsWith('userUrl')).split('=')[1])
+        stop = true
       }else if(document.cookie.split(";").find(row=>row.startsWith(' userUrl'))){
         setCookie(document.cookie.split(";").find(row=>row.startsWith(' userUrl')).split('=')[1])
+        stop = true
       }
       if(document.cookie.split(";").find(row=>row.startsWith(' cookiesSession'))){
         setCookiesSession(document.cookie.split(";").find(row=>row.startsWith(' cookiesSession')).split('=')[1])
@@ -47,12 +84,11 @@ function MyApp({ Component, pageProps }) {
         setCookiesSession(document.cookie.split(";").find(row=>row.startsWith('cookiesSession')).split('=')[1])
       }
       //const cook = document.cookie.split(";").find(row=>row.startsWith(' userUrl')).split('=')[1]
-      setCookiesSession(document.cookie.split(";").find(row=>row.startsWith(' cookiesSession')).split('=')[1] ? document.cookie.split(";").find(row=>row.startsWith(' cookiesSession')) : document.cookie.split(";").find(row=>row.startsWith('cookiesSession') ))
-    }catch(err){
-      console.error("cookie err : ",err)
-    }
+      //setCookiesSession(document.cookie.split(";").find(row=>row.startsWith(' cookiesSession')).split('=')[1] ? document.cookie.split(";").find(row=>row.startsWith(' cookiesSession')) : document.cookie.split(";").find(row=>row.startsWith('cookiesSession') ))
+    }, 1000);
     
-  }, [])
+  }, []);
+  
   useEffect(async () => {
     console.log(cookie)
     const res = await fetch('api/getUserInfo', {
@@ -122,14 +158,10 @@ function MyApp({ Component, pageProps }) {
       document.cookie = "state=notLoading"
     }
   },[cookie])
-  setInterval(() => {
-
-  }, 500)
   useEffect(() => {
     hotjar.initialize(2385823);
   }, [])
   return (
-      
         !cookie ? (<div>
           <div className="loader" id="loader"></div>
           <h2 className="font-bold">Wait a little (~ 15 sec) then refresh the app.</h2>
