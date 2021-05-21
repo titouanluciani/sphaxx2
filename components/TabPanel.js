@@ -7,6 +7,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Connect from './Connect'
+import Scenario from './Scenario'
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -72,7 +73,7 @@ export default function SimpleTabs({ notes, messages, campaign, loadProspects, s
         <Tabs value={value} onChange={handleChange} className="" aria-label="simple tabs example">
           <Tab label="Connect" {...a11yProps(0)} />
           <Tab label="Message" {...a11yProps(1)} />
-          {/*<Tab label="Scenario" {...a11yProps(2)} />*/}
+          <Tab label="Scenario" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -81,11 +82,12 @@ export default function SimpleTabs({ notes, messages, campaign, loadProspects, s
       <TabPanel value={value} index={1}>
         <Connect connect={false} notes={messages} campaign={campaign} loadProspects={loadProspects} selectedProspects={selectedProspects} cookie={cookie} setChanged={setChanged} changed={changed} campaignHasChanged={campaignHasChanged} handleMessageFilter={handleMessageFilter} />
       </TabPanel>
-      {/*<TabPanel value={value} index={2}>
-        <input id="linkedinUrl" type="text" placeholder="Linkedin Url"/>
+      <TabPanel value={value} index={2}>
+        {/*<input id="linkedinUrl" type="text" placeholder="Linkedin Url"/>
         <input id="linkedinName" type="text" placeholder="FirstName & Name"/>
-        <button onClick={createProspect} >Submit</button>
-      </TabPanel>*/}
+  <button onClick={createProspect} >Submit</button>*/}
+        <Scenario/>
+      </TabPanel>
     </div>
   );
 }

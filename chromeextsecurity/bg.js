@@ -120,9 +120,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         console.log("refresh btn trigger")
             chrome.tabs.query({ currentWindow: true }, (tabs) => {
                 console.log("tabs : ", tabs)
-                tabs.forEach(async tab => {
-                    if(/^https:\/\/www\.linkedin\.com/.test(tab.url)){
-                        console.log(tab.url)
+                //tabs.forEach(async tab => {
+                //    if(/^https:\/\/www\.linkedin\.com/.test(tab.url)){
+                        //console.log(tab.url)
                         //launch = true
                         launch2 = false
                         console.log('refresh & linkedin tab open : ', launch)
@@ -143,8 +143,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             })
                         })
 
-                    }
-                })
+                    //}
+                //})
             })
         
     }
@@ -180,7 +180,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 let launch = true
 let launch2 = false
 //Auth when tab is clicked
-chrome.tabs.onActivated.addListener(() => {
+/*chrome.tabs.onActivated.addListener(() => {
     chrome.windows.getCurrent( {'populate':true} , (currentWindow) =>{
         chrome.tabs.query({windowId: currentWindow.id }, (tabs) => {
             tabs.forEach(async tab => {
@@ -196,9 +196,9 @@ chrome.tabs.onActivated.addListener(() => {
                                 launch = false
                                 console.log("launch after localauth : ", launch)
                                 chrome.tabs.remove(tab.id)
-                                /*chrome.runtime.storage.get("userUrl", userUrl => {
-                                    await fetch('https://sphaxx-five.vercel.app/getUserUrl')
-                                })*/
+                                //chrome.runtime.storage.get("userUrl", userUrl => {
+                                //    await fetch('https://sphaxx-five.vercel.app/getUserUrl')
+                                //})
                             }
                         })
                     })
@@ -206,7 +206,7 @@ chrome.tabs.onActivated.addListener(() => {
             })
         })
     })
-})
+})*/
 
 
 /*chrome.webNavigation.onCommitted.addListener(() => {//chrome.tabs.onActivated.addListener
@@ -366,7 +366,7 @@ setInterval(() => {
     random = Math.random() * 3 + 5
     let currentDate = new Date()
     console.log("counting i : ",i, randomActions)
-    if(i<randomActions && currentDate.getHours() > 6 && currentDate.getHours() < 23 && currentDate.getDay() < 6 ){
+    if(i<randomActions && currentDate.getHours() > 6 && currentDate.getHours() < 23 && currentDate.getDay() < 6 && currentDate.getDay() > 0 ){
         i+=1;
         startConnect2()
     }
@@ -568,3 +568,25 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         })
     } 
 })
+
+//Create user account when extension is installed
+/*chrome.runtime.onInstalled.addListener(async () => {
+    await fetch('https://sphaxx-five.vercel.app/userCreation', {
+
+    })
+})*/
+
+chrome.runtime.onMessage.addListener((request, sender,sendResponse) => {
+    if(request.message === "extension clicked"){
+        chrome.tabs.query( { active:true, currentWindow: true }, tabs => {
+            const currentTab = tabs[0]
+            console.log("currenta tab is : ", currentTab)
+            chrome.storage.local.set({ 'currentTab': currentTab })
+            chrome.runtime.sendMessage({ message: 'current tab set in local' })
+        } )
+    }
+    if(request.message === "linkedin search tab btn clicked"){
+        chrome.tabs.create({ url:"https://www.linkedin.com/search/results/people/", active:true })
+    }
+})
+

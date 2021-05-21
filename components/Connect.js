@@ -88,7 +88,7 @@ export default function Connect(props){
     }, [doc])*/
     
     useEffect(()=>{
-        document.getElementById('count').innerHTML = "Characters left: " + (299 - description.length);
+        document.getElementById('count').innerHTML = props.connect ? `Characters left: ${299 - description.length}` : ""
         
     },[description])
     /*document.getElementById('textarea').onkeyup = function () {
@@ -116,7 +116,7 @@ export default function Connect(props){
                         props.notes.map(note => note.name === e.target.value ? setOldDescription(note.description) : '')
                         props.notes.map(note => note.name === e.target.value ? setDescription(note.description) : '')
                         console.log("desc ",description, document.getElementById('textarea').value)
-                        document.getElementById('count').innerHTML = "Characters left: " + (299 - document.getElementById('textarea').value.length);
+                        document.getElementById('count').innerHTML = props.connect ? `Characters left: ${299 - document.getElementById('textarea').value.length}` : ""
 
                         }} name="note" id="noteSelect" className="w-full m-2 p-2 rounded">
                         {props.notes.map(note => {
@@ -140,7 +140,7 @@ export default function Connect(props){
                     <textarea id='textarea' value={description.toString()} onChange={e => {
                         console.log(e.target.value)
                         setDescription(e.target.value.toString())
-                        document.getElementById('count').innerHTML = "Characters left: " + (299 - e.target.value.length);
+                        document.getElementById('count').innerHTML = props.connect ? `Characters left: ${299 - e.target.value.length}` : ""
                         console.log(description)
                         }} cols="30" rows="7" className="w-full m-2 rounded p-1"> { description } </textarea>
                     <h4 className="" id="count">{props.connect ? `Characters left: ${299 - description.length}` : ""}</h4>

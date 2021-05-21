@@ -21,8 +21,27 @@ export default async (req, res) => {
             )
         )
     )
+    /*[
+        {
+          url: 'https://www.linkedin.com/in/c%C3%A9lia-larochelle-31b095195/',
+          name: 'Celia Larochelle'
+        },
+        {
+          url: 'https://www.linkedin.com/in/alice-dalaric-9736471b2/',
+          name: 'Alice Dalaric'
+        },
+        {
+          url: 'https://www.linkedin.com/in/christoph-fleischmann-721482110/',
+          name: 'Christophe Fletcher'
+        },
+        {
+          url: 'https://www.linkedin.com/in/mouloud-bessa-660b03156/',
+          name: 'Mouloud LaVeinasse'
+        },
+        { url: '' }
+      ]*/
     const userClient = new faunadb.Client({ secret: user_secret })
-    await userClient.query(
+    const create = await userClient.query(
         Map(
             data.data,
             Lambda(
@@ -42,7 +61,7 @@ export default async (req, res) => {
             )
         )
     )
-
+    console.log(create)
     res.statusCode = 200
-    res.send("All is ok")
+    res.send()
 }

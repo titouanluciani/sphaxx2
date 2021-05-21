@@ -59,7 +59,7 @@ chrome.storage.local.get("response", async (response) => {
         if(connectExist && !document.querySelector('.pvs-profile-actions__action.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view')){
             console.log("connect btn doesn't exist")
             //Click on trois petits points
-            try{
+            //try{
                 console.log("trois petits points")
                 await delay(1000)
                 if(document.querySelector(".artdeco-dropdowntrigger.artdeco-dropdowntrigger--placement-bottom.ember-view.pvs-profile-actions__action.artdeco-button.artdeco-button--secondary.artdeco-button--muted.artdeco-button--2")){
@@ -74,8 +74,20 @@ chrome.storage.local.get("response", async (response) => {
                     document.querySelector('.artdeco-dropdown__trigger.artdeco-dropdown__trigger--placement-bottom.ember-view.pvs-profile-actions__action.artdeco-button.artdeco-button--secondary.artdeco-button--muted.artdeco-button--2').click()
                 }
                 await delay(Math.random() + 500)
-                let popup = document.querySelector('.pv-s-profile-actions__overflow-dropdown.display-flex.artdeco-dropdown__content.artdeco-dropdown--is-dropdown-element.artdeco-dropdown__content--justification-left.artdeco-dropdown__content--placement-bottom.ember-view') ? document.querySelector('.pv-s-profile-actions__overflow-dropdown.display-flex.artdeco-dropdown__content.artdeco-dropdown--is-dropdown-element.artdeco-dropdown__content--justification-left.artdeco-dropdown__content--placement-bottom.ember-view') : document.querySelector('.pv-s-profile-actions__overflow-dropdown.display-flex.artdeco-dropdown__content.artdeco-dropdown__content--is-open.artdeco-dropdown--is-dropdown-element.artdeco-dropdown__content--justification-left.artdeco-dropdown__content--placement-bottom.ember-view')
-                let popupPoints = popup.querySelector('.pv-s-profile-actions.pv-s-profile-actions--connect.pv-s-profile-actions__overflow-button.full-width.text-align-left.artdeco-dropdown__item.artdeco-dropdown__item--is-dropdown.ember-view')
+                console.log("first select popup")
+                popup = document.querySelector('.pv-s-profile-actions__overflow-dropdown.display-flex.artdeco-dropdown__content.artdeco-dropdown--is-dropdown-element.artdeco-dropdown__content--justification-left.artdeco-dropdown__content--placement-bottom.ember-view') ? document.querySelector('.pv-s-profile-actions__overflow-dropdown.display-flex.artdeco-dropdown__content.artdeco-dropdown--is-dropdown-element.artdeco-dropdown__content--justification-left.artdeco-dropdown__content--placement-bottom.ember-view') : document.querySelector('.pv-s-profile-actions__overflow-dropdown.display-flex.artdeco-dropdown__content.artdeco-dropdown__content--is-open.artdeco-dropdown--is-dropdown-element.artdeco-dropdown__content--justification-left.artdeco-dropdown__content--placement-bottom.ember-view')
+                if(popup === null){
+                    console.log("popup select")
+                    popup = document.querySelector('.pvs-overflow-actions-dropdown__content.artdeco-dropdown__content.artdeco-dropdown--is-dropdown-element.artdeco-dropdown__content--justification-left.artdeco-dropdown__content--placement-bottom.ember-view') ? document.querySelector('.pvs-overflow-actions-dropdown__content.artdeco-dropdown__content.artdeco-dropdown--is-dropdown-element.artdeco-dropdown__content--justification-left.artdeco-dropdown__content--placement-bottom.ember-view') : document.querySelector('.pvs-overflow-actions-dropdown__content.artdeco-dropdown__content.artdeco-dropdown__content--is-open.artdeco-dropdown--is-dropdown-element.artdeco-dropdown__content--justification-left.artdeco-dropdown__content--placement-bottom.ember-view')
+                }
+                let allPopupPoints = popup.querySelectorAll('.pvs-profile-actions__action.display-flex.align-items-center.artdeco-dropdown__item.artdeco-dropdown__item--is-dropdown.ember-view')
+                let popupPoints
+                for(let pop of allPopupPoints){
+                    if(pop.innerText.includes('Se connecter') || pop.innerText.includes('Connect') || pop.innerText.includes('En attente') || pop.innerText.includes('Pending')){
+                        console.log(pop.innerText)
+                        popupPoints = pop
+                    }
+                }
                 console.log("trois petits points2")
                 await delay(Math.random() + 500)
                 //Try if "Se connecter or en Attente exist"
@@ -84,7 +96,7 @@ chrome.storage.local.get("response", async (response) => {
                 let co = false
                 let pe = false
                 await delay(1500)
-                var checkExist = setInterval(function() {
+                /*var checkExist = setInterval(function() {
                     if (document.querySelector('.pv-s-profile-actions__overflow-dropdown.display-flex.artdeco-dropdown__content.artdeco-dropdown__content--is-open.artdeco-dropdown--is-dropdown-element.artdeco-dropdown__content--justification-left.artdeco-dropdown__content--placement-bottom.ember-view').length) {
                        console.log("Exists!");
                        clearInterval(checkExist);
@@ -92,18 +104,19 @@ chrome.storage.local.get("response", async (response) => {
                         console.log("Exists!");
                        clearInterval(checkExist);
                     }
-                 }, 100)
-                let spansPopup = document.querySelector('.pv-s-profile-actions__overflow-dropdown.display-flex.artdeco-dropdown__content.artdeco-dropdown__content--is-open.artdeco-dropdown--is-dropdown-element.artdeco-dropdown__content--justification-left.artdeco-dropdown__content--placement-bottom.ember-view').querySelectorAll('span')
+                 }, 100)*/
+                let spansPopup = popup.querySelectorAll('span')
                 for(let spanPopup of spansPopup){
-                    console.log(spanPopup.innerText)
-                    if(spanPopup.innerText == 'Se connecter' || spanPopup.innerText == 'Connect' ){
+                    //console.log(spanPopup.innerText)
+                    if(spanPopup.innerText == 'Se connecter' || spanPopup.innerText == 'Connect' || spanPopup.innerHTML == 'Se connecter' || spanPopup.innerHTML == 'Connect' ){
                         co = true
-                    }else if(spanPopup.innerText == 'En attente' || spanPopup.innerText == 'Pending' ){
+                    }else if(spanPopup.innerHTML == 'En attente' || spanPopup.innerHTML == 'Pending' ){
                         pe = true
                     }
                 }
+                //console.log(spans.filter(span => ["Se connecter","Connect", "En attente", "Pending"].includes(span.innerText || span.innerHTML)))
                 for(let span of spans){
-                    console.log(span.innerText)
+                    //console.log(span.innerText)
                     if(span.innerText == 'Se connecter' || span.innerText == 'Connect' ){
                         co = true
                     }else if(span.innerText == 'En attente' || span.innerText == 'Pending' ){
@@ -118,9 +131,10 @@ chrome.storage.local.get("response", async (response) => {
                 if(popupPoints.innerText.includes("En attente") || popupPoints.innerText.includes("Pending") || pe){
                     console.log("trois petits points en attente")
                     pending = true
-                }else if(popupPoints.innerText.includes("Se connecter") || popupPoints.innerText.includes("Connect") || co){
+                }else if(popupPoints.innerText.includes("Se connecter") || popupPoints.innerText.includes("Connect") || co || popupPoints.innerHTML.includes("Se connecter") || popupPoints.innerHTML.includes("Connect")){
                     console.log("trois petits points Connect")
                     popupPoints.click()
+                    await delay(500)
                 }
                 console.log("trois petits points3")
                 //Add { 'isConnected':true, 'hasAccepted':false } to info (to update the prospect)
@@ -279,8 +293,8 @@ chrome.storage.local.get("response", async (response) => {
                         )*/
                         info = { ...info, hold:true }
                 }
-            }catch(err){
-                console.log("err on trois petits points")
+            //}catch(err){
+                //console.log("err on trois petits points")
                 //Update user Info
                 /*await userClient.query(
                     Update(
@@ -288,8 +302,8 @@ chrome.storage.local.get("response", async (response) => {
                         { data: { 'isConnected':true, 'hasAccepted':true } }
                     )
                 )*/
-                info = { ...info, 'isConnected':true, 'hasAccepted':true }
-            }
+                //info = { ...info, 'isConnected':true, 'hasAccepted':true }
+            //}
         }else{
             console.log("connect btn exist")
             //Get the text on the connect btn profile

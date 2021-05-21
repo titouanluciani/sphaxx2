@@ -31,6 +31,8 @@ const refresh_btn = document.getElementById('refresh')
 const linkedin_auth_btn = document.getElementById('linkedinAuth')
 const start_connect = document.getElementById('startConnect')
 //let response = ''
+
+//Check the scraping state "done", "none", "current"
 const scrapeState = () => {
     chrome.storage.local.get('scraping', (scraping) => {
         console.log("this is scraping : ",scraping.scraping)
@@ -44,32 +46,43 @@ const scrapeState = () => {
         }
     })
 }
+
+//Add campaigns to select element
 const addOptions = async () => {
-    document.addEventListener('DOMContentLoaded', () => {
-        chrome.cookies.get({"name":"userUrl", "url":"https://sphaxx-five.vercel.app/"}, (user_url) => {
-            chrome.storage.local.set({ "userUrl": user_url })
-            console.log("user url : ", user_url.value)
-            fetch('https://sphaxx-five.vercel.app/api/getCampaigns', {
-                method:"POST",
-                body:JSON.stringify(user_url.value)
-            }).then(data => data.json())
-                .then( data => {
-                    console.log('data : ', data.data) 
-            
-                    const campaigns = data.data
-                    console.log(campaigns)
-                    campaigns.map(campaign => {
-                        let option = document.createElement("option")
-                        option.text = campaign.name
-                        option.value = campaign.name
-                        select.add(option)
+    //chrome.cookies.get({"name":"userUrl", "url":"https://sphaxx-five.vercel.app/"}, (user_url) => {
+        //chrome.storage.local.set({ "userUrl": user_url })
+    chrome.storage.local.get('userUrl', user_url => {
+        console.log("user url : ", user_url.userUrl.value)
+        fetch('https://sphaxx-five.vercel.app/api/getCampaigns', {
+            method:"POST",
+            body:JSON.stringify(user_url.userUrl.value)
+        }).then(data => data.json())
+            .then( data => {
+                console.log('data : ', data.data)
+                const campaigns = data.data
+                console.log(campaigns)
+
+                while (document.getElementById('campaigns').lastChild) {
+                    console.log(typeof document.getElementById('campaigns').lastChild)
+                    if(document.getElementById('campaigns').lastChild != document.getElementById('campaigns').firstChild){
+                        document.getElementById('campaigns').removeChild(document.getElementById('campaigns').lastChild);
                     }
-                    )
-                })
-        })
+                }
+
+                campaigns.map(campaign => {
+                    let option = document.createElement("option")
+                    option.text = campaign.name
+                    option.value = campaign.name
+                    select.add(option)
+                }
+                )
+            })
     })
+    //})
 }
 addOptions()
+
+//Create a new campaign
 const create = () => {
     let create_campaign = document.getElementById('create new campaign')
     let cancel = document.getElementById('cancel create')
@@ -185,7 +198,7 @@ scrapeState()
     })*/
 //})
 
-
+//When "import" btn is clicked
 btn.addEventListener('click', () => {
     console.log("this is select value : ",document.getElementById('campaigns').value)
     if(document.getElementById('campaigns').value !== "null"){
@@ -208,6 +221,8 @@ btn.addEventListener('click', () => {
         document.getElementById('importation').appendChild(errorMessage)
     }
 })
+
+//Listen for change in scraping state
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     console.log("message from import prospects  : ", request.message)
     if(request.message === 'Import proceed' || request.message === 'scraping state changed'){
@@ -220,19 +235,98 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 const select = document.getElementById('campaigns')
 
+//Change innerHTML of extension if current tab is not a linkedin search
+chrome.runtime.sendMessage({message : "extension clicked"})
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if(request.message === 'current tab set in local'){
+        chrome.storage.local.get('currentTab', currentTab => {
+            console.log("this si current tab : ", currentTab, currentTab.currentTab.url)
+            if(!currentTab.currentTab.url.includes('https://www.linkedin.com/search/results/people/')){
+                document.getElementById('select').innerHTML = "<button id='linkedinSearchTab'>Open a Linkedin Search tab<button/>"
+                document.getElementById('linkedinSearchTab').addEventListener('click', () => {
+                    console.log("linkedin search tab clicked")
+                    chrome.runtime.sendMessage({ message: 'linkedin search tab btn clicked' })
+                    chrome.storage.local.get(['userUrl'], userUrl => {
+                        if(userUrl == null || userUrl == undefined){
+                            chrome.runtime.sendMessage({'message':'set launch to true'})
+                        }
+                    })
 
+                })
+            }
+        })
+    }
+})
+
+//Open modal when createCampaign btn is clicked
+document.getElementById('createCampaign').addEventListener('click', () => {
+    console.log("create campaign btn clicked ")
+    document.getElementById('modal').style.display = 'block'
+})
+
+//Close modal when cancel btn is clicked
+document.getElementById('modalCancel').addEventListener('click', () => {
+    console.log("create campaign btn clicked ")
+    document.getElementById('modal').style.display = 'none'
+})
+
+//Close modal when user click outside of the modal
+window.onclick = function(event) {
+    if (event.target == document.getElementById('modal')) {
+        document.getElementById('modal').style.display = "none";
+    }
+}
+
+//Create campaign when modalOk btn is clicked
+document.getElementById('modalOk').addEventListener('click', () => {
+    if(document.getElementById('modalNewName').value.trim() !== ''){
+        console.log("valid create campaign btn clicked ")
+        document.getElementById('modal').style.display = 'none'
+        let create_campaign = document.getElementById('modalOk')
+        let cancel = document.getElementById('cancel create')
+        let name = document.getElementById('modalNewName').value
+        chrome.storage.local.get(['userUrl'], async userUrl => {
+            console.log("create fetch", userUrl.userUrl.value, name)
+            await fetch('https://sphaxx-five.vercel.app/api/createCampaign', {
+                method:'POST',
+                body:JSON.stringify({ cookie:userUrl.userUrl.value, name })
+            })
+            let option = document.createElement("option")
+            option.text = name
+            option.value = name
+            select.add(option)
+        })        
+    }else{
+        if(!document.getElementById('errorMessage')){
+            let p = document.createElement('p')
+            p.setAttribute('id','errorMessage')
+            let text = document.createTextNode('Error : Campaign name unvalid')
+            p.appendChild(text)
+            p.style.color = 'red'
+            p.style.margin = '0px'
+            document.getElementsByClassName('modalInputsFirstDiv')[0].appendChild(p)
+            document.getElementById('modalNewName').style.borderColor = 'red'
+            document.getElementById('modalNewName').style.boxShadow = '0 0 5px rgb(244, 67, 67)'
+            //document.getElementsByClassName('modalContent')[0].innerHTML += '<p>Error : Campaign name unvalid</p>'
+        }
+    }
+})
 
 /**/
 const launchBtn = document.getElementById('launch')
 
-refresh_btn.addEventListener('click', () => {
+//Refresh btn to launch auth
+/*refresh_btn.addEventListener('click', () => {
     console.log("azaezaez")
     chrome.runtime.sendMessage({'message':'set launch to true'})
-})
+})*/
+
+//Launch auth when "go to dashboard" is clicked
 document.getElementById('dashboard').addEventListener('click', () => {
     console.log("azaezaez")
     chrome.runtime.sendMessage({'message':'set launch to true'})
 })
+
 /*
 linkedin_auth_btn.addEventListener('click', () => {
     chrome.runtime.sendMessage({'message':'linkedinAuth'})
@@ -242,15 +336,17 @@ linkedin_auth_btn.addEventListener('click', () => {
     chrome.runtime.sendMessage({'message':'start connect'})
 })*/
 
-
-launchBtn.addEventListener('click', () => {
+//Launch "LaunchScript" when "Launch" btn is clicked
+/*launchBtn.addEventListener('click', () => {
     console.log("launch clicked")
     chrome.runtime.sendMessage({'message':'launch script locally'})
-})
-document.getElementById('personalStats').addEventListener('click', () => {
+})*/
+
+//Launch "personalStats" when "personal stats" btn is clicked
+/*document.getElementById('personalStats').addEventListener('click', () => {
     console.log("personal stats")
     chrome.runtime.sendMessage({'message':'launch personal stats'})
-})
+})*/
 
 /*if(!!document.querySelector('.pv-s-profile-actions.pv-s-profile-actions--connect.ml2.artdeco-button.artdeco-button--2.artdeco-button--primary.ember-view')){
         console.log("connect btn exist")
@@ -284,3 +380,4 @@ chrome.storage.local.get("valid_url", value =>{
         
     }
 })*/
+

@@ -247,12 +247,23 @@ export default function Campaign({cookie, cookiesSession}){
                                     const text = await file.text()
                                     const data = parse(text, { header: true })
                                     console.log("this is info from csv : ",data, cookie, campaign)
-                                    await fetch('api/importCSV', {
+                                    const res = await fetch('api/importCSV', {
                                         method: 'POST',
                                         body: JSON.stringify({data, cookie, campaign})
                                     })
                                     setChanged(prev => !prev)
-                                    console.log("from csv changed set")
+                                    console.log("from csv changed set : ", res)
+                                    if(res.status != 200){
+                                        const text = await file.text()
+                                        const data = parse(text, { header: true, delimiter: ';' })
+                                        console.log("this is info from csv : ",data, cookie, campaign)
+                                        const res = await fetch('api/importCSV', {
+                                            method: 'POST',
+                                            body: JSON.stringify({data, cookie, campaign})
+                                        })
+                                        setChanged(prev => !prev)
+                                        console.log("from csv changed set : ", res)
+                                    }
                                 })
                         }}
                     >

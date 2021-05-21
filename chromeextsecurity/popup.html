@@ -9,26 +9,55 @@
 <body>
     <div class="loader" id="loader"></div>
     <div class="container" id="container">
-        
-        <h2>Click on "Go to Dashboard - Make a linkedin search - Select "People" on LinkedIn - Select a campaign - Click "Import Prospects"</h2><br/>
-        <br><a id="dashboard" href="https://sphaxx-five.vercel.app/" target="_blank" ><h3>Go to Dashboard</h3></a>
-        <h3>Create a campaign in the app, then select it before clicking on "Import Prospects"</h3>
+        <!--
+            <h2>Click on "Go to Dashboard - Make a linkedin search - Select "People" on LinkedIn - Select a campaign - Click "Import Prospects"</h2><br/>
+            <h3>Create a campaign in the app, then select it before clicking on "Import Prospects"</h3>
         <h3>Your prospects will be imported in the selected campaign</h3>
-        <div class="select">
-            <select name="campaigns" id="campaigns">
-                <option value="null">Please select a campaign</option>
-            </select>
-        </div><br/>
-        <label for="number">How many prospects do you want to import ? (Default 100)</label><br/>
-        <input name="number" type="text" value="100">
-        <div id="importation">
-            <br/><button id="import">Import Prospects</button>
-        </div>
+
         <h3>"Refresh" button is used to solve authenticate issues in the app</h3>
         <br><button id="refresh">Refresh</button>
         <h3>"Launch" & "personalStats" button should only be used by our development teams</h3>
         <br><button id="launch">Launch</button>
         <br><button id="personalStats">personalStats</button>
+        -->
+        <div class="titlediv">
+            <h1 id="title">Sphaxx</h1>
+        </div>
+        <div class="main">
+            <a id="dashboard" href="https://sphaxx-five.vercel.app/" target="_blank" ><h2>Go to Dashboard</h2></a>
+            <div class="select" id="select">
+                <div id="select2">
+                    <select name="campaigns" id="campaigns">
+                        <option value="null">Please select a campaign</option>
+                    </select>
+                    <button id="createCampaign">Create campaign</button>
+                </div>
+                <div class="">
+                    <label for="number" id="labelProspects">Number of prospects to import</label><br/>
+                    <input name="number" type="text" value="100" id="prospectsNumber">
+                </div>
+                <div id="importation">
+                    <br/><button id="import">Import Prospects</button>
+                </div>
+            </div>
+        </div>
+        <div id="modal">
+            <div class="modalContent">
+                <div class="modalTitleDiv">
+                    <h2 id="modalTitle">Create campaign</h2>
+                </div>
+                <div class="modalInputsFirstDiv">
+                    <div class="modalInputs">
+                        <p id="modalP">Campaign</p>
+                        <input type="text" id="modalNewName" placeholder="My campaign">
+                    </div>
+                </div>
+                <div class="modalButtons">
+                    <button id="modalCancel">Cancel</button>
+                    <button id="modalOk">Ok</button>
+                </div>
+            </div>
+        </div>
     </div>
     <script src="popup.js"></script> 
 </body>
