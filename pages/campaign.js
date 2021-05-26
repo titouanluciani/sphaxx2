@@ -146,6 +146,9 @@ export default function Campaign({cookie, cookiesSession}){
     useEffect(() => {
         console.log("cookie for useEffect loadprosp loadcamp : ", cookie)
         console.log("cookiesSession for useEffect loadprosp loadcamp : ", cookiesSession)
+        setLoadingProspects(true)
+        setProspects([])
+        setFilterProspects([])
         loadProspects(campaign, cookie);
         loadCampaigns(cookie);
         //setFilterProspects(selectedProspects)

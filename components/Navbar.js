@@ -25,12 +25,12 @@ export default function Navbar({ cookie, userInfo }){
         icon:"https://cdn2.iconfinder.com/data/icons/font-awesome/1792/hourglass-o-512.png",
         number:wg,
         page:"/waitingLine"
-    },{
+    }/*,{
         name:"Prospects",
         icon:"https://cdn0.iconfinder.com/data/icons/users-android-l-lollipop-icon-pack/24/group2-512.png",
         number:prospects,
         page:"/prospects"
-    }]
+    }*/]
 /*{
     name:"Prospects",
     icon:"https://cdn0.iconfinder.com/data/icons/users-android-l-lollipop-icon-pack/24/group2-512.png",
